@@ -13,22 +13,28 @@
 const fs = require('fs');
 
 const html = fs.readFileSync('index.html', 'utf8');
-const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+const scriptRegex = /<script(\b[^>]*)>([\s\S]*?)<\/script>/gi;
 let match;
 let count = 0;
 
 while ((match = scriptRegex.exec(html)) !== null) {
-  const scriptContent = match[1].trim();
+  const scriptTagAttrs = match[1];
+  const scriptContent = match[2].trim();
   if (scriptContent.length > 200) {
     count++;
     try {
-      new Function(scriptContent);
-      console.log(`✅ 第 ${count} 个主脚本解析验证通过，无任何语法错误 (字符长度: ${scriptContent.length})`);
+      if (/type\s*=\s*["']application\/ld\+json["']/i.test(scriptTagAttrs)) {
+        JSON.parse(scriptContent);
+        console.log(`✅ 第 ${count} 个结构化数据 (JSON-LD) 语法校验通过 (字符长度: ${scriptContent.length})`);
+      } else {
+        new Function(scriptContent);
+        console.log(`✅ 第 ${count} 个主脚本解析验证通过，无任何语法错误 (字符长度: ${scriptContent.length})`);
+      }
     } catch (e) {
-      console.error(`❌ 第 ${count} 个主脚本语法错误:`, e);
+      console.error(`❌ 第 ${count} 个脚本解析错误:`, e);
       process.exit(1);
     }
   }
 }
 
-console.log('✅ index.html 所有前端脚本语法校验完全通过！');
+console.log('✅ index.html 所有前端脚本与结构化元数据校验完全通过！');

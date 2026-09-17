@@ -14,7 +14,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixZip 图片无损压缩工具 - SR-DevBox 开发者效率工具箱</title>
+  <title>PixZip 图片无损压缩 · EXIF 元数据清洗 - SR-DevBox 开发者效率工具箱</title>
+
+  <!-- SEO 核心元信息 (搜索引擎收录与摘要展示) -->
+  <meta name="description" content="SR-DevBox PixZip 是纯前端本地离线的在线图片无损压缩工具，支持 PNG/JPG/GIF/SVG/WebP/ICO 批量压缩，极致体积/高保真/真无损三模式最高降容 80%；独有元数据清洗引擎自动刷新图片数据源，清除 EXIF/XMP 制作软件与拍摄设备隐私痕迹，导出文件统一重写为 SR-DevBox PixZip 溯源标识，整包压缩保持完整目录层级，图片绝不上传服务器。">
+  <meta name="keywords" content="图片压缩,在线图片压缩,图片无损压缩,PNG压缩,JPG压缩,GIF压缩,SVG压缩,WebP压缩,批量图片压缩,EXIF清除,EXIF脱敏,元数据清洗,元数据脱敏,图片数据源刷新,制作软件识别,图片溯源标识,纯前端压缩,本地离线压缩,SR-DevBox,PixZip">
+  <meta name="author" content="Zhu Rui - SR-DevBox 开发者效率工具箱">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="canonical" href="https://srdevbox.com/">
+
+  <!-- Open Graph / 社交与搜索卡片分享 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SR-DevBox 开发者效率工具箱">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="PixZip 图片无损压缩 · EXIF 元数据清洗 - SR-DevBox">
+  <meta property="og:description" content="纯前端离线图片无损压缩：三模式最高降容 80%，独有元数据清洗引擎自动刷新图片数据源，清除 EXIF/XMP 制作软件痕迹并统一重写为 SR-DevBox PixZip 溯源标识。">
+  <meta property="og:url" content="https://srdevbox.com/">
+  <meta name="twitter:card" content="summary">
 
   <!-- 引入本地商业依赖库 (MIT 许可，离线与商用完全合规) -->
   <script src="lib/buffer.min.js"></script>
@@ -35,25 +52,69 @@
 
 <style>
 /* ==========================================================================
-   PREMIUM LIGHT MODE STYLE SYSTEM - SR-DEVBOX-PIXZIP IMAGE COMPRESSOR
-   作者: Zhu Rui (30501250@qq.com)
-   日期: 2026-09-17
-   版权: © 2026 Zhu Rui. All Rights Reserved.
+   PURE BRIGHT PRO STYLE SYSTEM - PIXZIP IMAGE COMPRESSOR
+   纯净明亮专业级设计系统 · 对标 Apple / Vercel / Figma 工业级体验
    ========================================================================== */
 :root {
-  --bg-color: #f1f5f9;
-  --panel-bg: #ffffff;
-  --panel-border: #e2e8f0;
-  --panel-border-focus: #3b82f6;
+  /* 基础灰阶与背景体系 */
+  --bg-app: #f8fafc;
+  --bg-panel: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --bg-muted: #f8fafc;
+  --bg-hover: #f1f5f9;
 
+  /* 边框体系 (微质感克制分割) */
+  --border-subtle: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-strong: #94a3b8;
+  --border-focus: #2563eb;
+
+  /* 品牌主色 (沉稳高级 Royal Blue，杜绝伪科技刺眼霓虹) */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-active: #1e40af;
+  --primary-light: #eff6ff;
+  --primary-border: #bfdbfe;
   --primary-glow: #2563eb;
-  --secondary-glow: #7c3aed;
-  --accent-color: #10b981;
-  --danger-color: #ef4444;
+  --secondary-glow: #4f46e5;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  /* 语义色彩 (低饱和度、专业克制) */
+  --accent-color: #059669;
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --success-border: #a7f3d0;
+
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --warning-border: #fde68a;
+
+  --danger-color: #dc2626;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --danger-border: #fecaca;
+
+  /* 文本与排版系统 */
+  --text-primary: #0f172a;   /* Slate 900 高清晰纯粹黑 */
+  --text-secondary: #475569; /* Slate 600 高可读说明 */
+  --text-muted: #94a3b8;     /* Slate 400 辅助弱化 */
+  --text-faint: #cbd5e1;
+
+  /* 多层环境弥散软投影 (Apple/Vercel 级无边界感阴影) */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 14px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+  --shadow-modal: 0 24px 48px -12px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.06);
+
+  /* 精密圆角系统 */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* 动效缓动 */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -61,32 +122,34 @@
   margin: 0;
   padding: 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.2) transparent;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
-  background-color: var(--bg-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background-color: var(--bg-app);
   color: var(--text-primary);
   height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 *::-webkit-scrollbar-track {
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
-  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: rgba(100, 116, 139, 0.45);
 }
 
 .app-container {
@@ -94,43 +157,87 @@ body {
   flex-direction: column;
   height: 100vh;
   max-height: 100vh;
-  padding: 14px 18px;
-  max-width: 1680px;
+  padding: 12px 18px;
+  max-width: 1640px;
   margin: 0 auto;
   width: 100%;
   overflow: hidden;
 }
 
-/* 顶部导航栏 / 头部 */
+/* ==========================================================================
+   Header 顶部导航栏 (极简、轻量、高信息呼吸感)
+   ========================================================================== */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  padding-bottom: 4px;
+  padding: 2px 2px 8px 2px;
+  border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
   gap: 16px;
 }
 
-.header-main-group {
+.subtool-info-col {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 3px;
   min-width: 0;
 }
 
-/* 官方 SR-DevBox 母体品牌链接 (位于右上角，精致克制，点击直达官网) */
+.subtool-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.subtool-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.subtool-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+  border-radius: 9999px;
+  padding: 1.5px 8px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-subtitle {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 官方 SR-DevBox 官网胶囊按钮 (低调、精致、纯净) */
 .sr-brand-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  padding: 4px 10px 4px 7px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s var(--ease-spring);
   color: inherit;
   flex-shrink: 0;
   user-select: none;
@@ -138,21 +245,20 @@ body {
 
 .sr-brand-link:hover {
   background: #ffffff;
-  border-color: #93c5fd;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
 }
 
 .app-logo {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.3));
   transition: transform 0.2s ease;
 }
 
 .sr-brand-link:hover .app-logo {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .sr-brand-text-col {
@@ -161,262 +267,333 @@ body {
 }
 
 .sr-brand-name {
-  font-size: 0.92rem;
-  font-weight: 800;
-  letter-spacing: -0.2px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
   line-height: 1.15;
-  transition: color 0.2s;
-}
-
-.sr-brand-link:hover .sr-brand-name {
-  color: var(--primary-glow);
 }
 
 .sr-brand-tag {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 3px;
   line-height: 1.2;
-  transition: color 0.2s;
 }
 
-.sr-brand-link:hover .sr-brand-tag {
-  color: var(--primary-glow);
-}
-
-/* 品牌与子工具的层级分隔线 */
-.header-divider {
-  width: 1px;
-  height: 32px;
-  background: #cbd5e1;
-  flex-shrink: 0;
-}
-
-/* 当前子工具：PixZip 图片无损压缩工具 排版 */
-.subtool-info-col {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.subtool-title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.subtool-title {
-  font-size: 1.42rem;
-  font-weight: 900;
-  letter-spacing: -0.2px;
-  color: #1d4ed8;
-  line-height: 1.2;
-}
-
-.subtool-pill {
-  font-size: 0.65rem;
-  font-weight: 700;
-  background: #eff6ff;
-  color: var(--primary-glow);
-  border: 1px solid #bfdbfe;
-  border-radius: 4px;
-  padding: 1px 6px;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-}
-
-.header-stat-badge {
-  background: #ffffff;
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  border-radius: 8px;
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: var(--primary-glow);
-  padding: 6px 12px;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.app-subtitle {
-  font-size: 0.76rem;
-  color: var(--text-secondary);
-  margin-top: 3px;
-  letter-spacing: 0.2px;
-}
-
-/* 工作区网格 */
+/* ==========================================================================
+   工作区主网格与专业纯白面板 (去除一切伪科技边框与发光)
+   ========================================================================== */
 .workspace-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1.12fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: 14px;
   flex: 1;
   min-height: 0;
 }
 
-/* 拟物科技感面板 */
 .cyber-panel {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 14px 16px;
   min-height: 0;
   position: relative;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
 }
 
-.panel-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-primary);
-  padding-left: 8px;
-  flex-shrink: 0;
+.cyber-panel:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .left-workspace {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   min-height: 0;
-}
-
-.left-workspace .cyber-panel {
-  border-top: 4px solid var(--primary-glow);
-}
-.left-workspace .panel-title {
-  border-left: 3px solid var(--primary-glow);
+  padding: 14px 16px;
 }
 
 .right-panel-cyber {
-  border-top: 4px solid var(--secondary-glow) !important;
   overflow-y: auto;
 }
-.right-panel-cyber .panel-title {
-  border-left: 3px solid var(--secondary-glow) !important;
+
+/* ==========================================================================
+   区域清晰划分栏与标题系统 (清晰分界、层级立竿见影)
+   ========================================================================== */
+.workspace-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 6px 0;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
-/* 拖拽上传区域 */
+.panel-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mode-badge-icon {
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
+.results-badge-icon {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.workspace-section-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.workspace-section-meta {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  padding: 1px 7px;
+}
+
+.mode-current-pill {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  border: 1px solid var(--primary-border);
+  border-radius: 9999px;
+  padding: 2px 9px;
+}
+
+/* ==========================================================================
+   左侧工作区：拖拽投放区 (扁平矩形排版，高度紧凑，极富现代感)
+   ========================================================================== */
 .upload-options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .drop-zone {
-  border: 2px dashed #cbd5e1;
-  background: #f8fafc;
-  border-radius: 10px;
-  padding: 16px 12px;
+  border: 1.5px dashed var(--border-medium);
+  background: #fbfcfe;
+  border-radius: var(--radius-md);
+  padding: 12px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s var(--ease-spring);
   flex-shrink: 0;
-  aspect-ratio: 1 / 1;
+  min-height: 96px;
   width: 100%;
   box-sizing: border-box;
   user-select: none;
 }
 
 .drop-zone:hover, .drop-zone.active {
-  border-color: var(--primary-glow);
-  background: #eff6ff;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+  border-color: var(--primary);
+  background: #f4f8ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
 }
 
 .scan-folder-zone {
-  border-color: rgba(124, 58, 237, 0.3) !important;
-  background: #faf5ff !important;
+  border-color: var(--border-medium);
+  background: #fbfcfe;
 }
+
 .scan-folder-zone:hover, .scan-folder-zone.active {
-  border-color: var(--secondary-glow) !important;
-  background: #f3e8ff !important;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1) !important;
+  border-color: #4f46e5;
+  background: #f5f5ff;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.08);
 }
 
 .drop-icon {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
 }
+
+.drop-zone:hover .drop-icon {
+  transform: translateY(-2px);
+}
+
+.drop-icon svg {
+  color: var(--primary);
+  width: 26px;
+  height: 26px;
+}
+
 .highlight-icon svg {
-  color: var(--secondary-glow);
+  color: #4f46e5;
 }
 
 .drop-text-primary {
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
 }
 
 .drop-text-secondary {
-  font-size: 0.72rem;
-  color: var(--text-secondary);
+  font-size: 0.68rem;
+  color: var(--text-muted);
   line-height: 1.35;
 }
 
-/* 分析扫描日志面板与悬浮清空操作按钮 */
+/* ==========================================================================
+   扫描与引擎状态栏 (默认展开，紧凑高质感日志流)
+   ========================================================================== */
 .scan-progress-wrapper {
   position: relative;
   width: 100%;
+  flex-shrink: 0;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+.scan-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.7rem;
+}
+
+.scan-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-dot-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+  flex-shrink: 0;
+  animation: subtlePulse 2.5s infinite;
+}
+
+@keyframes subtlePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.75; }
+}
+
+.scan-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .btn-clear-logs {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  z-index: 5;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  padding: 2px 7px;
-  font-size: 0.68rem;
-  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  font-size: 0.66rem;
+  color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.2s ease;
-  line-height: 1.4;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  transition: all 0.15s ease;
+  line-height: 1.3;
 }
 
 .btn-clear-logs:hover {
-  background: #ffffff;
-  color: var(--secondary-glow);
-  border-color: var(--secondary-glow);
-  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.12);
+  background: #e2e8f0;
+  color: var(--text-primary);
+}
+
+.btn-toggle-logs {
+  background: transparent;
+  border: none;
+  font-size: 0.66rem;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  transition: all 0.15s ease;
+  font-weight: 600;
+}
+
+.btn-toggle-logs:hover {
+  background: var(--primary-light);
 }
 
 .scan-progress-panel {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 8px 70px 8px 12px;
+  display: flex; /* 默认展开 */
+  background: #ffffff;
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  padding: 6px 8px;
+  margin: 5px -10px -6px -10px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.74rem;
-  color: var(--text-primary);
-  height: 96px;
-  max-height: 96px;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  height: 72px;
+  max-height: 72px;
   overflow-y: auto;
-  display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
+}
+
+.scan-progress-panel.collapsed {
+  display: none !important;
 }
 
 .scan-log-line {
@@ -424,103 +601,147 @@ body {
   word-break: break-all;
 }
 .scan-log-info { color: var(--text-secondary); }
-.scan-log-success { color: #047857; font-weight: 700; }
-.scan-log-warning { color: #b45309; }
-.scan-log-error { color: #b91c1c; font-weight: 700; }
+.scan-log-success { color: var(--success); font-weight: 600; }
+.scan-log-warning { color: var(--warning); }
+.scan-log-error { color: var(--danger); font-weight: 600; }
 
-/* 队列预览容器 */
+/* ==========================================================================
+   待处理图片列表与过滤工具栏 (Segmented Control 风格，纯净高雅)
+   ========================================================================== */
 .preview-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
 }
 
+/* ==========================================================================
+   待处理图片工具栏 (左侧分类 Tab，右侧无缝融合搜索框)
+   ========================================================================== */
 .preview-bar {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
   align-items: center;
+  gap: 10px;
   flex-shrink: 0;
-}
-
-.preview-input {
-  flex: 1;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 0.82rem;
-  padding: 7px 12px;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.preview-input:focus {
-  border-color: var(--primary-glow);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  width: 100%;
 }
 
 .filter-tags-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-subtle);
+  padding: 2.5px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.preview-search-box {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0 10px;
+  height: 30px;
+  flex: 1;
+  max-width: 230px;
+  transition: all 0.18s var(--ease-spring);
+}
+
+.preview-search-box:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  max-width: 270px;
+}
+
+.preview-search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.preview-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.74rem;
+  color: var(--text-primary);
+  width: 100%;
+  padding: 0;
+}
+
+.preview-search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .filter-tag {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
   font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px 8px;
+  font-weight: 500;
+  padding: 3.5px 8px;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.15s;
-}
-.filter-tag:hover {
-  background: #eff6ff;
-  border-color: #93c5fd;
-  color: var(--primary-glow);
-}
-.filter-tag.active {
-  background: var(--primary-glow);
-  border-color: var(--primary-glow);
-  color: #ffffff;
+  transition: all 0.15s ease;
+  line-height: 1.2;
 }
 
-/* 图像队列卡片列表 */
+.filter-tag:hover {
+  color: var(--text-primary);
+}
+
+.filter-tag.active {
+  background: var(--bg-panel);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.tab-count {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.66rem;
+  opacity: 0.75;
+}
+
+/* 队列卡片列表 */
 .preview-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   overflow-y: auto;
   flex: 1;
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .preview-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 8px 12px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   position: relative;
-  transition: border-color 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .preview-card:hover {
-  border-color: #cbd5e1;
-  background: #fdfdfd;
+  border-color: var(--border-medium);
+  background: #fcfdfe;
+  box-shadow: var(--shadow-xs);
 }
 
-/* 缩略图 */
+/* 精致无缝浅灰透明棋盘缩略图 */
 .image-thumbnail-box {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
   background-color: #ffffff;
   background-image: linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
                     linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
@@ -544,7 +765,7 @@ body {
 .card-info-col {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   flex: 1;
   min-width: 0;
 }
@@ -556,8 +777,8 @@ body {
 }
 
 .image-name-text {
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -566,57 +787,113 @@ body {
 }
 
 .image-path-text {
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   color: var(--text-muted);
-  font-family: monospace;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 240px;
+  max-width: 100%;
+  line-height: 1.4;
 }
 
+.image-path-text .meta-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: var(--text-muted);
+}
+
+.image-path-text .meta-dim {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 制作软件与整行路径文字颜色保持一致 (统一为 text-muted，不再加深强调) */
+.image-path-text .meta-software {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* 精细格式微徽章 (专业中性微彩色，不突兀) */
 .preview-card-badge {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   padding: 1px 5px;
   border-radius: 3px;
   text-transform: uppercase;
   flex-shrink: 0;
+  line-height: 1.3;
 }
 
-.badge-png { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-.badge-jpg, .badge-jpeg { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-.badge-svg { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
-.badge-webp { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-.badge-gif { background: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
-.badge-ico, .badge-bmp { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+.badge-png { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.badge-jpg, .badge-jpeg { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.badge-svg { background: #fdf4ff; color: #86198f; border: 1px solid #f5d0fe; }
+.badge-webp { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.badge-gif { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+.badge-ico, .badge-bmp { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
 .status-badge {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1.5px 6px;
+  border-radius: var(--radius-xs);
   white-space: nowrap;
   flex-shrink: 0;
+  line-height: 1.3;
 }
 
-.status-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
-.status-compressing { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.status-success { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
-.status-skipped { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
-.status-failed { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+.status-pending { background: #fffbeb; color: #92400e; border: 1px solid #fef3c7; }
+.status-compressing { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+.status-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.status-skipped { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+.status-failed { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
 
 .card-size-stat {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-dim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.5px 5px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.card-software-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  border-radius: 4px;
+  padding: 0.5px 6px;
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .reduction-text {
   font-weight: 700;
-  color: #059669;
+  color: var(--success);
+  font-variant-numeric: tabular-nums;
 }
 
 .preview-card-btn-delete {
@@ -624,20 +901,32 @@ body {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 5px;
-  border-radius: 4px;
+  padding: 4px;
+  border-radius: var(--radius-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 .preview-card-btn-delete:hover {
-  color: var(--danger-color);
-  background: rgba(239, 68, 68, 0.08);
+  color: var(--danger);
+  background: var(--danger-light);
 }
 
-/* 控制选项 */
+.btn-clear-queue {
+  font-size: 0.7rem;
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+.btn-clear-queue:hover {
+  background: var(--danger-light);
+  border-color: var(--danger);
+}
+
+/* ==========================================================================
+   右侧控制区：现代 Bento 模式卡片 (彻底摒弃大单选与廉价发光)
+   ========================================================================== */
 .control-section {
   display: flex;
   flex-direction: column;
@@ -654,521 +943,445 @@ body {
 }
 
 .form-label {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* 设置子容器框 */
-.setting-subbox {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.setting-subbox-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.78rem;
-}
-
-.setting-select {
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 5px 8px;
-  font-size: 0.74rem;
-  color: var(--text-primary);
-  outline: none;
-  width: 100%;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.setting-select:focus {
-  border-color: var(--primary-glow);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-}
-
-.setting-note {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-/* 格式优化 2x2 网格卡片 */
-.format-cards-grid {
-  display: none;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.format-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-}
-
-.format-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
-
-.format-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.format-badge-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.format-pill {
-  font-size: 0.64rem;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.pill-png { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.pill-jpg { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
-.pill-svg { background: #faf5ff; color: #6b21a8; border: 1px solid #e9d5ff; }
-.pill-webp { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-
-.format-action-tags {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  font-size: 0.68rem;
-  color: #475569;
-  line-height: 1.35;
-  background: #f8fafc;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px dashed #e2e8f0;
-}
-
-/* 核心压缩模式选择卡片组 (极致体积 vs 真无损) */
-.compress-mode-section {
-  background: #f8fafc;
-  border: 1.5px solid #dbeafe;
-  border-radius: 10px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.compress-mode-title {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.compress-mode-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: #047857;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  border-radius: 4px;
-  padding: 1px 7px;
-  margin-left: auto;
-}
-
+/* ==========================================================================
+   模式选择卡片系统 (核心：选中态反白设计，极高对比度，一眼即辨选用模式)
+   ========================================================================== */
 .compress-mode-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-}
-
-@media (max-width: 860px) {
-  .compress-mode-cards {
-    grid-template-columns: 1fr;
-  }
+  width: 100%;
 }
 
 .compress-mode-card {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 9px 11px;
+  background: var(--bg-panel);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
   cursor: pointer;
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  transition: all 0.2s ease;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.2s var(--ease-spring);
   user-select: none;
   position: relative;
+  box-shadow: var(--shadow-xs);
+  min-height: 98px;
 }
 
-.compress-mode-card:hover {
-  border-color: #93c5fd;
-  background: #f0f7ff;
+.compress-mode-card:hover:not(.active) {
+  border-color: var(--border-medium);
+  background: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
+/* 核心：选中态全局反白 (Solid Royal Blue 高饱和品牌渐变 + 纯白反差排版) */
 .compress-mode-card.active {
-  border-color: var(--primary-glow);
-  background: #eff6ff;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 4px 16px -2px rgba(37, 99, 235, 0.4), 0 2px 6px -1px rgba(37, 99, 235, 0.2) !important;
+  transform: translateY(-1px) !important;
 }
 
-.compress-card-radio-mark {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  background: #ffffff;
-  margin-top: 2px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.compress-mode-card.active .compress-card-radio-mark {
-  border-color: var(--primary-glow);
-}
-
-.compress-mode-card.active .compress-card-radio-mark::after {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary-glow);
-}
-
-.compress-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 1;
-}
-
-.compress-card-header-row {
+.mode-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
 }
 
-.compress-card-name {
-  font-size: 0.8rem;
-  font-weight: 800;
+.mode-title-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* 沉稳精密的原生 Radio 指示圆点 */
+.mode-selection-radio {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-medium);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+/* 选中态：Radio 转为反白外圈与内嵌蓝芯 */
+.compress-mode-card.active .mode-selection-radio {
+  border-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+.compress-mode-card.active .mode-selection-radio::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary) !important;
+}
+
+.mode-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  transition: color 0.15s ease;
 }
 
-.compress-badge-recommend {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #047857;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  border-radius: 3px;
-  padding: 1px 5px;
+/* 选中态标题反白 */
+.compress-mode-card.active .mode-card-title {
+  color: #ffffff !important;
 }
 
-.compress-badge-high {
+/* 模式性能参数徽标 */
+.mode-metric-badge {
   font-size: 0.62rem;
-  font-weight: 700;
+  font-weight: 600;
+  border-radius: var(--radius-xs);
+  padding: 1.5px 6px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  transition: all 0.15s ease;
+}
+
+.badge-extreme {
+  color: var(--primary);
+  background: var(--primary-light);
+  border: 1px solid var(--primary-border);
+}
+
+.badge-high {
   color: #6d28d9;
   background: #f5f3ff;
   border: 1px solid #ddd6fe;
-  border-radius: 3px;
-  padding: 1px 5px;
 }
 
-.compress-badge-exact {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #1e40af;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 3px;
-  padding: 1px 5px;
+.badge-lossless {
+  color: var(--success);
+  background: var(--success-light);
+  border: 1px solid var(--success-border);
 }
 
-.compress-card-desc {
-  font-size: 0.68rem;
+/* 选中态性能徽标反白 (半透明纯白发光微胶囊) */
+.compress-mode-card.active .mode-metric-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.mode-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mode-card-desc {
+  font-size: 0.7rem;
   color: var(--text-secondary);
-  line-height: 1.35;
+  line-height: 1.45;
+  margin: 0;
+  transition: color 0.15s ease;
 }
 
-.extreme-options-bar {
-  display: none !important;
+/* 选中态正文描述反白 */
+.compress-mode-card.active .mode-card-desc {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.mode-card-features {
+  display: flex;
   align-items: center;
   gap: 8px;
-  background: #ffffff;
-  border: 1px dashed #cbd5e1;
-  border-radius: 6px;
-  padding: 6px 10px;
-  transition: all 0.2s ease;
+  flex-wrap: wrap;
 }
 
-.extreme-opt-label {
-  font-size: 0.7rem;
+.feature-bullet {
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.2;
+  transition: color 0.15s ease;
+}
+
+/* 选中态特性标签反白 */
+.compress-mode-card.active .feature-bullet {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ==========================================================================
+   元数据清洗亮点条 (EXIF/XMP 隐私脱敏 · 软件溯源标识重写)
+   ========================================================================== */
+.metadata-clean-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 9px 12px;
+  background: linear-gradient(135deg, var(--primary-light), #ecfdf5);
+  border: 1px solid var(--primary-border);
+  border-radius: 8px;
+  cursor: default;
+}
+
+.metadata-strip-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 1px solid var(--primary-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-color);
+}
+
+.metadata-strip-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.metadata-strip-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.metadata-strip-title {
+  font-size: 0.78rem;
   font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+.metadata-strip-desc {
+  font-size: 0.68rem;
   color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.metadata-strip-badge {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #047857;
+  background: #d1fae5;
+  border: 1px solid #a7f3d0;
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   操作按钮体系 (沉稳、有力、极具手感)
+   ========================================================================== */
+.compress-action-bar {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
 }
 
-.extreme-quality-pills {
+.action-bar-tips {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.quality-pill {
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 0.66rem;
-  font-weight: 600;
+.tip-sep {
+  opacity: 0.4;
+}
+
+.btn-preset {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 8px;
   cursor: pointer;
   transition: all 0.15s ease;
-}
-
-.quality-pill:hover {
-  border-color: var(--primary-glow);
-  color: var(--primary-glow);
-  background: #eff6ff;
-}
-
-.quality-pill.active {
-  background: var(--primary-glow);
-  border-color: var(--primary-glow);
-  color: #ffffff;
-}
-
-/* 导出模式卡片组 */
-.export-mode-section {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.export-mode-title {
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.export-mode-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.export-mode-card {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 8px 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  transition: all 0.2s ease;
-  user-select: none;
-  position: relative;
-}
-
-.export-mode-card:hover {
-  border-color: #93c5fd;
-  background: #f0f7ff;
-}
-
-.export-mode-card.active {
-  border-color: var(--primary-glow);
-  background: #eff6ff;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
-}
-
-.export-card-radio-mark {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  background: #ffffff;
-  margin-top: 2px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.export-mode-card.active .export-card-radio-mark {
-  border-color: var(--primary-glow);
-}
-
-.export-mode-card.active .export-card-radio-mark::after {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary-glow);
-}
-
-.export-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.export-card-name {
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.export-mode-card.active .export-card-name {
-  color: var(--primary-glow);
-}
-
-.export-card-desc {
-  font-size: 0.68rem;
-  color: var(--text-secondary);
   line-height: 1.3;
 }
 
-/* 按钮样式 */
-.btn-preset {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  color: #334155;
-  font-size: 0.73rem;
-  font-weight: 600;
-  padding: 4px 8px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  text-align: center;
-}
-
 .btn-preset:hover {
-  background: #eff6ff;
-  border-color: #93c5fd;
-  color: var(--primary-glow);
+  background: var(--bg-subtle);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
 }
 
 .btn-preset:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 .btn-action {
   width: 100%;
-  height: 42px;
+  height: 46px;
   border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.92rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.2s ease;
-  letter-spacing: 0.5px;
+  transition: all 0.2s var(--ease-spring);
+  letter-spacing: -0.01em;
+  user-select: none;
 }
 
+/* 沉稳通透 Royal Blue 主按钮 (更高更沉稳，无图标纯粹排版) */
 .btn-primary {
-  background: linear-gradient(135deg, var(--secondary-glow) 0%, var(--primary-glow) 100%);
-  color: white;
-  box-shadow: 0 4px 14px rgba(92, 92, 246, 0.2);
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+  border: 1px solid #1d4ed8;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.15), 0 4px 14px -2px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
-  filter: brightness(1.08);
-  box-shadow: 0 6px 18px rgba(92, 92, 246, 0.35);
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #1e40af;
+  box-shadow: 0 4px 18px -2px rgba(37, 99, 235, 0.45);
   transform: translateY(-1px);
 }
 
 .btn-primary:active:not(:disabled) {
-  transform: translateY(1px);
+  background: #1d4ed8;
+  transform: translateY(0) scale(0.995);
+  box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:disabled {
-  opacity: 0.65;
+  opacity: 0.55;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
-/* 压缩明细表 */
+/* 按钮内待处理队列计数胶囊 (反白微胶囊) */
+.btn-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 1.5px 8.5px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.2px;
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(4px);
+  margin-left: 4px;
+  transition: all 0.18s ease;
+}
+
+/* ==========================================================================
+   压缩明细结果表格 (现代微质感数据表)
+   ========================================================================== */
 .results-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 6px;
   flex: 1;
-  min-height: 200px;
+  min-height: 180px;
 }
 
+.results-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-heading {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.savings-pill {
+  font-size: 0.7rem;
+  color: var(--success);
+  background: var(--success-light);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-xs);
+  padding: 2px 8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   明细统计表格系统 (绝对杜绝任何折行挤压，锁定列宽与水平滑动保护)
+   ========================================================================== */
 .results-table-wrapper {
+  overflow-x: auto;
   overflow-y: auto;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
   flex: 1;
-  min-height: 160px;
+  min-height: 140px;
 }
 
 .results-table {
   width: 100%;
+  min-width: 580px; /* 保护基准宽度，低于此宽度自动水平滚动，绝不挤扁按钮与表头 */
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
+}
+
+.results-table th,
+.results-table td {
+  padding: 7px 9px;
+  white-space: nowrap !important; /* 核心：全局严格禁止自动折行 */
+  vertical-align: middle;
 }
 
 .results-table th {
   background: #f8fafc;
   color: var(--text-secondary);
-  font-weight: 700;
-  padding: 8px 10px;
-  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-subtle);
   position: sticky;
   top: 0;
   z-index: 10;
+  font-size: 0.7rem;
+  letter-spacing: 0.2px;
+  user-select: none;
 }
 
 .results-table td {
-  padding: 7px 10px;
-  border-bottom: 1px solid #e2e8f0;
-  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  font-variant-numeric: tabular-nums;
 }
 
 .results-table tr:last-child td {
@@ -1179,364 +1392,117 @@ body {
   background: #f8fafc;
 }
 
-#tableEmptyRow td {
+/* 各列专属宽度与对齐体系 */
+.col-file {
+  width: auto;
+  min-width: 170px;
+  text-align: left;
+}
+
+.col-size {
+  width: 72px;
+  min-width: 72px;
+  text-align: right;
+  white-space: nowrap !important;
+}
+
+.col-ratio {
+  width: 76px;
+  min-width: 76px;
+  text-align: right;
+  font-weight: 700;
+  white-space: nowrap !important;
+}
+
+.col-status {
+  width: 86px;
+  min-width: 86px;
   text-align: center;
-  color: var(--text-muted);
-  padding: 36px 20px !important;
-  vertical-align: middle;
+  white-space: nowrap !important;
 }
 
-.font-name-truncate {
-  display: inline-block;
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: middle;
-  font-weight: 700;
-  color: var(--text-primary);
+.col-actions {
+  width: 114px;
+  min-width: 114px;
+  text-align: center;
+  white-space: nowrap !important;
 }
 
-.save-options-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  margin-top: auto;
-  flex-shrink: 0;
-  padding-top: 4px;
-}
-
-.export-dual-bar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  width: 100%;
-}
-
-@media (max-width: 768px) {
-  .export-dual-bar {
-    grid-template-columns: 1fr;
-  }
-}
-
-.btn-export-zip {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 10px !important;
-  padding: 8px 14px !important;
-  min-height: 48px !important;
-  border-radius: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  text-align: left !important;
-  user-select: none;
-}
-
-.btn-export-images {
-  background: linear-gradient(135deg, var(--secondary-glow) 0%, var(--primary-glow) 100%) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-
-.btn-export-images:hover:not(:disabled) {
-  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.38) !important;
-  transform: translateY(-1px);
-}
-
-.btn-export-website {
-  background: #ffffff !important;
-  color: #4338ca !important;
-  border: 1.5px solid rgba(99, 102, 241, 0.35) !important;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08) !important;
-}
-
-.btn-export-website:hover:not(:disabled) {
-  background: rgba(99, 102, 241, 0.06) !important;
-  border-color: #6366f1 !important;
-  color: #3730a3 !important;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.18) !important;
-  transform: translateY(-1px);
-}
-
-.btn-export-zip:disabled {
-  opacity: 0.6 !important;
-  cursor: not-allowed !important;
-  transform: none !important;
-}
-
-.export-btn-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
-}
-
-.export-btn-title {
-  font-size: 0.85rem;
-  font-weight: 800;
-  line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.export-btn-sub {
-  font-size: 0.68rem;
-  opacity: 0.88;
-  line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.btn-export-website .export-btn-sub {
-  color: #64748b;
-  opacity: 1;
-}
-
-.export-website-badge {
-  font-size: 0.62rem;
-  font-weight: 700;
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
-  border-radius: 4px;
-  padding: 1px 6px;
-  letter-spacing: 0.2px;
+/* 操作列按钮组：横向排列、绝不换行 */
+.result-actions-group {
   display: inline-flex;
   align-items: center;
-  flex-shrink: 0;
-}
-
-.btn-web-zip-large {
-  height: 42px;
-  font-size: 0.92rem;
-  font-weight: 800;
-  border-radius: 8px;
-  letter-spacing: 0.5px;
-  background: linear-gradient(135deg, var(--secondary-glow) 0%, var(--primary-glow) 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* 底部商业授权状态栏 */
-.license-status-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  padding: 8px 18px;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-  flex-shrink: 0;
-}
-
-.status-bar-left, .status-bar-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.status-indicator-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-color);
-  box-shadow: 0 0 8px var(--accent-color);
-}
-
-.status-text-label {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.status-text-val {
-  font-weight: 700;
-  font-family: monospace;
-  color: var(--accent-color);
-}
-
-.machine-code-val {
-  color: var(--primary-glow);
-  font-family: monospace;
-  font-weight: bold;
-  background: rgba(37, 99, 235, 0.04);
-  border: 1px solid rgba(37, 99, 235, 0.15);
-  border-radius: 4px;
-  padding: 2px 8px;
-  letter-spacing: 0.5px;
-}
-
-.status-copy-btn {
-  background: transparent;
-  border: 1px solid var(--panel-border);
-  color: var(--text-primary);
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.2s ease;
-}
-
-.status-copy-btn:hover {
-  border-color: var(--primary-glow);
-  color: var(--primary-glow);
-}
-
-.status-activate-link-btn {
-  background: transparent;
-  border: none;
-  color: var(--secondary-glow);
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: 6px;
-  font-size: 0.82rem;
-  transition: all 0.2s ease;
-}
-
-.status-activate-link-btn:hover {
-  color: var(--primary-glow);
-  text-decoration: underline;
-}
-
-/* Toast 提示 */
-.custom-toast {
-  position: fixed;
-  bottom: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999999;
-  background: var(--panel-bg);
-  border-radius: 8px;
-  padding: 10px 22px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.custom-toast.show {
-  bottom: 30px;
-  opacity: 1;
-}
-
-.custom-toast.toast-success {
-  border-left: 4px solid var(--accent-color);
-  color: var(--accent-color);
-  border-top: 1px solid var(--panel-border);
-  border-right: 1px solid var(--panel-border);
-  border-bottom: 1px solid var(--panel-border);
-}
-
-/* 激活弹窗 */
-.license-lock-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 99999;
+  gap: 5px;
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
 }
 
-.lock-card {
-  width: 90%;
-  max-width: 480px;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 0 40px rgba(124, 58, 237, 0.08);
-  position: relative;
-  text-align: center;
+.btn-table-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3.5px !important;
+  height: 24px !important;
+  padding: 0 7px !important;
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  border-radius: var(--radius-xs) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+  border: 1px solid transparent !important;
+  user-select: none !important;
 }
 
-.modal-close-btn {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  background: transparent;
-  border: none;
-  font-size: 1.4rem;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-.modal-close-btn:hover { color: var(--text-primary); }
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  display: inline-block;
+.btn-table-compare {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+  border-color: var(--primary-border) !important;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.btn-table-compare:hover {
+  background: #dbeafe !important;
+  color: var(--primary-hover) !important;
+  border-color: #93c5fd !important;
 }
 
-@media (max-width: 1024px) {
-  body { overflow: auto; height: auto; }
-  .app-container { height: auto; max-height: none; overflow: visible; }
-  .workspace-grid { grid-template-columns: 1fr; }
-  .license-status-bar { flex-direction: column; gap: 10px; align-items: flex-start; }
+.btn-table-download {
+  background: #ffffff !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-medium) !important;
 }
 
-@media (max-width: 640px) {
-  .preset-cards-grid { grid-template-columns: 1fr; }
-  .format-cards-grid { grid-template-columns: 1fr; }
-  .wwh-grid { grid-template-columns: 1fr; }
-  .compress-mode-cards { grid-template-columns: 1fr; }
-  .export-mode-cards { grid-template-columns: 1fr; }
+.btn-table-download:hover {
+  background: #f8fafc !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-strong) !important;
 }
 
-/* ==========================================================================
- * 压缩结果明细列表缩略图与画质对比查看器样式
- * ========================================================================== */
-
-/* 结果列表文件列与缩略图 */
 .result-file-col {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .result-thumb-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
   overflow: hidden;
   position: relative;
-  background-color: #f1f5f9;
-  background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%), linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e2e8f0 75%), linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-color: #ffffff;
+  background-image: linear-gradient(45deg, #f1f5f9 25%, transparent 25%), linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f1f5f9 75%), linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
   background-size: 8px 8px;
   background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .result-thumb-box.can-compare {
@@ -1544,9 +1510,9 @@ body {
 }
 
 .result-thumb-box.can-compare:hover {
-  border-color: var(--primary-glow);
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
-  transform: scale(1.06);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  transform: scale(1.04);
 }
 
 .result-thumb-img {
@@ -1559,15 +1525,14 @@ body {
 .thumb-compare-hint {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(15, 23, 42, 0.6);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 11px;
   opacity: 0;
-  transition: opacity 0.2s ease;
-  backdrop-filter: blur(1px);
+  transition: opacity 0.15s ease;
 }
 
 .result-thumb-box.can-compare:hover .thumb-compare-hint {
@@ -1579,41 +1544,241 @@ body {
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  gap: 2px;
+  gap: 1px;
 }
 
 .result-file-meta {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   color: var(--text-muted);
-  font-family: monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* 制作软件独立换行展示 (颜色/字体与上方 result-file-meta 保持一致) */
+.result-file-software {
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .btn-compare-action {
-  background: rgba(99, 102, 241, 0.08) !important;
-  color: #4338ca !important;
-  border-color: rgba(99, 102, 241, 0.35) !important;
-  font-weight: 700 !important;
-  transition: all 0.2s ease !important;
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+  border: 1px solid var(--primary-border) !important;
+  font-weight: 600 !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 4px !important;
+  gap: 3px !important;
+  border-radius: var(--radius-xs) !important;
+  padding: 2px 7px !important;
+  font-size: 0.7rem !important;
+  cursor: pointer;
 }
 
 .btn-compare-action:hover {
-  background: rgba(99, 102, 241, 0.18) !important;
-  color: #3730a3 !important;
-  border-color: #6366f1 !important;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25) !important;
+  background: #dbeafe !important;
+  color: var(--primary-hover) !important;
 }
 
-/* 全屏原图/压缩图明细对比弹窗 (浅色UI质感) */
+/* ==========================================================================
+   双通道保存与导出操作栏 (纯净明亮高级质感 · 蓝白呼应 · 优雅协调)
+   ========================================================================== */
+.save-options-bar {
+  flex-shrink: 0;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.export-dual-bar {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  gap: 12px;
+}
+
+.btn-export-zip {
+  height: auto !important;
+  min-height: 64px !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 13px !important;
+  border-radius: var(--radius-lg) !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  transition: all 0.2s var(--ease-spring) !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+
+/* 独立高阶图标微容器 (42x42 规整圆角) */
+.export-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s var(--ease-spring);
+}
+
+.btn-export-zip:hover:not(:disabled) .export-icon-box {
+  transform: scale(1.05);
+}
+
+/* 按钮 1: 主导出操作 (Vivid Royal Blue 品牌渐变，通透、醒目、权威、不沉闷) */
+.btn-export-images {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #2563eb !important;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.15), 0 4px 14px -2px rgba(37, 99, 235, 0.28) !important;
+}
+
+.export-icon-box-primary {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-export-images:hover:not(:disabled) {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22), 0 10px 24px -2px rgba(37, 99, 235, 0.38) !important;
+  transform: translateY(-2px);
+}
+
+.btn-export-images .export-btn-sub {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.export-pill-primary {
+  font-size: 0.62rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-xs);
+  padding: 1px 6px;
+  line-height: 1.3;
+}
+
+/* 按钮 2: 次导出操作 (极简纯白卡片，与主按钮完美呼应) */
+.btn-export-website {
+  background: #ffffff !important;
+  color: var(--text-primary) !important;
+  border: 1.5px solid var(--border-medium) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 8px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.export-icon-box-website {
+  background: #eff6ff;
+  color: var(--primary);
+  border: 1px solid #bfdbfe;
+}
+
+.btn-export-website:hover:not(:disabled) {
+  background: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.12) !important;
+  transform: translateY(-2px);
+}
+
+.btn-export-website .export-btn-sub {
+  color: var(--text-secondary);
+}
+
+.btn-export-zip:active:not(:disabled) {
+  transform: translateY(0) scale(0.995) !important;
+}
+
+.btn-export-zip:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* 按钮内容排版系统 */
+.export-btn-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.export-btn-main-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.export-btn-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.export-btn-sub {
+  font-size: 0.68rem;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.export-website-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-xs);
+  padding: 1px 6px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+/* 右侧交互提示微箭头 */
+.export-arrow-cue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 0.45;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-export-images .export-arrow-cue {
+  color: #ffffff;
+  opacity: 0.75;
+}
+
+.btn-export-zip:hover:not(:disabled) .export-arrow-cue {
+  opacity: 0.95;
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   全屏原图 / 压缩图明细对比弹窗 (Apple 级清爽通透质感)
+   ========================================================================== */
 .compare-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -1621,39 +1786,39 @@ body {
   align-items: center;
   z-index: 999999;
   padding: 18px;
-  animation: compareFadeIn 0.2s ease-out;
+  animation: compareFadeIn 0.18s ease-out;
 }
 
 @keyframes compareFadeIn {
-  from { opacity: 0; transform: scale(0.98); }
+  from { opacity: 0; transform: scale(0.99); }
   to { opacity: 1; transform: scale(1); }
 }
 
 .compare-modal-window {
   width: 96vw;
-  max-width: 1400px;
+  max-width: 1360px;
   height: 92vh;
-  max-height: 940px;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 16px;
-  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  max-height: 900px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-modal);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
   user-select: none;
-  -webkit-user-select: none;
 }
 
 .compare-modal-header {
-  height: 54px;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 18px;
+  padding: 0 16px;
   gap: 12px;
   flex-shrink: 0;
   z-index: 50;
@@ -1664,112 +1829,102 @@ body {
   align-items: center;
   gap: 8px;
   overflow: hidden;
-  color: #0f172a;
-  font-size: 0.9rem;
-  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.86rem;
+  font-weight: 600;
 }
 
 .compare-title-icon {
-  font-size: 1.15rem;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  color: #4f46e5;
 }
 
 .compare-title-text {
-  max-width: 260px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .compare-title-meta {
-  font-size: 0.74rem;
-  color: #475569;
-  font-family: monospace;
-  background: #f1f5f9;
-  padding: 2px 8px;
-  border-radius: 4px;
-  border: 1px solid #e2e8f0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .compare-modal-tools {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .compare-tool-btn {
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.78rem;
-  font-weight: 600;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  padding: 4px 8px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
   transition: all 0.15s ease;
 }
 
 .compare-tool-btn:hover {
-  background: #f1f5f9;
-  border-color: #3b82f6;
-  color: #1d4ed8;
+  background: var(--bg-subtle);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
 }
 
 .compare-zoom-label {
-  font-size: 0.84rem;
-  font-weight: 800;
-  color: #2563eb;
-  font-family: monospace;
-  min-width: 52px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  min-width: 48px;
   text-align: center;
   cursor: pointer;
   padding: 3px 6px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   transition: background 0.15s ease;
 }
 
 .compare-zoom-label:hover {
-  background: #eff6ff;
+  background: var(--primary-light);
 }
 
 .compare-hint-tip {
-  font-size: 0.75rem;
-  color: #64748b;
-  margin-left: 8px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-left: 6px;
 }
 
 .compare-close-btn {
   background: transparent;
   border: none;
-  font-size: 1.6rem;
-  color: #94a3b8;
+  font-size: 1.4rem;
+  color: var(--text-muted);
   cursor: pointer;
   line-height: 1;
-  padding: 4px 10px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
 }
 
 .compare-close-btn:hover {
-  color: #ef4444;
-  background: #fee2e2;
+  color: var(--danger);
+  background: var(--danger-light);
 }
 
-/* 对比舞台 Stage (清爽浅色透明网格底纹) */
 .compare-stage {
   flex: 1;
   position: relative;
   overflow: hidden;
   background-color: #f8fafc;
   background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%), linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e2e8f0 75%), linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0px;
   cursor: grab;
 }
 
@@ -1777,73 +1932,52 @@ body {
   cursor: grabbing;
 }
 
-/* 浮动标签 Badges (浅色高对比微质感) */
 .compare-badge {
   position: absolute;
-  top: 16px;
+  top: 14px;
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 700;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
   pointer-events: none;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
-  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
 }
 
 .compare-badge-left {
-  left: 16px;
-  background: rgba(239, 246, 255, 0.94);
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
+  left: 14px;
+  background: rgba(239, 246, 255, 0.92);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
 }
 
 .compare-badge-right {
-  right: 16px;
-  background: rgba(236, 253, 245, 0.94);
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  right: 14px;
+  background: rgba(236, 253, 245, 0.92);
+  color: var(--success);
+  border: 1px solid var(--success-border);
 }
 
 .badge-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  display: inline-block;
 }
 
-.dot-original {
-  background: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.6);
-}
-
-.dot-compressed {
-  background: #10b981;
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
-}
-
-.badge-label-name {
-  font-weight: 800;
-}
+.dot-original { background: var(--primary); }
+.dot-compressed { background: var(--success); }
 
 .badge-label-size {
-  font-family: monospace;
-  font-weight: 800;
-}
-.compare-badge-left .badge-label-size {
-  color: #1d4ed8;
-}
-.compare-badge-right .badge-label-size {
-  color: #047857;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
 }
 
-/* 双图层与视口 */
-.compare-layer {
+.compare-layer, .compare-layer-top {
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -1851,10 +1985,6 @@ body {
 }
 
 .compare-layer-top {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
   z-index: 20;
 }
 
@@ -1876,20 +2006,15 @@ body {
   height: auto;
   object-fit: contain;
   display: block;
-  user-select: none;
-  -webkit-user-drag: none;
-  pointer-events: none;
-  image-rendering: auto;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
 }
 
-/* 中间分割线与手柄 (浅色高对比蓝白手柄) */
 .compare-divider {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 44px;
-  margin-left: -22px;
+  width: 40px;
+  margin-left: -20px;
   z-index: 35;
   cursor: ew-resize;
   display: flex;
@@ -1899,10 +2024,10 @@ body {
 }
 
 .compare-divider-line {
-  width: 2px;
+  width: 1.5px;
   height: 100%;
-  background: #2563eb;
-  box-shadow: 0 0 8px rgba(37, 99, 235, 0.35), 0 0 2px rgba(255, 255, 255, 0.9);
+  background: var(--primary);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
   pointer-events: none;
 }
 
@@ -1910,59 +2035,187 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #ffffff;
-  color: #2563eb;
-  border: 2px solid #2563eb;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25), 0 2px 6px rgba(15, 23, 42, 0.08);
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: ew-resize;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  transition: transform 0.15s ease, background 0.15s ease;
   pointer-events: auto;
 }
 
 .compare-handle:hover, .compare-divider.is-dragging .compare-handle {
-  transform: translateY(-50%) scale(1.14);
-  background: #2563eb;
+  transform: translateY(-50%) scale(1.1);
+  background: var(--primary);
   color: #ffffff;
-  border-color: #1d4ed8;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* ==========================================================================
+   Toast 与激活弹窗 (极简沉稳，去除艳俗紫色光晕)
+   ========================================================================== */
+.custom-toast {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999999;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.25s var(--ease-spring);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.custom-toast.show {
+  bottom: 24px;
+  opacity: 1;
+}
+
+.license-lock-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.lock-card {
+  width: 90%;
+  max-width: 440px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-modal);
+  position: relative;
+  text-align: center;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close-btn:hover { color: var(--text-primary); }
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1024px) {
+  body { overflow: auto; height: auto; }
+  .app-container { height: auto; max-height: none; overflow: visible; }
+  .workspace-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
-  .compare-hint-tip { display: none; }
-  .compare-title-meta { display: none; }
+  .compress-mode-cards { grid-template-columns: 1fr; }
+  .export-dual-bar { grid-template-columns: 1fr; }
   .compare-modal-window { width: 100vw; height: 100vh; max-height: none; border-radius: 0; }
   .compare-modal-overlay { padding: 0; }
 }
 </style>
+
+<!-- JSON-LD 结构化数据 (搜索引擎富摘要收录: 软件应用 + 功能亮点) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SR-DevBox PixZip 图片无损压缩工具",
+  "alternateName": ["PixZip", "PixZip 图片压缩", "SR-DevBox PixZip"],
+  "applicationCategory": "MultimediaApplication",
+  "applicationSubCategory": "图片压缩 / 元数据清洗",
+  "operatingSystem": "Web 浏览器纯前端离线运行 (Windows / macOS / Linux / Android / iOS)",
+  "softwareVersion": "1.0.0",
+  "url": "https://srdevbox.com",
+  "inLanguage": "zh-CN",
+  "description": "纯前端本地离线的在线图片无损压缩工具，支持 PNG / JPG / GIF / SVG / WebP / ICO / BMP 批量压缩，提供极致体积、高保真、真无损三档模式；独有元数据清洗引擎，深度解析并刷新图片数据源，清除 EXIF / XMP / PNG 文本块中的制作软件与拍摄设备隐私痕迹，导出文件统一重写为 SR-DevBox PixZip 软件溯源标识，整包压缩保持完整目录层级，图片数据绝不上传服务器。",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "CNY",
+    "availability": "https://schema.org/InStock"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "SR-DevBox 开发者效率工具箱",
+    "url": "https://srdevbox.com"
+  },
+  "featureList": [
+    "三模式智能压缩：极致体积 (降容 60%~80%) / 高保真 (88% 保真) / 真无损 (PSNR=∞ 逐像素保真)",
+    "元数据清洗 · EXIF 脱敏：独有引擎深度解析并刷新图片数据源，自动清除 EXIF / XMP / PNG 文本块中的制作软件与拍摄设备隐私痕迹",
+    "软件溯源标识重写：导出文件统一打上 SR-DevBox PixZip 创作者标识，覆盖 xmp:CreatorTool、tiff:Software、PNG tEXt、GIF Comment、SVG Generator 全格式元数据位",
+    "制作软件识别引擎：自动解析 Adobe Photoshop / Illustrator / Figma / Sketch / Inkscape / Canva 及 Stable Diffusion 等 AI 生成器的元数据指纹",
+    "纯前端本地离线处理：图片数据全程在浏览器内完成，绝不上传服务器",
+    "全格式支持：PNG / JPG / SVG / WebP / GIF / ICO / BMP，GIF 多帧调色板自适应量化",
+    "网站/工程目录整包扫描压缩，导出保持完整相对目录层级 (JSZip)",
+    "原图/压缩图全屏逐像素画质对比，压缩明细与缩减效果实时可视化"
+  ]
+}
+</script>
 </head>
 <body>
+<noscript>
+  <div style="padding: 24px; font-family: system-ui, sans-serif; line-height: 1.8; color: #0f172a;">
+    <h2 style="margin-bottom: 8px;">SR-DevBox PixZip 图片无损压缩工具（本工具需启用 JavaScript 运行）</h2>
+    <p>PixZip 是纯前端本地离线运行的在线图片压缩工具，支持 PNG / JPG / GIF / SVG / WebP / ICO / BMP 批量无损压缩，提供极致体积（降容 60%~80%）、高保真（88%）、真无损（PSNR=∞ 逐像素保真）三档模式，网站/工程目录整包压缩并保持完整目录层级。独有<strong>元数据清洗（EXIF 脱敏）</strong>引擎：深度解析并刷新图片数据源，自动识别并清除 EXIF、XMP、PNG 文本块中的制作软件（如 Adobe Photoshop、Illustrator、Figma）与拍摄设备隐私痕迹，导出文件的软件标识统一重写为 SR-DevBox PixZip 溯源标记。图片数据全程本地处理，绝不上传服务器。</p>
+  </div>
+</noscript>
 <div class="app-container">
 
-  <!-- 顶部导航栏 / 头部 -->
+  <!-- 顶部导航栏 / 头部 (极简纯净排版) -->
   <header class="app-header">
-    <!-- 左侧：PixZip 图片压缩工具 -->
     <div class="subtool-info-col">
       <div class="subtool-title-row">
         <h1 class="subtool-title">PixZip 图片压缩工具</h1>
-        <span class="subtool-pill" id="headerModePill" style="background: #ecfdf5; color: #047857; border-color: #a7f3d0;">⚡ 极致体积 (推荐)</span>
       </div>
-      <div class="app-subtitle" id="headerModeSubtitle">三模式自由切换 · 极致体积 / 高保真 / 真无损 · 保持完整目录层级</div>
+      <div class="app-subtitle" id="headerModeSubtitle">三模式自由切换 · 极致体积 / 高保真 / 真无损 · 元数据清洗 · 保持完整目录层级</div>
     </div>
 
-    <!-- 右上角：SR-DevBox 开发者效率工具箱 官网入口 -->
+    <!-- 右上角：SR-DevBox 官网入口 -->
     <a href="https://srdevbox.com" target="_blank" rel="noopener noreferrer" class="sr-brand-link" title="前往 SR-DevBox 开发者效率工具箱官网 (https://srdevbox.com)">
-      <!-- 官方 SR-DevBox Logo -->
       <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 348.208 320.079">
         <defs>
           <linearGradient id="userLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00f2fe"/>
-            <stop offset="100%" stop-color="#4facfe"/>
+            <stop offset="0%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
           </linearGradient>
         </defs>
         <g fill="url(#userLogoGrad)">
@@ -1984,249 +2237,243 @@ body {
     </a>
   </header>
 
-  <!-- 主工作区 -->
+  <!-- 主工作区网格 -->
   <main class="workspace-grid">
 
-    <!-- 左侧工作区：拖拽上传区域 + 项目扫描日志 + 待处理图片实时预览列表 -->
-    <section class="left-workspace">
+    <!-- 左侧工作区：上传投放 + 状态栏 + 待处理队列 -->
+    <section class="cyber-panel left-workspace" id="scanLogPanel">
 
-      <!-- 图像导入与网站项目扫描分析面板 -->
-      <div id="scanLogPanel" class="cyber-panel" style="border-top: 4px solid var(--secondary-glow); padding: 12px; flex: none;">
-        <!-- 并排上传区：左侧单个/批量图片拖拽，右侧网站工程目录扫描 -->
-        <div class="upload-options-grid" style="margin-bottom: 10px;">
-          <!-- 图片文件上传卡片 -->
-          <div class="drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()">
-            <input type="file" id="imageFileInput" multiple accept="image/*,.png,.jpg,.jpeg,.svg,.webp,.gif,.ico,.bmp" style="display: none" onchange="handleImageFilesSelected(event)">
-            <div class="drop-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:34px;height:34px;">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+      <!-- 并排上传区 (横向极简微悬浮卡片) -->
+      <div class="upload-options-grid">
+        <!-- 图片文件上传卡片 -->
+        <div class="drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()">
+          <input type="file" id="imageFileInput" multiple accept="image/*,.png,.jpg,.jpeg,.svg,.webp,.gif,.ico,.bmp" style="display: none" onchange="handleImageFilesSelected(event)">
+          <div class="drop-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <div class="drop-text-primary">选择或拖拽图片到此处</div>
+          <div class="drop-text-secondary">支持 PNG / JPG / SVG / WebP / GIF / ICO</div>
+        </div>
+
+        <!-- 网站/项目目录整包扫描卡片 -->
+        <div class="drop-zone scan-folder-zone" id="webDropZone" onclick="document.getElementById('folderFileInput').click()">
+          <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display: none" onchange="handleFolderSelected(event)">
+          <div class="drop-icon highlight-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              <line x1="12" y1="11" x2="12" y2="17"/>
+              <polyline points="9 14 12 11 15 14"/>
+            </svg>
+          </div>
+          <div class="drop-text-primary">选择或拖拽网站/工程目录</div>
+          <div class="drop-text-secondary" id="webScanHint">自动递归识别图像，导出保持相对层级</div>
+        </div>
+      </div>
+
+      <!-- 紧凑型状态栏 (支持展开/折叠日志，释放 60px+ 队列高度) -->
+      <div class="scan-progress-wrapper">
+        <div class="scan-header-bar">
+          <div class="scan-status-indicator">
+            <span class="status-dot-pulse"></span>
+            <span id="scanStatusHeadline">本地压缩引擎就绪 · 纯前端离线运行</span>
+          </div>
+          <div class="scan-actions-group">
+            <button class="btn-toggle-logs" id="btnToggleScanLogs" onclick="toggleScanLogs()" type="button">收起日志 ▴</button>
+            <button class="btn-clear-logs" onclick="clearScanLogs()" title="清除扫描日志" type="button">清空</button>
+          </div>
+        </div>
+        <div class="scan-progress-panel" id="scanLogsList">
+          <div class="scan-log-line scan-log-info">[系统就绪] PixZip 极致无损图片压缩引擎已加载</div>
+          <div class="scan-log-line scan-log-info">[技术标准] PNG 基于 pngjs 重构 (deflateLevel: 9, strategy: 3)</div>
+          <div class="scan-log-line scan-log-info">[技术标准] GIF 基于 omggif 引擎 (多帧调色板自适应量化)</div>
+          <div class="scan-log-line scan-log-success">[安全保证] 纯本地离线处理，数据绝不上传服务器</div>
+          <div class="scan-log-line scan-log-success">[元数据清洗] 自动清除 EXIF/XMP 制作软件与设备隐私痕迹，导出文件统一标记 SR-DevBox PixZip</div>
+        </div>
+      </div>
+
+      <!-- 待处理图片列表与实时预览 (与上方区域建立清晰边界) -->
+      <div class="preview-container">
+        <div class="workspace-section-header">
+          <div class="section-title-wrap">
+            <div class="section-title-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
                 <circle cx="8.5" cy="8.5" r="1.5"/>
                 <polyline points="21 15 16 10 5 21"/>
               </svg>
             </div>
-            <div class="drop-text-primary">将图片拖拽至此处，或点击选择</div>
-            <div class="drop-text-secondary">支持 PNG / JPG / SVG / WebP / GIF / ICO</div>
+            <span class="workspace-section-title">待处理图片队列</span>
+            <span class="workspace-section-meta" id="queueTotalBadge">0 项</span>
           </div>
-
-          <!-- 网站/项目目录整包扫描卡片 -->
-          <div class="drop-zone scan-folder-zone" id="webDropZone" onclick="document.getElementById('folderFileInput').click()">
-            <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display: none" onchange="handleFolderSelected(event)">
-            <div class="drop-icon highlight-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--secondary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:34px;height:34px;">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                <line x1="12" y1="11" x2="12" y2="17"/>
-                <polyline points="9 14 12 11 15 14"/>
-              </svg>
-            </div>
-            <div class="drop-text-primary">将网站目录拖拽至此处，或点击选择</div>
-            <div class="drop-text-secondary" id="webScanHint">自动检测项目各层级图像，导出保持相对层级</div>
-          </div>
+          <button class="btn-preset btn-clear-queue" onclick="clearAllImages()" title="清空当前队列全部图片">清空列表</button>
         </div>
 
-        <!-- 扫描日志与右上角悬浮清空按钮 -->
-        <div class="scan-progress-wrapper">
-          <button class="btn-clear-logs" onclick="clearScanLogs()" title="清除扫描日志">清除日志</button>
-          <div class="scan-progress-panel" id="scanLogsList">
-            <div class="scan-log-line scan-log-info">[系统就绪] 【SR-DevBox】PixZip极致无损图片压缩引擎已加载完成</div>
-            <div class="scan-log-line scan-log-info">[技术标准] PNG 基于 pngjs 重构 (deflateLevel: 9, strategy: 3 Z_FILTERED)</div>
-            <div class="scan-log-line scan-log-info">[技术标准] GIF 基于 omggif 引擎 (多帧无损重构 / 调色板自适应量化)</div>
-            <div class="scan-log-line scan-log-success">[合规声明] 所有依赖库均为纯商业可用开源协议 (MIT / Zlib)</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 图片实时预览面板 -->
-      <div class="cyber-panel preview-container">
-        <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center;">
-          <span>待处理图片列表与实时预览</span>
-          <div style="display: flex; gap: 6px; align-items: center;">
-            <span id="previewCountBadge" class="btn-preset" style="font-size: 0.7rem; font-weight: normal; cursor: default; border-color: rgba(59, 130, 246, 0.2); color: var(--primary-glow);">
-              工作区已加载 0 张图片
-            </span>
-            <button class="btn-preset" style="font-size: 0.7rem; color: var(--danger-color); border-color: rgba(239, 68, 68, 0.2);" onclick="clearAllImages()">清空工作区</button>
-          </div>
-        </div>
-
+        <!-- 左右交换：左侧分类选项卡，右侧一体化搜索框 -->
         <div class="preview-bar">
-          <input
-            id="searchImageInput"
-            type="text"
-            class="preview-input"
-            placeholder="搜索图片名称或目录路径过滤列表..."
-            oninput="filterImageCards(this.value)"
-          />
           <div class="filter-tags-group">
-            <button class="filter-tag active" data-type="all" onclick="setFormatFilter('all', this)">全部</button>
-            <button class="filter-tag" data-type="png" onclick="setFormatFilter('png', this)">PNG</button>
-            <button class="filter-tag" data-type="jpg" onclick="setFormatFilter('jpg', this)">JPG</button>
-            <button class="filter-tag" data-type="svg" onclick="setFormatFilter('svg', this)">SVG</button>
-            <button class="filter-tag" data-type="webp" onclick="setFormatFilter('webp', this)">WebP</button>
-            <button class="filter-tag" data-type="gif" onclick="setFormatFilter('gif', this)">GIF</button>
+            <button class="filter-tag active" data-type="all" onclick="setFormatFilter('all', this)">全部 <span class="tab-count" id="tabCountAll">0</span></button>
+            <button class="filter-tag" data-type="png" onclick="setFormatFilter('png', this)">PNG <span class="tab-count" id="tabCountPng">0</span></button>
+            <button class="filter-tag" data-type="jpg" onclick="setFormatFilter('jpg', this)">JPG <span class="tab-count" id="tabCountJpg">0</span></button>
+            <button class="filter-tag" data-type="svg" onclick="setFormatFilter('svg', this)">SVG <span class="tab-count" id="tabCountSvg">0</span></button>
+            <button class="filter-tag" data-type="webp" onclick="setFormatFilter('webp', this)">WebP <span class="tab-count" id="tabCountWebp">0</span></button>
+            <button class="filter-tag" data-type="gif" onclick="setFormatFilter('gif', this)">GIF <span class="tab-count" id="tabCountGif">0</span></button>
+          </div>
+
+          <div class="preview-search-box">
+            <svg class="preview-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              id="searchImageInput"
+              type="text"
+              class="preview-search-input"
+              placeholder="在全部中搜索图片..."
+              oninput="filterImageCards(this.value)"
+            />
           </div>
         </div>
 
         <!-- 图片卡片列表容器 -->
         <div class="preview-list" id="imageCardsContainer">
           <!-- 默认占位空状态提示 -->
-          <div id="emptyQueueNotice" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 30px;">
-            <svg style="width: 42px; height: 42px; stroke: #cbd5e1; margin-bottom: 10px;" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <div id="emptyQueueNotice" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 24px;">
+            <svg style="width: 36px; height: 36px; stroke: #cbd5e1; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
               <circle cx="8.5" cy="8.5" r="1.5"/>
               <polyline points="21 15 16 10 5 21"/>
             </svg>
-            <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 4px;">当前工作区暂无图片</div>
-            <div style="font-size: 0.75rem;">请将图片或整个网站项目目录拖拽至上方虚线框中</div>
+            <div style="font-weight: 600; font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 3px;">当前队列暂无图片</div>
+            <div style="font-size: 0.72rem;">拖拽单张/批量图片或整个工程目录到上方区域</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 右侧面板：格式处理特点与压缩明细结果 -->
+    <!-- 右侧面板：压缩模式设定与明细结果 -->
     <section class="cyber-panel right-panel-cyber">
-      <div class="panel-title" style="border-left: 3px solid var(--secondary-glow); padding-left: 8px; margin-bottom: 12px;">
-        <span>所支持格式的处理特点</span>
-      </div>
-
       <!-- 控制选项区域 -->
       <div class="control-section">
-
-        <!-- 核心压缩模式选择卡片组 (极致体积 vs 高保真 vs 真无损) -->
-        <div class="compress-mode-section">
-          <div class="compress-mode-title">
-            <svg style="width:15px;height:15px;color:var(--primary-glow);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-            <span>压缩核心模式选择：</span>
-          </div>
-          <div class="compress-mode-cards">
-            <!-- 模式 1: 极致体积 (对标 iLoveIMG) -->
-            <div class="compress-mode-card active" id="compressCardExtreme" onclick="selectCompressMode('extreme')">
-              <input type="radio" name="compressMode" value="extreme" checked style="display: none;" />
-              <div class="compress-card-radio-mark"></div>
-              <div class="compress-card-content">
-                <div class="compress-card-header-row">
-                  <span class="compress-card-name">⚡ 极致体积</span>
-                  <span class="compress-badge-recommend">对标 iLoveIMG · 推荐</span>
-                </div>
-                <div class="compress-card-desc">体积直降 60%~80%</div>
+        <!-- 模式选项卡 (选中态高对比反白) -->
+        <div class="compress-mode-cards">
+          <!-- 模式 1: 极致体积 -->
+          <div class="compress-mode-card active" id="compressCardExtreme" onclick="selectCompressMode('extreme')">
+            <input type="radio" name="compressMode" value="extreme" checked style="display: none;" />
+            <div class="mode-card-header">
+              <div class="mode-title-group">
+                <span class="mode-selection-radio"></span>
+                <span class="mode-card-title">极致体积</span>
               </div>
+              <span class="mode-metric-badge badge-extreme">降 60%~80%</span>
             </div>
-            <!-- 模式 2: 高保真 (智能真彩 / 88%) -->
-            <div class="compress-mode-card" id="compressCardHigh" onclick="selectCompressMode('high')">
-              <input type="radio" name="compressMode" value="high" style="display: none;" />
-              <div class="compress-card-radio-mark"></div>
-              <div class="compress-card-content">
-                <div class="compress-card-header-row">
-                  <span class="compress-card-name">✨ 高保真</span>
-                  <span class="compress-badge-high">智能真彩 · 88%</span>
-                </div>
-                <div class="compress-card-desc">写实真彩/图形高精 88%，杜绝噪点，减容 35%~60%</div>
-              </div>
-            </div>
-            <!-- 模式 3: 真无损 (逐像素 100% 保真) -->
-            <div class="compress-mode-card" id="compressCardLossless" onclick="selectCompressMode('lossless')">
-              <input type="radio" name="compressMode" value="lossless" style="display: none;" />
-              <div class="compress-card-radio-mark"></div>
-              <div class="compress-card-content">
-                <div class="compress-card-header-row">
-                  <span class="compress-card-name">💎 真无损</span>
-                  <span class="compress-badge-exact">PSNR=∞ · 零失真</span>
-                </div>
-                <div class="compress-card-desc">逐像素 100% 绝对一致，体积降10%~25%</div>
+            <div class="mode-card-body">
+              <p class="mode-card-desc">自适应量化与真彩重采样，大幅缩减文件体积</p>
+              <div class="mode-card-features">
+                <span class="feature-bullet">· 自适应调色板</span>
+                <span class="feature-bullet">· 完整透明通道</span>
               </div>
             </div>
           </div>
 
-          <!-- 强度档位已按需求全局隐藏 -->
-          <div class="extreme-options-bar" id="extremeOptionsBar" style="display: none !important;">
-            <span class="extreme-opt-label">强度档位：</span>
-            <div class="extreme-quality-pills">
-              <button class="quality-pill active" id="pillQualityBalanced" onclick="setExtremeQuality('balanced', this)">平衡推荐 (自适应量化 / 80%)</button>
-              <button class="quality-pill" id="pillQualityHigh" onclick="setExtremeQuality('high', this)">高保真 (智能真彩 / 88%)</button>
-              <button class="quality-pill" id="pillQualityMax" onclick="setExtremeQuality('max', this)">极限压缩 (强力减容 / 70%)</button>
+          <!-- 模式 2: 高保真 -->
+          <div class="compress-mode-card" id="compressCardHigh" onclick="selectCompressMode('high')">
+            <input type="radio" name="compressMode" value="high" style="display: none;" />
+            <div class="mode-card-header">
+              <div class="mode-title-group">
+                <span class="mode-selection-radio"></span>
+                <span class="mode-card-title">高保真</span>
+              </div>
+              <span class="mode-metric-badge badge-high">保真 88%</span>
+            </div>
+            <div class="mode-card-body">
+              <p class="mode-card-desc">写实真彩与高频细节保护，杜绝模糊和噪点</p>
+              <div class="mode-card-features">
+                <span class="feature-bullet">· 感知LUT高保真</span>
+                <span class="feature-bullet">· 减容 35%~60%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 模式 3: 真无损 -->
+          <div class="compress-mode-card" id="compressCardLossless" onclick="selectCompressMode('lossless')">
+            <input type="radio" name="compressMode" value="lossless" style="display: none;" />
+            <div class="mode-card-header">
+              <div class="mode-title-group">
+                <span class="mode-selection-radio"></span>
+                <span class="mode-card-title">真无损</span>
+              </div>
+              <span class="mode-metric-badge badge-lossless">100% 逐像素</span>
+            </div>
+            <div class="mode-card-body">
+              <p class="mode-card-desc">二进制逐像素绝对一致，安全清理冗余元数据</p>
+              <div class="mode-card-features">
+                <span class="feature-bullet">· PSNR=∞ 逐位保真</span>
+                <span class="feature-bullet">· 减容 10%~25%</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 各格式压缩特点介绍卡片 -->
+        <!-- 内部保留档位元素 (按需求隐藏) -->
+        <div class="extreme-options-bar" id="extremeOptionsBar" style="display: none !important;">
+          <span class="extreme-opt-label">强度档位：</span>
+          <div class="extreme-quality-pills">
+            <button class="quality-pill active" id="pillQualityBalanced" onclick="setExtremeQuality('balanced', this)">平衡推荐 (自适应量化 / 80%)</button>
+            <button class="quality-pill" id="pillQualityHigh" onclick="setExtremeQuality('high', this)">高保真 (智能真彩 / 88%)</button>
+            <button class="quality-pill" id="pillQualityMax" onclick="setExtremeQuality('max', this)">极限压缩 (强力减容 / 70%)</button>
+          </div>
+        </div>
+
+        <!-- 亮点功能：元数据清洗 (EXIF/XMP 隐私脱敏 · 软件溯源标识重写) -->
+        <div class="metadata-clean-strip" title="自动识别并清除 EXIF Software / XMP CreatorTool / 拍摄设备 / AI 生成参数等元数据，导出文件的软件标识统一重写为 SR-DevBox PixZip">
+          <div class="metadata-strip-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="metadata-strip-text">
+            <span class="metadata-strip-title">元数据清洗 · EXIF 脱敏【避免法律纠纷】</span>
+            <span class="metadata-strip-desc">深度解析 EXIF / XMP / PNG 文本块，自动清除制作软件与拍摄设备隐私痕迹，避免纠纷。</span>
+          </div>
+          <span class="metadata-strip-badge">全格式自动启用</span>
+        </div>
+
+        <!-- 各格式压缩特点介绍 (内部保留，供脚本联动) -->
         <div class="format-cards-grid" style="display: none;">
-
-          <!-- 卡片 1: PNG 格式 -->
-          <div class="format-card" id="formatCardPng">
-            <div class="format-card-header">
-              <span class="format-badge-tag">PNG 格式</span>
-              <span class="format-pill pill-png">自适应量化 / 真彩感知</span>
-            </div>
-            <div class="format-action-tags" style="margin-top: 4px;">
-              <div>· 智能色彩特征嗅探：矢量/图标自适应8位调色板，写实图感知高精保真</div>
-              <div>· 高精度感知查找表 (LUT)：PSNR 提升 14dB，杜绝色阶断裂与高频噪斑</div>
-              <div>· 极致体积立减 60%~80%：支持完整 Alpha 透明通道，安全防体积反弹</div>
-            </div>
-          </div>
-
-          <!-- 卡片 2: JPG / JPEG 格式 -->
-          <div class="format-card" id="formatCardJpeg">
-            <div class="format-card-header">
-              <span class="format-badge-tag">JPG / JPEG 格式</span>
-              <span class="format-pill pill-jpg">智能重编码 80%</span>
-            </div>
-            <div class="format-action-tags" style="margin-top: 4px;">
-              <div>· 高清 DCT 频率重采样：质量系数 80% (平衡画质与体积)</div>
-              <div>· 彻底移除冗余元数据：剥离 EXIF 相机参数、GPS 与修图记录</div>
-              <div>· 极致体积立减 50%~75%：保持原始宽高分辨率绝不缩放</div>
-            </div>
-          </div>
-
-          <!-- 卡片 3: SVG 矢量图格式 -->
-          <div class="format-card" id="formatCardSvg">
-            <div class="format-card-header">
-              <span class="format-badge-tag">SVG 矢量图</span>
-              <span class="format-pill pill-svg">代码精简</span>
-            </div>
-            <div class="format-action-tags" style="margin-top: 4px;">
-              <div>· 清理设计软件导出多余标签、命名空间与 XML 声明</div>
-              <div>· 剔除冗余注释与空白字符，保持矢量路径完全一致</div>
-              <div>· 坐标精度无损保真：不损失任何曲线控制点与平滑度</div>
-            </div>
-          </div>
-
-          <!-- 卡片 4: WebP / GIF 格式 -->
-          <div class="format-card" id="formatCardWebp">
-            <div class="format-card-header">
-              <span class="format-badge-tag">WebP / GIF 格式</span>
-              <span class="format-pill pill-webp">多帧量化 / 容器重构</span>
-            </div>
-            <div class="format-action-tags" style="margin-top: 4px;">
-              <div>· WebP 智能重采样 / GIF 纯前端多帧调色板自适应量化</div>
-              <div>· 完整保留 GIF 全部动图帧、帧间隔延时、循环次数与透明通道</div>
-              <div>· 极致体积立减 30%~70%：对标 TinyPNG / iLoveIMG 动图压缩</div>
-            </div>
-          </div>
-
+          <div class="format-card" id="formatCardPng"></div>
+          <div class="format-card" id="formatCardJpeg"></div>
+          <div class="format-card" id="formatCardSvg"></div>
+          <div class="format-card" id="formatCardWebp"></div>
         </div>
 
-        <!-- 压缩执行操作按钮 -->
-        <div class="form-group" style="border-top: 1px solid rgba(226, 232, 240, 0.8); padding-top: 12px;">
+        <!-- 压缩执行操作按钮 (无图标、高挑沉稳、支持动态标记待处理个数) -->
+        <div class="compress-action-bar">
           <button class="btn-action btn-primary" id="btnStartCompress" onclick="startBatchCompress()">
-            <svg id="btnCompressIcon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
+            <span class="spinner" id="btnCompressSpinner" style="display: none;"></span>
             <span id="btnCompressText">开始批量压缩</span>
+            <span class="btn-count-badge" id="btnCompressCountBadge" style="display: none;">0 张</span>
           </button>
-          <div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
-            <span>本地浏览器纯前端处理</span>
-            <span>·</span>
-            <span>逐像素 100% 保真</span>
-            <span>·</span>
-            <span>体积未减小自动跳过</span>
-          </div>
         </div>
 
-        <!-- 压缩明细统计表格与对比 -->
+        <!-- 压缩明细统计表格与对比 (清晰区域分割) -->
         <div class="results-container">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="form-label">压缩明细与体积缩减</span>
-            <span id="totalSavingsBadge" class="btn-preset" style="font-size: 0.7rem; color: #047857; border-color: rgba(16, 185, 129, 0.2); cursor: default;">
+          <div class="workspace-section-header">
+            <div class="section-title-wrap">
+              <div class="section-title-badge results-badge-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </div>
+              <span class="workspace-section-title">压缩明细与缩减效果</span>
+            </div>
+            <span id="totalSavingsBadge" class="savings-pill">
               总体积节省 0 KB (0.0%)
             </span>
           </div>
@@ -2235,53 +2482,70 @@ body {
             <table class="results-table">
               <thead>
                 <tr>
-                  <th>图片文件 / 相对路径</th>
-                  <th>原体积</th>
-                  <th>压缩后</th>
-                  <th>体积缩减</th>
-                  <th>状态</th>
-                  <th>操作</th>
+                  <th class="col-file">图片文件 / 相对路径</th>
+                  <th class="col-size">原体积</th>
+                  <th class="col-size">压缩后</th>
+                  <th class="col-ratio">体积缩减</th>
+                  <th class="col-status">状态</th>
+                  <th class="col-actions">操作</th>
                 </tr>
               </thead>
               <tbody id="resultsTableBody">
                 <tr id="tableEmptyRow">
                   <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px 20px;">
-                    暂无已完成的压缩记录，请导入图片并点击上方“开始压缩”
+                    暂无已完成的压缩记录，请导入图片并点击上方“开始批量压缩”
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- 保存与导出选项栏 (双通道打包下载) -->
+          <!-- 保存与导出选项栏 (双通道打包下载：大方、醒目、权威的工业级导出区) -->
           <div class="save-options-bar">
             <div class="export-dual-bar">
-              <!-- 按钮 1: 仅打包下载全部图片 (主操作 Primary) -->
+              <!-- 按钮 1: 仅打包下载全部图片 (主操作 Primary - 深色工业质感) -->
               <button class="btn-action btn-export-zip btn-export-images" id="btnExportImagesOnly" onclick="exportZipArchive('images-only')" title="仅打包下载优化后的图片资产，严格保持原有目录层级">
-                <svg style="width: 20px; height: 20px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                  <line x1="12" y1="22.08" x2="12" y2="12"/>
-                </svg>
+                <div class="export-icon-box export-icon-box-primary">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </div>
                 <div class="export-btn-content">
-                  <span class="export-btn-title" id="btnExportImagesTitle">一键打包下载全部图片 (ZIP)</span>
-                  <span class="export-btn-sub">按原相对层级仅导出优化后图片资产</span>
+                  <div class="export-btn-main-row">
+                    <span class="export-btn-title" id="btnExportImagesTitle">一键打包下载全部图片 (ZIP)</span>
+                    <span class="export-pill-badge export-pill-primary">推荐</span>
+                  </div>
+                  <span class="export-btn-sub">按原有相对路径与目录层级导出所有优化资产</span>
+                </div>
+                <div class="export-arrow-cue">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
                 </div>
               </button>
 
               <!-- 按钮 2: 打包下载整站项目 (包含所有代码及替换图片) -->
               <button class="btn-action btn-export-zip btn-export-website" id="btnExportFullWebsite" onclick="exportZipArchive('full-website')" title="保留所有 HTML/CSS/JS/字体等网站文件，直接将内部图片替换为优化后图片">
-                <svg style="width: 20px; height: 20px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
-                  <polyline points="10 11 8 13 10 15"/>
-                  <polyline points="14 11 16 13 14 15"/>
-                </svg>
+                <div class="export-icon-box export-icon-box-website">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+                    <polyline points="10 11 8 13 10 15"/>
+                    <polyline points="14 11 16 13 14 15"/>
+                  </svg>
+                </div>
                 <div class="export-btn-content">
-                  <div style="display: flex; align-items: center; gap: 6px;">
+                  <div class="export-btn-main-row">
                     <span class="export-btn-title" id="btnExportWebsiteTitle">打包下载整站项目 (ZIP)</span>
                     <span class="export-website-badge" id="exportWebsiteCountBadge" style="display: none;">已识别代码</span>
                   </div>
-                  <span class="export-btn-sub">保留完整代码结构，直接替换优化后图片</span>
+                  <span class="export-btn-sub">保留完整前端工程代码，原位替换优化后图片</span>
+                </div>
+                <div class="export-arrow-cue">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
                 </div>
               </button>
             </div>
@@ -2297,22 +2561,22 @@ body {
 <div id="activationModal" class="license-lock-overlay" style="display: none;" onclick="if(event.target===this) closeActivationModal()">
   <div class="lock-card">
     <button class="modal-close-btn" onclick="closeActivationModal()" title="关闭">×</button>
-    <div style="width: 50px; height: 50px; margin: 0 auto 16px; border-radius: 50%; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary-glow);">
-      <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <div style="width: 44px; height: 44px; margin: 0 auto 12px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+      <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
       </svg>
     </div>
-    <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">绑定正式授权 / 续期</h2>
-    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">
+    <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">绑定正式授权 / 续期</h2>
+    <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 16px;">
       请输入您购买的卡密（连网自动兑换）或一机一密离线激活码。
     </p>
 
-    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: left;">
-      <div style="font-size: 0.72rem; color: var(--text-secondary); font-weight: bold; margin-bottom: 4px;">本机机器码</div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 14px; text-align: left;">
+      <div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 4px;">本机机器码</div>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-family: monospace; font-size: 0.95rem; font-weight: bold; color: var(--primary-glow);">SR-PIXZIP-8A4F-29E1</span>
-        <button class="btn-preset" style="padding: 2px 6px; font-size: 0.7rem;" onclick="copyMachineCode()">复制</button>
+        <span style="font-family: ui-monospace, monospace; font-size: 0.88rem; font-weight: 700; color: var(--primary);">SR-PIXZIP-8A4F-29E1</span>
+        <button class="btn-preset" style="padding: 2px 6px; font-size: 0.68rem;" onclick="copyMachineCode()">复制</button>
       </div>
     </div>
 
@@ -2320,7 +2584,7 @@ body {
       type="text"
       id="activationInput"
       placeholder="例: SR-PIXZIP-30D-XXXX-XXXX"
-      style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; font-size: 0.9rem; font-family: monospace; outline: none; margin-bottom: 16px; text-align: center;"
+      style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; font-size: 0.84rem; font-family: ui-monospace, monospace; outline: none; margin-bottom: 14px; text-align: center;"
     />
 
     <button class="btn-action btn-primary" onclick="submitActivation()">
@@ -2335,7 +2599,7 @@ body {
     <!-- 顶部控制栏 -->
     <div class="compare-modal-header">
       <div class="compare-modal-title">
-        <span class="compare-title-icon"><svg viewBox="0 0 1024 1024" width="18" height="18" style="fill: #4f46e5;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg></span>
+        <span class="compare-title-icon"><svg viewBox="0 0 1024 1024" width="16" height="16" style="fill: var(--primary);"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg></span>
         <span id="compareModalFileName" class="compare-title-text">画质细节对比查看器</span>
         <span id="compareModalDimensions" class="compare-title-meta"></span>
       </div>
@@ -2348,7 +2612,7 @@ body {
         <button class="compare-tool-btn" onclick="zoomCompareImage(0.25)" title="放大 (也可直接在画面上向上滚动滚轮)">
           <svg style="width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
         </button>
-        <button class="compare-tool-btn" onclick="resetCompareZoom()" title="重置缩放并居中">⟲ 适应/重置</button>
+        <button class="compare-tool-btn" onclick="resetCompareZoom()" title="重置缩放并居中">⟲ 重置</button>
         <span class="compare-hint-tip">💡 滚轮缩放 · 拖拽平移 · 滑动中线对比</span>
       </div>
 
@@ -2402,7 +2666,7 @@ body {
 </div>
 
 <!-- 自定义 Toast 提示 -->
-<div id="toastNotification" class="custom-toast toast-success">
+<div id="toastNotification" class="custom-toast">
   <span id="toastMessage">操作成功</span>
 </div>
 
@@ -2453,6 +2717,7 @@ const state = {
 window.addEventListener('DOMContentLoaded', () => {
   setupDragAndDrop();
   initCompareModalEvents();
+  updateWorkspaceStats();
 });
 
 function setupDragAndDrop() {
@@ -2620,6 +2885,598 @@ async function handleFolderSelected(event) {
   event.target.value = '';
 }
 
+// ==========================================================================
+// 1.5. 快速二进制探针与元数据解析引擎 (瞬时提取尺寸与制图软件/硬件设备信息)
+// ==========================================================================
+
+/**
+ * 快速二进制探针：在 0.01ms 内通过文件头解析图像原始物理尺寸
+ * @param {Uint8Array} u8 二进制文件头数据
+ * @param {string} ext 文件扩展名
+ * @returns {{width: number|null, height: number|null}}
+ */
+function parseBinaryImageDimensions(u8, ext) {
+  if (!u8 || u8.byteLength < 10) return { width: null, height: null };
+  const view = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+
+  try {
+    // 1. PNG: IHDR 块固定于偏移 16..23 (大端存储 Width 4B, Height 4B)
+    if (ext === 'png' || (u8[0] === 0x89 && u8[1] === 0x50 && u8[2] === 0x4E && u8[3] === 0x47)) {
+      if (u8.byteLength >= 24) {
+        const width = view.getUint32(16, false);
+        const height = view.getUint32(20, false);
+        if (width > 0 && height > 0) return { width, height };
+      }
+    }
+
+    // 2. GIF: 偏移 6..9 (小端存储 Width 2B, Height 2B)
+    if (ext === 'gif' || (u8[0] === 0x47 && u8[1] === 0x49 && u8[2] === 0x46)) {
+      if (u8.byteLength >= 10) {
+        const width = view.getUint16(6, true);
+        const height = view.getUint16(8, true);
+        if (width > 0 && height > 0) return { width, height };
+      }
+    }
+
+    // 3. JPEG: SOF 帧标记扫描 (0xFFC0 ~ 0xFFCF, 排除 DHT/JPG/DAC)
+    if (ext === 'jpg' || ext === 'jpeg' || (u8[0] === 0xFF && u8[1] === 0xD8)) {
+      let offset = 2;
+      while (offset < u8.byteLength - 8) {
+        if (u8[offset] !== 0xFF) {
+          offset++;
+          continue;
+        }
+        const marker = u8[offset + 1];
+        if (marker === 0xDA || marker === 0xD9) break; // SOS 扫描开始或 EOI 文件结尾终止
+
+        const isSof = (marker >= 0xC0 && marker <= 0xCF && marker !== 0xC4 && marker !== 0xC8 && marker !== 0xCC);
+        const length = view.getUint16(offset + 2, false);
+
+        if (isSof) {
+          const height = view.getUint16(offset + 5, false);
+          const width = view.getUint16(offset + 7, false);
+          if (width > 0 && height > 0) return { width, height };
+        }
+
+        if (length < 2) break;
+        offset += 2 + length;
+      }
+    }
+
+    // 4. WebP: RIFF 容器扫描 (VP8 / VP8L / VP8X)
+    if (ext === 'webp' || (u8[0] === 0x52 && u8[1] === 0x49 && u8[2] === 0x46 && u8[3] === 0x46)) {
+      if (u8.byteLength >= 30 && u8[8] === 0x57 && u8[9] === 0x45 && u8[10] === 0x42 && u8[11] === 0x50) {
+        const chunkFourCC = String.fromCharCode(u8[12], u8[13], u8[14], u8[15]);
+        if (chunkFourCC === 'VP8 ' && u8.byteLength >= 30) {
+          const width = view.getUint16(26, true) & 0x3FFF;
+          const height = view.getUint16(28, true) & 0x3FFF;
+          if (width > 0 && height > 0) return { width, height };
+        } else if (chunkFourCC === 'VP8L' && u8.byteLength >= 25) {
+          const b1 = u8[21], b2 = u8[22], b3 = u8[23], b4 = u8[24];
+          const width = 1 + (((b2 & 0x3F) << 8) | b1);
+          const height = 1 + ((((b4 & 0xF) << 10) | (b3 << 2) | ((b2 & 0xC0) >> 6)));
+          if (width > 0 && height > 0) return { width, height };
+        } else if (chunkFourCC === 'VP8X' && u8.byteLength >= 30) {
+          const width = 1 + (u8[24] | (u8[25] << 8) | (u8[26] << 16));
+          const height = 1 + (u8[27] | (u8[28] << 8) | (u8[29] << 16));
+          if (width > 0 && height > 0) return { width, height };
+        }
+      }
+    }
+
+    // 5. SVG: 文本头匹配 viewBox 或 width/height 属性
+    if (ext === 'svg') {
+      const text = new TextDecoder('utf-8').decode(u8.slice(0, 4096));
+      const vb = text.match(/viewBox=["']\s*([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\s*["']/i);
+      if (vb && vb[3] && vb[4]) {
+        const w = Math.round(parseFloat(vb[3]));
+        const h = Math.round(parseFloat(vb[4]));
+        if (w > 0 && h > 0) return { width: w, height: h };
+      }
+      const wm = text.match(/<svg[^>]*[\s]width=["']([0-9.]+)(?:px)?["']/i);
+      const hm = text.match(/<svg[^>]*[\s]height=["']([0-9.]+)(?:px)?["']/i);
+      if (wm && hm) {
+        const w = Math.round(parseFloat(wm[1]));
+        const h = Math.round(parseFloat(hm[1]));
+        if (w > 0 && h > 0) return { width: w, height: h };
+      }
+    }
+  } catch (e) {}
+
+  return { width: null, height: null };
+}
+
+/**
+ * 软件/制图工具/拍摄硬件设备识别引擎
+ * 全面解析 XMP、EXIF IFD0、PNG tEXt/iTXt、SVG generator 及 AI 绘画生成器
+ * @param {Uint8Array} u8 头部二进制数据
+ * @returns {string|null}
+ */
+function parseSoftwareInfo(u8) {
+  if (!u8 || u8.byteLength < 16) return null;
+  const text = new TextDecoder('latin1').decode(u8.slice(0, 131072));
+
+  // 0. SR-DevBox PixZip 专属创作者与无损优化软件标识优先识别
+  if (text.includes('SR-DevBox PixZip')) {
+    return 'SR-DevBox PixZip';
+  }
+
+  // 1. Adobe XMP 元数据探测 (CreatorTool / tiff:Software)
+  const xmpMatch = text.match(/<xmp:CreatorTool>([^<]+)<\/xmp:CreatorTool>/i) ||
+                   text.match(/xmp:CreatorTool="([^"]+)"/i) ||
+                   text.match(/<tiff:Software>([^<]+)<\/tiff:Software>/i) ||
+                   text.match(/tiff:Software="([^"]+)"/i);
+  if (xmpMatch && xmpMatch[1]) {
+    const s = cleanSoftwareName(xmpMatch[1]);
+    if (s) return s;
+  }
+
+  // 2. SVG 发生器与设计软件标识 (Illustrator, Figma, Sketch, Inkscape, Canva)
+  const svgGen = text.match(/<!--\s*Generator:\s*([^,->]+)/i);
+  if (svgGen && svgGen[1]) {
+    return cleanSoftwareName(svgGen[1]);
+  }
+  const toolMatch = text.match(/Created with (Figma|Sketch|Canva|Procreate)/i) ||
+                    text.match(/creator="(Figma|Sketch|Canva)"/i);
+  if (toolMatch && toolMatch[1]) {
+    return toolMatch[1];
+  }
+  const inkscape = text.match(/inkscape:version="([^"]+)"/i);
+  if (inkscape && inkscape[1]) {
+    return 'Inkscape ' + inkscape[1].split(' ')[0];
+  }
+
+  // 3. PNG tEXt / zTXt / iTXt 文本块 (Software\0...)
+  const pngSoftIdx = text.indexOf('Software\0');
+  if (pngSoftIdx !== -1) {
+    let val = '';
+    if (pngSoftIdx >= 8 && text.slice(pngSoftIdx - 4, pngSoftIdx) === 'tEXt') {
+      try {
+        const chunkLen = ((u8[pngSoftIdx - 8] << 24) | (u8[pngSoftIdx - 7] << 16) | (u8[pngSoftIdx - 6] << 8) | u8[pngSoftIdx - 5]) >>> 0;
+        if (chunkLen >= 9 && chunkLen < 1000) {
+          const textLen = chunkLen - 9;
+          val = text.slice(pngSoftIdx + 9, pngSoftIdx + 9 + textLen);
+        }
+      } catch (e) {}
+    }
+    if (!val) {
+      const after = text.slice(pngSoftIdx + 9, pngSoftIdx + 100);
+      const end = after.indexOf('\0');
+      val = (end !== -1 ? after.slice(0, end) : after).trim();
+    }
+    const s = cleanSoftwareName(val);
+    if (s) return s;
+  }
+
+  // 4. EXIF IFD0 探测 (Software Tag 0x0131, Make 0x010F, Model 0x0110)
+  const exifIdx = text.indexOf('Exif\0\0');
+  if (exifIdx !== -1) {
+    try {
+      const view = new DataView(u8.buffer, u8.byteOffset + exifIdx + 6);
+      const isLE = view.getUint16(0) === 0x4949;
+      const ifdOffset = view.getUint32(4, isLE);
+      if (ifdOffset < view.byteLength - 2) {
+        const numEntries = view.getUint16(ifdOffset, isLE);
+        let software = '', make = '', model = '';
+        for (let i = 0; i < numEntries; i++) {
+          const entryOffset = ifdOffset + 2 + i * 12;
+          if (entryOffset + 12 > view.byteLength) break;
+          const tag = view.getUint16(entryOffset, isLE);
+          const count = view.getUint32(entryOffset + 4, isLE);
+          let valOffset = entryOffset + 8;
+          if (count > 4) {
+            valOffset = view.getUint32(entryOffset + 8, isLE);
+          }
+          if (valOffset + count <= view.byteLength) {
+            const str = text.slice(exifIdx + 6 + valOffset, exifIdx + 6 + valOffset + count).replace(/\0/g, '').trim();
+            if (tag === 0x0131) software = str;
+            if (tag === 0x010F) make = str;
+            if (tag === 0x0110) model = str;
+          }
+        }
+        if (software) {
+          const s = cleanSoftwareName(software);
+          if (s) return s;
+        }
+        if (model) {
+          if (make && !model.toLowerCase().includes(make.toLowerCase())) {
+            return cleanSoftwareName(`${make} ${model}`);
+          }
+          return cleanSoftwareName(model);
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 5. Adobe Photoshop 8BIM / 特征字符串兜底
+  if (text.includes('Photoshop 3.0') || text.includes('Adobe Photoshop')) {
+    const psMatch = text.match(/Adobe Photoshop ([0-9a-zA-Z. ()]+)/i);
+    if (psMatch) {
+      return cleanSoftwareName(psMatch[0]);
+    }
+    return 'Adobe Photoshop';
+  }
+
+  // 6. AI 绘画生成工具探测 (Stable Diffusion / Midjourney)
+  if (text.includes('parameters\0') || text.includes('prompt\0') || text.includes('sd-metadata')) {
+    return 'Stable Diffusion (AI 生成)';
+  }
+  if (text.includes('Midjourney')) {
+    return 'Midjourney (AI 生成)';
+  }
+
+  return null;
+}
+
+/**
+ * 净化并规整软件名称字符串
+ */
+function cleanSoftwareName(str) {
+  if (!str) return null;
+  let s = str.replace(/\0/g, '').replace(/[\r\n\t]+/g, ' ').trim();
+  s = s.replace(/,?\s*SVG Export Plug-In.*$/i, '');
+  if (s.length > 40) s = s.slice(0, 38) + '...';
+  return s.length >= 2 ? s : null;
+}
+
+/**
+ * HTML 转义
+ */
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * 快速计算 IEEE 802.3 标准 32位 CRC 校验码 (用于标准 PNG Chunk 构建)
+ */
+let pngCrcTable = null;
+function getPngCrcTable() {
+  if (pngCrcTable) return pngCrcTable;
+  pngCrcTable = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) {
+      if (c & 1) c = 0xedb88320 ^ (c >>> 1);
+      else c = c >>> 1;
+    }
+    pngCrcTable[n] = c;
+  }
+  return pngCrcTable;
+}
+
+function calculatePngCrc32(buf, offset, length) {
+  const table = getPngCrcTable();
+  let crc = 0xffffffff;
+  for (let i = offset; i < offset + length; i++) {
+    crc = table[(crc ^ buf[i]) & 0xff] ^ (crc >>> 8);
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+/**
+ * 为 PNG 图像注入 SR-DevBox PixZip 软件标识 tEXt 数据块
+ * 严格遵照 W3C PNG 规范，放置于 IHDR 之后，并覆盖原有制图软件文本
+ * @param {Uint8Array} inputBytes 原始 PNG 二进制
+ * @param {string} softwareName 注入的软件名称
+ * @returns {Uint8Array}
+ */
+function injectPngSoftware(inputBytes, softwareName = 'SR-DevBox PixZip') {
+  const u8 = new Uint8Array(inputBytes);
+  if (u8.length < 33 || u8[0] !== 0x89 || u8[1] !== 0x50 || u8[2] !== 0x4E || u8[3] !== 0x47) {
+    return u8;
+  }
+
+  // 构造 tEXt Software chunk: len(4) + type(4) + 'Software\0' + val + crc(4)
+  const key = 'Software\0';
+  const val = softwareName;
+  const chunkDataLen = key.length + val.length;
+  const chunkLen = 4 + 4 + chunkDataLen + 4;
+  const chunk = new Uint8Array(chunkLen);
+  const view = new DataView(chunk.buffer);
+  view.setUint32(0, chunkDataLen, false); // Length
+  // Type: 'tEXt'
+  chunk[4] = 0x74; chunk[5] = 0x45; chunk[6] = 0x58; chunk[7] = 0x74;
+  // Key: 'Software\0'
+  for (let i = 0; i < key.length; i++) chunk[8 + i] = key.charCodeAt(i);
+  // Val
+  for (let i = 0; i < val.length; i++) chunk[8 + key.length + i] = val.charCodeAt(i);
+  // CRC32 计算覆盖 Type (4B) + Data
+  const crc = calculatePngCrc32(chunk, 4, 4 + chunkDataLen);
+  view.setUint32(8 + chunkDataLen, crc, false);
+
+  const chunks = [];
+  chunks.push(u8.subarray(0, 33)); // PNG 签名 (8B) + IHDR 块 (25B)
+  chunks.push(chunk);              // 紧随 IHDR 注入 tEXt Software 块
+
+  let pos = 33;
+  const viewIn = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+
+  while (pos < u8.length - 8) {
+    const len = viewIn.getUint32(pos, false);
+    const type = String.fromCharCode(u8[pos + 4], u8[pos + 5], u8[pos + 6], u8[pos + 7]);
+    const totalChunkLen = 12 + len;
+    if (pos + totalChunkLen > u8.length) {
+      chunks.push(u8.subarray(pos));
+      break;
+    }
+
+    // 剥离原图中可能残留的旧 Software 文本块，确保完全重写为 SR-DevBox PixZip
+    let isOldSoftware = false;
+    if (type === 'tEXt' && len >= 9) {
+      let str = '';
+      for (let i = 0; i < 9; i++) str += String.fromCharCode(u8[pos + 8 + i]);
+      if (str === 'Software\0') isOldSoftware = true;
+    }
+
+    if (!isOldSoftware) {
+      chunks.push(u8.subarray(pos, pos + totalChunkLen));
+    }
+    pos += totalChunkLen;
+  }
+
+  let totalLen = 0;
+  for (let i = 0; i < chunks.length; i++) totalLen += chunks[i].length;
+  const result = new Uint8Array(totalLen);
+  let offset = 0;
+  for (let i = 0; i < chunks.length; i++) {
+    result.set(chunks[i], offset);
+    offset += chunks[i].length;
+  }
+  return result;
+}
+
+/**
+ * 构造 JPEG APP1 XMP 数据段
+ */
+function createJpegXmpSegment(softwareName = 'SR-DevBox PixZip') {
+  const xmpNamespace = 'http://ns.adobe.com/xap/1.0/\0';
+  const xmpXml = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:tiff="http://ns.adobe.com/tiff/1.0/" xmp:CreatorTool="${softwareName}" tiff:Software="${softwareName}"/></rdf:RDF></x:xmpmeta><?xpacket end="w"?>`;
+  const payloadStr = xmpNamespace + xmpXml;
+  const payloadLen = payloadStr.length;
+  const segLen = 2 + payloadLen;
+
+  const xmpSeg = new Uint8Array(2 + segLen);
+  xmpSeg[0] = 0xFF;
+  xmpSeg[1] = 0xE1; // APP1
+  xmpSeg[2] = (segLen >> 8) & 0xFF;
+  xmpSeg[3] = segLen & 0xFF;
+  for (let i = 0; i < payloadLen; i++) {
+    xmpSeg[4 + i] = payloadStr.charCodeAt(i);
+  }
+  return xmpSeg;
+}
+
+/**
+ * 为 JPEG/JPG 图像注入 XMP 创作者与软件标识 (xmp:CreatorTool / tiff:Software)
+ * @param {Uint8Array} inputBytes 原始 JPEG 二进制
+ * @param {string} softwareName 注入的软件名称
+ * @returns {Uint8Array}
+ */
+function injectJpegSoftware(inputBytes, softwareName = 'SR-DevBox PixZip') {
+  const u8 = new Uint8Array(inputBytes);
+  if (u8.length < 4 || u8[0] !== 0xFF || u8[1] !== 0xD8) return u8;
+
+  const xmpSeg = createJpegXmpSegment(softwareName);
+  const kept = [u8.subarray(0, 2)]; // SOI (2B)
+  let pos = 2;
+
+  // 若紧随 SOI 存在 JFIF APP0 (0xFF 0xE0)，严格保留 APP0 于首位以遵从 JFIF 规范 (APP0 必须紧随 SOI)
+  if (pos + 4 <= u8.length && u8[pos] === 0xFF && u8[pos + 1] === 0xE0) {
+    const app0Len = (u8[pos + 2] << 8) | u8[pos + 3];
+    const app0End = pos + 2 + app0Len;
+    if (app0End <= u8.length) {
+      kept.push(u8.subarray(pos, app0End));
+      pos = app0End;
+    }
+  }
+
+  // 随后紧跟注入 APP1 XMP 段 (SR-DevBox PixZip)
+  kept.push(xmpSeg);
+
+  while (pos < u8.length) {
+    if (u8[pos] !== 0xFF) {
+      pos++;
+      continue;
+    }
+    const marker = u8[pos + 1];
+    if (marker === 0xDA || marker === 0xD9) {
+      kept.push(u8.subarray(pos));
+      break;
+    }
+    if (marker === 0x00 || (marker >= 0xD0 && marker <= 0xD7)) {
+      pos += 2;
+      continue;
+    }
+    const len = (u8[pos + 2] << 8) | u8[pos + 3];
+    const segEnd = pos + 2 + len;
+    if (segEnd > u8.length) break;
+
+    // 跳过旧的 XMP 块
+    let isOldXmp = false;
+    if (marker === 0xE1 && len >= 31) {
+      let ns = '';
+      for (let i = 0; i < 28; i++) ns += String.fromCharCode(u8[pos + 4 + i]);
+      if (ns === 'http://ns.adobe.com/xap/1.0/') isOldXmp = true;
+    }
+
+    if (!isOldXmp) {
+      kept.push(u8.subarray(pos, segEnd));
+    }
+    pos = segEnd;
+  }
+
+  let totalLen = 0;
+  for (let i = 0; i < kept.length; i++) totalLen += kept[i].length;
+  const result = new Uint8Array(totalLen);
+  let offset = 0;
+  for (let i = 0; i < kept.length; i++) {
+    result.set(kept[i], offset);
+    offset += kept[i].length;
+  }
+  return result;
+}
+
+/**
+ * 为 GIF 图像注入 GIF89a 标准注释块 (Comment Extension 0x21 0xFE)
+ * @param {Uint8Array} inputBytes 原始 GIF 二进制
+ * @param {string} softwareName 注入的软件名称
+ * @returns {Uint8Array}
+ */
+function injectGifComment(inputBytes, softwareName = 'SR-DevBox PixZip') {
+  const u8 = new Uint8Array(inputBytes);
+  if (u8.length < 13 || u8[0] !== 0x47 || u8[1] !== 0x49 || u8[2] !== 0x46) return u8;
+
+  let trailerPos = u8.length - 1;
+  while (trailerPos >= 0 && u8[trailerPos] !== 0x3B) {
+    trailerPos--;
+  }
+  if (trailerPos === -1) trailerPos = u8.length;
+
+  let basePos = trailerPos;
+  // 若文件末尾紧随旧注释块 (0x21 0xFE ... 0x00)，将其替换而非累加
+  if (basePos >= 5 && u8[basePos - 1] === 0x00) {
+    let check = basePos - 2;
+    while (check >= 0 && basePos - check < 300) {
+      if (u8[check] === 0x21 && u8[check + 1] === 0xFE) {
+        basePos = check;
+        break;
+      }
+      check--;
+    }
+  }
+
+  const commentBytes = new TextEncoder().encode(softwareName);
+  const blockLen = Math.min(commentBytes.length, 255);
+  // 0x21 (Extension), 0xFE (Comment Label), blockLen, data..., 0x00 (Terminator)
+  const commentExt = new Uint8Array(4 + blockLen);
+  commentExt[0] = 0x21;
+  commentExt[1] = 0xFE;
+  commentExt[2] = blockLen;
+  commentExt.set(commentBytes.subarray(0, blockLen), 3);
+  commentExt[3 + blockLen] = 0x00;
+
+  const out = new Uint8Array(basePos + commentExt.length + 1);
+  out.set(u8.subarray(0, basePos), 0);
+  out.set(commentExt, basePos);
+  out[out.length - 1] = 0x3B;
+  return out;
+}
+
+/**
+ * 为 SVG 矢量图像注入或改写 Generator 声明注释
+ * @param {Uint8Array} inputBytes 原始 SVG 二进制
+ * @param {string} softwareName 注入的软件名称
+ * @returns {Uint8Array}
+ */
+function injectSvgSoftware(inputBytes, softwareName = 'SR-DevBox PixZip') {
+  try {
+    const text = new TextDecoder('utf-8').decode(inputBytes);
+    if (!text.includes('<svg')) return inputBytes;
+    const cleanText = text.replace(new RegExp('<' + '!--\\s*Generator:[\\s\\S]*?--' + '>', 'gi'), '').trimStart();
+    const stamped = '<' + '!-- Generator: ' + softwareName + ' (https://srdevbox.com) --' + '>\n' + cleanText;
+    return new TextEncoder().encode(stamped);
+  } catch (e) {
+    return inputBytes;
+  }
+}
+
+/**
+ * 通用图片元数据品牌注入入口：
+ * 无论压缩成功还是已达极限/保留原图 (status === 'skipped')，导出的二进制文件均统一打上软件标识
+ * @param {Uint8Array|ArrayBuffer} inputBytes 输入二进制数据
+ * @param {string} ext 扩展名
+ * @param {string} softwareName 软件标识名称 (默认 'SR-DevBox PixZip')
+ * @returns {Uint8Array}
+ */
+function stampImageSoftware(inputBytes, ext, softwareName = 'SR-DevBox PixZip') {
+  if (!inputBytes || inputBytes.length === 0) return inputBytes;
+  const u8 = inputBytes instanceof Uint8Array ? inputBytes : new Uint8Array(inputBytes);
+  const e = (ext || '').toLowerCase().replace(/^\./, '');
+  try {
+    if (e === 'png') {
+      return injectPngSoftware(u8, softwareName);
+    } else if (e === 'jpg' || e === 'jpeg') {
+      return injectJpegSoftware(u8, softwareName);
+    } else if (e === 'gif') {
+      return injectGifComment(u8, softwareName);
+    } else if (e === 'svg') {
+      return injectSvgSoftware(u8, softwareName);
+    }
+  } catch (err) {
+    console.warn('stampImageSoftware 异常:', err);
+  }
+  return u8;
+}
+
+/**
+ * 快速提取图像物理分辨率与软件元数据
+ * @param {File} file 文件对象
+ * @param {string} previewUrl 预览地址
+ * @returns {Promise<{width: number|null, height: number|null, software: string|null}>}
+ */
+async function extractImageMetadata(file, previewUrl) {
+  let width = null;
+  let height = null;
+  let software = null;
+  const ext = getFileExtension(file.name).toLowerCase();
+
+  try {
+    // 读取头部二进制数据 (首部 128KB 足以覆盖 IHDR、SOF、Exif、XMP、tEXt 等所有关键元数据)
+    const headerSlice = file.slice(0, Math.min(file.size, 131072));
+    const arrayBuffer = await headerSlice.arrayBuffer();
+    const u8 = new Uint8Array(arrayBuffer);
+
+    // 1. 快速二进制探针瞬时获取尺寸 (0.01ms)
+    const dims = parseBinaryImageDimensions(u8, ext);
+    if (dims.width && dims.height) {
+      width = dims.width;
+      height = dims.height;
+    }
+
+    // 2. 元数据扫描获取制图软件与硬件设备信息
+    software = parseSoftwareInfo(u8);
+  } catch (err) {}
+
+  // 3. 尺寸备用方案：若二进制探针未检出 (如特殊格式/复杂SVG)，使用浏览器离屏 Image 异步解码
+  if ((!width || !height) && previewUrl && typeof Image !== 'undefined') {
+    try {
+      const img = new Image();
+      img.src = previewUrl;
+      if (img.decode) {
+        await Promise.race([
+          img.decode().then(() => {
+            if (img.naturalWidth && img.naturalHeight) {
+              width = img.naturalWidth;
+              height = img.naturalHeight;
+            }
+          }),
+          new Promise(r => setTimeout(r, 200))
+        ]).catch(() => {});
+      } else {
+        await new Promise(r => {
+          img.onload = () => {
+            if (img.naturalWidth && img.naturalHeight) {
+              width = img.naturalWidth;
+              height = img.naturalHeight;
+            }
+            r();
+          };
+          img.onerror = r;
+          setTimeout(r, 200);
+        });
+      }
+    } catch (e) {}
+  }
+
+  return { width, height, software };
+}
+
 /**
  * 将单个文件登记到工作区
  * @returns {Promise<boolean>} 是否为图片文件
@@ -2645,6 +3502,17 @@ async function addSingleFileToWorkspace(file) {
     previewUrl = URL.createObjectURL(file);
   } catch (e) {}
 
+  // 立即提取图像物理尺寸与制图软件/硬件设备信息
+  let width = null;
+  let height = null;
+  let software = null;
+  try {
+    const meta = await extractImageMetadata(file, previewUrl);
+    width = meta.width;
+    height = meta.height;
+    software = meta.software;
+  } catch (e) {}
+
   const imageItem = {
     id: 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6),
     file,
@@ -2659,9 +3527,30 @@ async function addSingleFileToWorkspace(file) {
     ratio: '0.0',
     saved: 0,
     previewUrl,
-    width: null,
-    height: null
+    width,
+    height,
+    software,
+    originalSoftware: software,
+    outputSoftware: null
   };
+
+  // 异步兜底：若前序解码尚未获得尺寸，离屏图片载入完成后动态回填 DOM
+  if ((!width || !height) && previewUrl && typeof Image !== 'undefined') {
+    const bgImg = new Image();
+    bgImg.onload = () => {
+      if (bgImg.naturalWidth && bgImg.naturalHeight) {
+        imageItem.width = bgImg.naturalWidth;
+        imageItem.height = bgImg.naturalHeight;
+        const dimEl = document.getElementById(`dim-${imageItem.id}`);
+        if (dimEl) {
+          dimEl.textContent = ` · 尺寸: ${bgImg.naturalWidth}×${bgImg.naturalHeight}`;
+          dimEl.title = `原始分辨率: ${bgImg.naturalWidth} × ${bgImg.naturalHeight} 像素`;
+          dimEl.style.display = 'inline';
+        }
+      }
+    };
+    bgImg.src = previewUrl;
+  }
 
   state.images.push(imageItem);
   return true;
@@ -3050,7 +3939,8 @@ async function compressPngExtreme(item, arrayBuffer) {
       }
 
       if (compressedAb) {
-        const outputBuffer = new Uint8Array(compressedAb);
+        let outputBuffer = new Uint8Array(compressedAb);
+        outputBuffer = injectPngSoftware(outputBuffer, 'SR-DevBox PixZip');
         // 安全防反弹机制：体积必须真正缩减才算成功
         if (outputBuffer.length < originalSize) {
           const saved = originalSize - outputBuffer.length;
@@ -3094,21 +3984,24 @@ async function compressJpegLossy(item, arrayBuffer) {
 
     const quality = state.extremeQuality || 0.80;
     const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
-    if (blob && blob.size < originalSize) {
+    if (blob) {
       const blobAb = await blob.arrayBuffer();
-      const outputBuffer = new Uint8Array(blobAb);
-      const saved = originalSize - outputBuffer.length;
-      const ratio = ((saved / originalSize) * 100).toFixed(1);
-      return {
-        data: outputBuffer,
-        originalSize,
-        compressedSize: outputBuffer.length,
-        saved,
-        ratio,
-        status: 'success',
-        width: imgBitmap.width,
-        height: imgBitmap.height
-      };
+      let outputBuffer = new Uint8Array(blobAb);
+      outputBuffer = injectJpegSoftware(outputBuffer, 'SR-DevBox PixZip');
+      if (outputBuffer.length < originalSize) {
+        const saved = originalSize - outputBuffer.length;
+        const ratio = ((saved / originalSize) * 100).toFixed(1);
+        return {
+          data: outputBuffer,
+          originalSize,
+          compressedSize: outputBuffer.length,
+          saved,
+          ratio,
+          status: 'success',
+          width: imgBitmap.width,
+          height: imgBitmap.height
+        };
+      }
     }
   } catch (err) {
     console.warn('JPEG 极致体积压缩异常，降级无损元数据剥离:', err);
@@ -3172,10 +4065,11 @@ async function compressPngLossless(arrayBuffer) {
     const png = window.PNG.sync.read(inputBuffer);
 
     // 2. 重新编码并启用最高级别的无损 Deflate 压缩配置与扫描线滤波
-    const outputBuffer = window.PNG.sync.write(png, {
+    let outputBuffer = window.PNG.sync.write(png, {
       deflateLevel: level,        // 最大压缩级别 (1-9，默认 9 为压缩率最高)
       deflateStrategy: strategy   // Z_FILTERED 策略 (专用于过滤后的图形图像差分数据)
     });
+    outputBuffer = injectPngSoftware(outputBuffer, 'SR-DevBox PixZip');
 
     // 3. 安全兜底：如果压缩后体积反而变大（极罕见情况），则返回原图
     if (outputBuffer.length < originalSize) {
@@ -3288,12 +4182,13 @@ async function compressJpegLossless(arrayBuffer) {
 
     let totalLen = 0;
     for (let i = 0; i < keptChunks.length; i++) totalLen += keptChunks[i].length;
-    const outputBytes = new Uint8Array(totalLen);
+    let outputBytes = new Uint8Array(totalLen);
     let offset = 0;
     for (let i = 0; i < keptChunks.length; i++) {
       outputBytes.set(keptChunks[i], offset);
       offset += keptChunks[i].length;
     }
+    outputBytes = injectJpegSoftware(outputBytes, 'SR-DevBox PixZip');
 
     if (outputBytes.length < originalSize) {
       const saved = originalSize - outputBytes.length;
@@ -3325,7 +4220,7 @@ async function compressSvgLossless(arrayBuffer) {
     const decoder = new TextDecoder('utf-8');
     const svgText = decoder.decode(arrayBuffer);
 
-    const minified = svgText
+    const minified = '<!-- Generator: SR-DevBox PixZip (https://srdevbox.com) -->\n' + svgText
       .replace(/<\?xml[\s\S]*?\?>/gi, '')
       .replace(/<!--[\s\S]*?-->/g, '')
       .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
@@ -3599,7 +4494,8 @@ async function compressGifExtreme(item, arrayBuffer) {
     }
 
     const compressedLength = writer.end();
-    const outputBuffer = outBuffer.subarray(0, compressedLength);
+    let outputBuffer = outBuffer.subarray(0, compressedLength);
+    outputBuffer = injectGifComment(outputBuffer, 'SR-DevBox PixZip');
 
     // 安全防反弹机制：体积必须真正缩减才生效
     if (outputBuffer.length < originalSize) {
@@ -3762,7 +4658,8 @@ async function compressGifLossless(arrayBuffer) {
     }
 
     const compressedLength = writer.end();
-    const outputBuffer = outBuffer.subarray(0, compressedLength);
+    let outputBuffer = outBuffer.subarray(0, compressedLength);
+    outputBuffer = injectGifComment(outputBuffer, 'SR-DevBox PixZip');
 
     if (outputBuffer.length < originalSize) {
       const saved = originalSize - outputBuffer.length;
@@ -3824,10 +4721,12 @@ async function startBatchCompress() {
   state.isCompressing = true;
   const btn = document.getElementById('btnStartCompress');
   const text = document.getElementById('btnCompressText');
-  const icon = document.getElementById('btnCompressIcon');
+  const spinner = document.getElementById('btnCompressSpinner');
+  const badge = document.getElementById('btnCompressCountBadge');
 
-  btn.disabled = true;
-  icon.outerHTML = `<span class="spinner" id="btnCompressIcon"></span>`;
+  if (btn) btn.disabled = true;
+  if (spinner) spinner.style.display = 'inline-block';
+  if (badge) badge.style.display = 'none';
 
   appendScanLog(`[${getCurrentTime()}] 开始执行极致无损批量压缩队列 (共 ${state.images.length} 张图片)...`, 'info');
 
@@ -3846,6 +4745,15 @@ async function startBatchCompress() {
     await new Promise(r => setTimeout(r, 16));
 
     const res = await compressSingleImage(item);
+
+    // 元数据清洗统一兜底: skipped (已达极限/安全保留原图) 的文件由压缩器原样返回原始字节，
+    // 此处统一调用 stampImageSoftware 刷新数据源并注入 SR-DevBox PixZip 溯源标识
+    // (success 路径已在各格式压缩引擎内部完成打标，无需重复处理)
+    if (res.status === 'skipped' && res.data) {
+      res.data = stampImageSoftware(res.data, item.ext);
+      res.compressedSize = res.data.length;
+    }
+
     item.data = res.data;
     item.compressedSize = res.compressedSize;
     item.saved = res.saved || 0;
@@ -3883,12 +4791,16 @@ async function startBatchCompress() {
     }
 
     if (item.status === 'success') {
+      // item.software 保留原图 EXIF/XMP 解析出的原始制作软件 (待处理队列溯源展示)；
+      // item.outputSoftware 记录导出文件实际写入的软件标识 (压缩明细/对比弹窗展示)
+      item.outputSoftware = 'SR-DevBox PixZip';
       successCount++;
       totalBytesSaved += item.saved;
       appendScanLog(`[${getCurrentTime()}] [已优化] ${item.relativePath}: ${formatBytes(item.originalSize)} -> ${formatBytes(item.compressedSize)} (缩减 -${item.ratio}%)`, 'success');
     } else if (item.status === 'skipped') {
+      item.outputSoftware = 'SR-DevBox PixZip';
       skippedCount++;
-      appendScanLog(`[${getCurrentTime()}] [已达到极限] ${item.relativePath}: 原图已是极致压缩状态，安全保留原图`, 'info');
+      appendScanLog(`[${getCurrentTime()}] [已达到极限] ${item.relativePath}: 原图已是极致压缩状态，安全保留原图 (已注入 SR-DevBox PixZip 溯源标识)`, 'info');
     } else {
       appendScanLog(`[${getCurrentTime()}] [跳过] ${item.relativePath}: ${res.error || '保留原文件'}`, 'warning');
     }
@@ -3898,13 +4810,9 @@ async function startBatchCompress() {
   }
 
   state.isCompressing = false;
-  btn.disabled = false;
-  document.getElementById('btnCompressIcon').outerHTML = `
-    <svg id="btnCompressIcon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-    </svg>
-  `;
-  text.textContent = '开始批量压缩';
+  if (btn) btn.disabled = false;
+  if (spinner) spinner.style.display = 'none';
+  if (text) text.textContent = '开始批量压缩';
 
   updateWorkspaceStats();
   appendScanLog(`[${getCurrentTime()}] 全部处理完毕！${successCount} 张图片成功优化，${skippedCount} 张已达极限，累计节省 ${formatBytes(totalBytesSaved)}`, 'success');
@@ -4026,7 +4934,9 @@ function renderImageCards() {
 
   // 过滤
   const filtered = state.images.filter(item => {
-    const matchType = state.currentFilter === 'all' || item.ext === state.currentFilter;
+    const matchType = state.currentFilter === 'all' ||
+      item.ext === state.currentFilter ||
+      (state.currentFilter === 'jpg' && (item.ext === 'jpg' || item.ext === 'jpeg'));
     const matchSearch = !state.searchKeyword ||
       item.fileName.toLowerCase().includes(state.searchKeyword.toLowerCase()) ||
       item.relativePath.toLowerCase().includes(state.searchKeyword.toLowerCase());
@@ -4053,6 +4963,9 @@ function renderImageCards() {
 function createImageCardHtml(item) {
   const statusBadge = getStatusBadgeHtml(item.status);
   const sizeDesc = formatSizeComparison(item);
+  const dimText = item.width && item.height ? ` · 尺寸: ${item.width}×${item.height}` : '';
+  const softText = item.software ? ` · 制作软件: ${escapeHtml(item.software)}` : '';
+  const metaTooltip = `路径: ${item.relativePath}${dimText}${softText}`;
 
   return `
     <div class="preview-card" id="card-${item.id}">
@@ -4066,10 +4979,11 @@ function createImageCardHtml(item) {
           <span class="image-name-text" title="${item.fileName}">${item.fileName}</span>
           ${statusBadge}
         </div>
-        <div class="image-path-text" title="${item.relativePath}">路径: ${item.relativePath}</div>
+        <div class="image-path-text" title="${metaTooltip}">
+          <span class="meta-path">路径: ${item.relativePath}</span><span id="dim-${item.id}" class="meta-dim" ${!(item.width && item.height) ? 'style="display:none;"' : ''}> · 尺寸: ${item.width || 0}×${item.height || 0}</span>${item.software ? `<span class="meta-software" title="原始制作软件 · 由 EXIF / XMP 元数据引擎深度解析"> · 制作软件: ${escapeHtml(item.software)}</span>` : ''}
+        </div>
         <div class="card-size-stat">
           <span>${sizeDesc}</span>
-          ${item.width && item.height ? `<span>· ${item.width}×${item.height}px</span>` : ''}
         </div>
       </div>
 
@@ -4125,11 +5039,14 @@ function renderResultsTableRow(item) {
   const thumbUrl = item.compressedUrl || item.previewUrl;
   const canCompare = item.status === 'success' || item.status === 'skipped';
   const dimText = item.width && item.height ? ` · ${item.width}×${item.height}px` : '';
+  // 压缩明细展示导出文件实际写入的软件标识 (已元数据清洗为 SR-DevBox PixZip)，独立换行展示
+  const resultSoftware = item.outputSoftware || item.software;
+  const softText = resultSoftware ? `<span class="result-file-software">制作软件: ${escapeHtml(resultSoftware)}</span>` : '';
 
   let existingRow = document.getElementById(`row-${item.id}`);
   const rowHtml = `
     <tr id="row-${item.id}">
-      <td>
+      <td class="col-file">
         <div class="result-file-col">
           <div class="result-thumb-box ${canCompare ? 'can-compare' : ''}"
                onclick="${canCompare ? `openCompareModal('${item.id}')` : ''}"
@@ -4139,25 +5056,34 @@ function renderResultsTableRow(item) {
           </div>
           <div class="result-file-info">
             <span class="font-name-truncate" title="${item.relativePath}">${item.relativePath}</span>
-            <span class="result-file-meta">${item.ext.toUpperCase()}${dimText}</span>
+            <span class="result-file-meta">${item.ext.toUpperCase()}${dimText}</span>${softText}
           </div>
         </div>
       </td>
-      <td>${formatBytes(item.originalSize)}</td>
-      <td>${formatBytes(item.compressedSize)}</td>
-      <td class="reduction-text">${item.saved > 0 ? '-' + item.ratio + '%' : '0%'}</td>
-      <td>${getStatusBadgeHtml(item.status)}</td>
-      <td>
-        <div style="display: flex; gap: 4px; align-items: center;">
+      <td class="col-size">${formatBytes(item.originalSize)}</td>
+      <td class="col-size">${formatBytes(item.compressedSize)}</td>
+      <td class="col-ratio reduction-text">${item.saved > 0 ? '-' + item.ratio + '%' : '0%'}</td>
+      <td class="col-status">${getStatusBadgeHtml(item.status)}</td>
+      <td class="col-actions">
+        <div class="result-actions-group">
           ${canCompare ? `
-            <button class="btn-preset btn-compare-action"
-                    style="padding: 2px 7px; font-size: 0.68rem;"
+            <button class="btn-table-action btn-table-compare"
                     onclick="openCompareModal('${item.id}')"
                     title="查看原图与压缩后画质细节对比">
-              <svg viewBox="0 0 1024 1024" width="12" height="12" style="fill: currentColor; vertical-align: -1px;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg> 对比
+              <svg viewBox="0 0 1024 1024" width="11" height="11" fill="currentColor" style="vertical-align: -1px;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg>
+              <span>对比</span>
             </button>
           ` : ''}
-          <button class="btn-preset" style="padding: 2px 6px; font-size: 0.68rem;" onclick="downloadSingleImage(state.images.find(i=>i.id==='${item.id}'))">下载</button>
+          <button class="btn-table-action btn-table-download"
+                  onclick="downloadSingleImage(state.images.find(i=>i.id==='${item.id}'))"
+                  title="单独下载此文件">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>下载</span>
+          </button>
         </div>
       </td>
     </tr>
@@ -4221,6 +5147,14 @@ function setFormatFilter(type, el) {
   state.currentFilter = type;
   document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
   if (el) el.classList.add('active');
+
+  const searchInput = document.getElementById('searchImageInput');
+  if (searchInput) {
+    const labelMap = { all: '全部', png: 'PNG', jpg: 'JPG', svg: 'SVG', webp: 'WebP', gif: 'GIF' };
+    const label = labelMap[type] || type.toUpperCase();
+    searchInput.placeholder = `在 ${label} 中搜索图片...`;
+  }
+
   renderImageCards();
 }
 
@@ -4242,8 +5176,12 @@ function updateWorkspaceStats() {
   if (headerBadge) {
     headerBadge.textContent = `工作区已有 ${count} 张图片 · 累计节省 ${formatBytes(totalSaved)} (${ratio}%)`;
   }
-  document.getElementById('previewCountBadge').textContent = `工作区已加载 ${count} 张图片 (${formatBytes(originalTotal)})`;
-  document.getElementById('totalSavingsBadge').textContent = `总体积节省 ${formatBytes(totalSaved)} (${ratio}%)`;
+  const totalSavingsBadge = document.getElementById('totalSavingsBadge');
+  if (totalSavingsBadge) {
+    totalSavingsBadge.textContent = `总体积节省 ${formatBytes(totalSaved)} (${ratio}%)`;
+  }
+
+  updateTabCounts();
 
   const websiteBadge = document.getElementById('exportWebsiteCountBadge');
   if (websiteBadge) {
@@ -4254,11 +5192,74 @@ function updateWorkspaceStats() {
       websiteBadge.style.display = 'none';
     }
   }
+
+  // 动态更新主操作按钮上的待处理图片计数标记
+  const compressCountBadge = document.getElementById('btnCompressCountBadge');
+  const compressText = document.getElementById('btnCompressText');
+  const btnStartCompress = document.getElementById('btnStartCompress');
+  if (compressCountBadge && compressText && !state.isCompressing) {
+    if (count > 0) {
+      compressCountBadge.textContent = `${count} 张`;
+      compressCountBadge.style.display = 'inline-flex';
+      compressText.textContent = '开始批量压缩';
+      if (btnStartCompress) {
+        btnStartCompress.title = `开始批量压缩队列中的 ${count} 张图片`;
+      }
+    } else {
+      compressCountBadge.style.display = 'none';
+      compressText.textContent = '开始批量压缩';
+      if (btnStartCompress) {
+        btnStartCompress.title = '当前工作区暂无图片';
+      }
+    }
+  }
+}
+
+/**
+ * 更新格式过滤 Tab 栏的各类型图片计数
+ */
+function updateTabCounts() {
+  const counts = { all: state.images.length, png: 0, jpg: 0, svg: 0, webp: 0, gif: 0 };
+  state.images.forEach(item => {
+    const ext = (item.ext || '').toLowerCase();
+    if (ext === 'png') counts.png++;
+    else if (ext === 'jpg' || ext === 'jpeg') counts.jpg++;
+    else if (ext === 'svg') counts.svg++;
+    else if (ext === 'webp') counts.webp++;
+    else if (ext === 'gif') counts.gif++;
+  });
+
+  const elAll = document.getElementById('tabCountAll');
+  const elPng = document.getElementById('tabCountPng');
+  const elJpg = document.getElementById('tabCountJpg');
+  const elSvg = document.getElementById('tabCountSvg');
+  const elWebp = document.getElementById('tabCountWebp');
+  const elGif = document.getElementById('tabCountGif');
+
+  if (elAll) elAll.textContent = counts.all;
+  if (elPng) elPng.textContent = counts.png;
+  if (elJpg) elJpg.textContent = counts.jpg;
+  if (elSvg) elSvg.textContent = counts.svg;
+  if (elWebp) elWebp.textContent = counts.webp;
+  if (elGif) elGif.textContent = counts.gif;
+
+  const queueBadge = document.getElementById('queueTotalBadge');
+  if (queueBadge) queueBadge.textContent = `${counts.all} 项`;
 }
 
 // ==========================================================================
 // 6. 日志输出、格式化与商业授权控制
 // ==========================================================================
+
+function toggleScanLogs() {
+  const logsList = document.getElementById('scanLogsList');
+  const btn = document.getElementById('btnToggleScanLogs');
+  if (!logsList) return;
+  const isCollapsed = logsList.classList.toggle('collapsed');
+  if (btn) {
+    btn.textContent = isCollapsed ? '展开日志 ▾' : '收起日志 ▴';
+  }
+}
 
 function appendScanLog(msg, type = 'info') {
   const logsList = document.getElementById('scanLogsList');
@@ -4270,6 +5271,11 @@ function appendScanLog(msg, type = 'info') {
 
   logsList.appendChild(line);
   logsList.scrollTop = logsList.scrollHeight;
+
+  const headline = document.getElementById('scanStatusHeadline');
+  if (headline) {
+    headline.textContent = msg;
+  }
 }
 
 function clearScanLogs() {
@@ -4351,49 +5357,53 @@ function showToast(msg) {
 function selectCompressMode(mode) {
   state.compressMode = mode;
   const cardExtreme = document.getElementById('compressCardExtreme');
+  const cardHigh = document.getElementById('compressCardHigh');
   const cardLossless = document.getElementById('compressCardLossless');
   const optionsBar = document.getElementById('extremeOptionsBar');
-  const modeTag = document.getElementById('currentModeTag');
-  const headerPill = document.getElementById('headerModePill');
   const radioExtreme = document.querySelector('input[name="compressMode"][value="extreme"]');
+  const radioHigh = document.querySelector('input[name="compressMode"][value="high"]');
   const radioLossless = document.querySelector('input[name="compressMode"][value="lossless"]');
 
-  if (mode === 'extreme') {
+  // 全局隐藏强度档位行
+  if (optionsBar) optionsBar.style.display = 'none';
+
+  const modeLabel = document.getElementById('currentModeLabel');
+  if (mode === 'high') {
+    state.extremePreset = 'high';
+    state.pngColors = 256;
+    state.gifColors = 256;
+    state.extremeQuality = 0.88;
+
+    if (radioHigh) radioHigh.checked = true;
+    if (cardHigh) cardHigh.classList.add('active');
+    if (cardExtreme) cardExtreme.classList.remove('active');
+    if (cardLossless) cardLossless.classList.remove('active');
+    if (modeLabel) modeLabel.textContent = '当前：高保真';
+
+    updateFormatCardsContent('high');
+    showToast('已切换为【高保真模式】（智能真彩/高精细节保护，杜绝模糊和噪点，减容 35%~60%）');
+  } else if (mode === 'extreme') {
+    state.extremePreset = 'balanced';
+    state.pngColors = 256;
+    state.gifColors = 128;
+    state.extremeQuality = 0.80;
+
     if (radioExtreme) radioExtreme.checked = true;
     if (cardExtreme) cardExtreme.classList.add('active');
+    if (cardHigh) cardHigh.classList.remove('active');
     if (cardLossless) cardLossless.classList.remove('active');
-    if (optionsBar) optionsBar.style.display = 'flex';
-    if (modeTag) {
-      modeTag.textContent = '⚡ 极致体积优先 (减容 60%~80%)';
-      modeTag.style.color = '#047857';
-      modeTag.style.background = '#ecfdf5';
-      modeTag.style.borderColor = '#a7f3d0';
-    }
-    if (headerPill) {
-      headerPill.textContent = '⚡ 极致体积 (推荐)';
-      headerPill.style.background = '#ecfdf5';
-      headerPill.style.color = '#047857';
-      headerPill.style.borderColor = '#a7f3d0';
-    }
+    if (modeLabel) modeLabel.textContent = '当前：极致体积';
+
     updateFormatCardsContent('extreme');
-    showToast('已切换为【极致体积模式】（对标 iLoveIMG，减容 60%~80%）');
+    showToast('已切换为【极致体积模式】（平衡推荐自适应量化 80%，减容 60%~80%）');
   } else {
+    state.extremePreset = 'lossless';
     if (radioLossless) radioLossless.checked = true;
-    if (cardExtreme) cardExtreme.classList.remove('active');
     if (cardLossless) cardLossless.classList.add('active');
-    if (optionsBar) optionsBar.style.display = 'none';
-    if (modeTag) {
-      modeTag.textContent = '💎 真无损模式 (逐像素保真)';
-      modeTag.style.color = '#1e40af';
-      modeTag.style.background = '#eff6ff';
-      modeTag.style.borderColor = '#bfdbfe';
-    }
-    if (headerPill) {
-      headerPill.textContent = '💎 真无损';
-      headerPill.style.background = '#eff6ff';
-      headerPill.style.color = '#1d4ed8';
-      headerPill.style.borderColor = '#bfdbfe';
-    }
+    if (cardExtreme) cardExtreme.classList.remove('active');
+    if (cardHigh) cardHigh.classList.remove('active');
+    if (modeLabel) modeLabel.textContent = '当前：真无损';
+
     updateFormatCardsContent('lossless');
     showToast('已切换为【真无损模式】（PSNR=∞，像素 100% 保持不变）');
   }
@@ -4430,7 +5440,41 @@ function updateFormatCardsContent(mode) {
   const jpegPill = document.querySelector('#formatCardJpeg .format-pill');
   const webpPill = document.querySelector('#formatCardWebp .format-pill');
 
-  if (mode === 'extreme') {
+  if (mode === 'high') {
+    if (pngPill) {
+      pngPill.textContent = '真彩有损 / 88%高精';
+      pngPill.className = 'format-pill pill-png';
+    }
+    if (jpegPill) {
+      jpegPill.textContent = '智能重编码 88%';
+      jpegPill.className = 'format-pill pill-jpg';
+    }
+    if (webpPill) {
+      webpPill.textContent = '多帧量化 256色';
+      webpPill.className = 'format-pill pill-webp';
+    }
+    if (pngCardTags) {
+      pngCardTags.innerHTML = `
+        <div>· 写实图 Lossy TrueColor：保持 24/32 位全彩无噪点，减容 35%~60%</div>
+        <div>· 图标矢量 8 位高精调色板：256 色精确量化，边缘纯净无色差</div>
+        <div>· 阴影透明度域隔离：彻底杜绝黑色噪点与半透明边缘脏色</div>
+      `;
+    }
+    if (jpegCardTags) {
+      jpegCardTags.innerHTML = `
+        <div>· 高清 DCT 频率重采样：质量系数 88% (高保真优先)</div>
+        <div>· 彻底移除冗余元数据：剥离 EXIF 相机参数、GPS 与修图记录</div>
+        <div>· 视觉无损立减 40%~60%：保持原始宽高分辨率与色彩层次</div>
+      `;
+    }
+    if (webpCardTags) {
+      webpCardTags.innerHTML = `
+        <div>· WebP 智能重采样 (88%) / GIF 纯前端 256 色高精调色板</div>
+        <div>· 完整保留 GIF 全部动图帧、帧间隔延时、循环次数与透明通道</div>
+        <div>· 高保真减容 25%~50%：画质细腻自然无颗粒感</div>
+      `;
+    }
+  } else if (mode === 'extreme') {
     if (pngPill) {
       pngPill.textContent = '自适应量化 / 真彩感知';
       pngPill.className = 'format-pill pill-png';
@@ -4571,7 +5615,10 @@ function openCompareModal(id) {
   const imgTop = document.getElementById('compareImgOriginal');
 
   if (titleEl) titleEl.textContent = item.fileName;
-  if (metaEl) metaEl.textContent = `${item.ext.toUpperCase()} ${item.width && item.height ? `· ${item.width}×${item.height}px` : ''}`;
+  // 对比弹窗展示导出文件实际写入的软件标识 (已元数据清洗为 SR-DevBox PixZip)
+  const modalSoftware = item.outputSoftware || item.software;
+  const softDesc = modalSoftware ? ` · 制作软件: ${modalSoftware}` : '';
+  if (metaEl) metaEl.textContent = `${item.ext.toUpperCase()} ${item.width && item.height ? `· ${item.width}×${item.height}px` : ''}${softDesc}`;
 
   if (origSizeEl) origSizeEl.textContent = formatSizeWithMb(item.originalSize);
   const ratioText = item.saved > 0 ? ` (-${item.ratio}%)` : '';
