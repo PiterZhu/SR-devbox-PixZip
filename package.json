@@ -13,8 +13,10 @@
   "dependencies": {
     "buffer": "^6.0.3",
     "jszip": "^3.10.1",
+    "omggif": "^1.0.10",
     "pako": "^2.1.0",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "upng-js": "^2.1.0"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",

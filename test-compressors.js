@@ -120,3 +120,31 @@ for (let i = 0; i < testPng.data.length; i += 4) {
 const testPngBuf = PNG.sync.write(testPng, { deflateLevel: 1 }); // 原始低压缩
 const compResult = compressPngLossless(testPngBuf, { deflateLevel: 9, deflateStrategy: 3 });
 console.log('PNG 低压缩原体积:', testPngBuf.length, '-> 强无损压缩后:', compResult.buffer.length, '节省:', compResult.saved, '字节');
+
+// 5. 测试对标 iLoveIMG 的 UPNG 极致体积压缩对比
+try {
+  const UPNG = require('upng-js');
+  // 创建一个包含真实渐变和微噪点的 200x200 彩色图片模拟真实照片
+  const w = 200, h = 200;
+  const photoPng = new PNG({ width: w, height: h });
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      const noise = ((x * 7 + y * 13) % 23);
+      photoPng.data[idx] = Math.min(255, ((x / w) * 200 + noise) | 0);
+      photoPng.data[idx + 1] = Math.min(255, ((y / h) * 180 + noise) | 0);
+      photoPng.data[idx + 2] = Math.min(255, (((x + y) / (w + h)) * 220 + noise) | 0);
+      photoPng.data[idx + 3] = 255;
+    }
+  }
+  const photoRaw = PNG.sync.write(photoPng, { deflateLevel: 6 });
+  const photoLossless = PNG.sync.write(photoPng, { deflateLevel: 9, deflateStrategy: 3 });
+  const photoExtreme = Buffer.from(UPNG.encode([photoPng.data.buffer], w, h, 256));
+
+  console.log('\n--- 真实图像压缩对比测试 (对标 iLoveIMG) ---');
+  console.log('原图文件大小:', (photoRaw.length / 1024).toFixed(1), 'KB');
+  console.log('模式一【真无损】大小:', (photoLossless.length / 1024).toFixed(1), 'KB (缩减率: ' + (((photoRaw.length - photoLossless.length) / photoRaw.length) * 100).toFixed(1) + '%)');
+  console.log('模式二【极致体积】大小:', (photoExtreme.length / 1024).toFixed(1), 'KB (缩减率: ' + (((photoRaw.length - photoExtreme.length) / photoRaw.length) * 100).toFixed(1) + '%)');
+} catch (e) {
+  console.log('UPNG 测试跳过:', e.message);
+}

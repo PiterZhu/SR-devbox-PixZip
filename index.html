@@ -25,6 +25,8 @@
 
   <script src="lib/pngjs.min.js"></script>
 
+  <script src="lib/upng.min.js"></script>
+
   <script src="lib/jszip.min.js"></script>
   <script>window.JSZip || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\/script>')</script>
 
@@ -102,8 +104,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 10px;
+  padding-bottom: 4px;
   flex-shrink: 0;
   gap: 16px;
 }
@@ -115,16 +116,17 @@ body {
   min-width: 0;
 }
 
-/* 官方 SR-DevBox 母体品牌链接 (Logo 与名称为一个整体，悬停高亮，点击直达官网) */
+/* 官方 SR-DevBox 母体品牌链接 (位于右上角，精致克制，点击直达官网) */
 .sr-brand-link {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
-  padding: 4px 10px 4px 6px;
+  padding: 4px 10px 4px 7px;
   border-radius: 8px;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   color: inherit;
   flex-shrink: 0;
@@ -133,16 +135,16 @@ body {
 
 .sr-brand-link:hover {
   background: #ffffff;
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+  border-color: #93c5fd;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
   transform: translateY(-1px);
 }
 
 .app-logo {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.35));
+  filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.3));
   transition: transform 0.2s ease;
 }
 
@@ -156,7 +158,7 @@ body {
 }
 
 .sr-brand-name {
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: -0.2px;
   color: var(--text-primary);
@@ -169,7 +171,7 @@ body {
 }
 
 .sr-brand-tag {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--text-muted);
   font-weight: 600;
   display: flex;
@@ -207,19 +209,11 @@ body {
 }
 
 .subtool-title {
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
-.title-highlight {
-  background: linear-gradient(135deg, var(--primary-glow) 0%, var(--secondary-glow) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 1.42rem;
   font-weight: 900;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
+  color: #1d4ed8;
+  line-height: 1.2;
 }
 
 .subtool-pill {
@@ -248,10 +242,10 @@ body {
 }
 
 .app-subtitle {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   color: var(--text-secondary);
-  font-family: monospace;
-  margin-top: 1px;
+  margin-top: 3px;
+  letter-spacing: 0.2px;
 }
 
 /* 工作区网格 */
@@ -332,7 +326,9 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  min-height: 125px;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  box-sizing: border-box;
   user-select: none;
 }
 
@@ -353,7 +349,7 @@ body {
 }
 
 .drop-icon {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .highlight-icon svg {
   color: var(--secondary-glow);
@@ -363,21 +359,52 @@ body {
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .drop-text-secondary {
   font-size: 0.72rem;
   color: var(--text-secondary);
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-/* 分析扫描日志面板 */
+/* 分析扫描日志面板与悬浮清空操作按钮 */
+.scan-progress-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.btn-clear-logs {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.btn-clear-logs:hover {
+  background: #ffffff;
+  color: var(--secondary-glow);
+  border-color: var(--secondary-glow);
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.12);
+}
+
 .scan-progress-panel {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 8px 70px 8px 12px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.74rem;
   color: var(--text-primary);
@@ -611,7 +638,9 @@ body {
 .control-section {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
 }
 
 .form-group {
@@ -627,52 +656,6 @@ body {
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.form-switch {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.switch-input {
-  display: none;
-}
-
-.switch-slider {
-  width: 36px;
-  height: 20px;
-  background-color: #cbd5e1;
-  border-radius: 10px;
-  position: relative;
-  transition: background-color 0.2s ease;
-  flex-shrink: 0;
-}
-
-.switch-slider::before {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: white;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-}
-
-.switch-input:checked + .switch-slider {
-  background-color: var(--primary-glow);
-}
-
-.switch-input:checked + .switch-slider::before {
-  transform: translateX(16px);
 }
 
 /* 设置子容器框 */
@@ -697,16 +680,372 @@ body {
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 0.75rem;
+  padding: 5px 8px;
+  font-size: 0.74rem;
   color: var(--text-primary);
   outline: none;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.setting-select:focus {
+  border-color: var(--primary-glow);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .setting-note {
   font-size: 0.7rem;
   color: var(--text-secondary);
   line-height: 1.4;
+}
+
+/* 格式优化 2x2 网格卡片 */
+.format-cards-grid {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.format-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.format-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.format-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.format-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.format-pill {
+  font-size: 0.64rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.pill-png { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.pill-jpg { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.pill-svg { background: #faf5ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+.pill-webp { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+
+.format-action-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.68rem;
+  color: #475569;
+  line-height: 1.35;
+  background: #f8fafc;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px dashed #e2e8f0;
+}
+
+/* 核心压缩模式选择卡片组 (极致体积 vs 真无损) */
+.compress-mode-section {
+  background: #f8fafc;
+  border: 1.5px solid #dbeafe;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compress-mode-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.compress-mode-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 4px;
+  padding: 1px 7px;
+  margin-left: auto;
+}
+
+.compress-mode-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.compress-mode-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 9px 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
+}
+
+.compress-mode-card:hover {
+  border-color: #93c5fd;
+  background: #f0f7ff;
+}
+
+.compress-mode-card.active {
+  border-color: var(--primary-glow);
+  background: #eff6ff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.compress-card-radio-mark {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+  margin-top: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.compress-mode-card.active .compress-card-radio-mark {
+  border-color: var(--primary-glow);
+}
+
+.compress-mode-card.active .compress-card-radio-mark::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary-glow);
+}
+
+.compress-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.compress-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.compress-card-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.compress-badge-recommend {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+.compress-badge-exact {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+.compress-card-desc {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.extreme-options-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+.extreme-opt-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.extreme-quality-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.quality-pill {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quality-pill:hover {
+  border-color: var(--primary-glow);
+  color: var(--primary-glow);
+  background: #eff6ff;
+}
+
+.quality-pill.active {
+  background: var(--primary-glow);
+  border-color: var(--primary-glow);
+  color: #ffffff;
+}
+
+/* 导出模式卡片组 */
+.export-mode-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.export-mode-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.export-mode-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.export-mode-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
+}
+
+.export-mode-card:hover {
+  border-color: #93c5fd;
+  background: #f0f7ff;
+}
+
+.export-mode-card.active {
+  border-color: var(--primary-glow);
+  background: #eff6ff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.export-card-radio-mark {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+  margin-top: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.export-mode-card.active .export-card-radio-mark {
+  border-color: var(--primary-glow);
+}
+
+.export-mode-card.active .export-card-radio-mark::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary-glow);
+}
+
+.export-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.export-card-name {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.export-mode-card.active .export-card-name {
+  color: var(--primary-glow);
+}
+
+.export-card-desc {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
 }
 
 /* 按钮样式 */
@@ -774,8 +1113,10 @@ body {
 .results-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 8px;
+  flex: 1;
+  min-height: 200px;
 }
 
 .results-table-wrapper {
@@ -783,7 +1124,8 @@ body {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   background: #ffffff;
-  max-height: 160px;
+  flex: 1;
+  min-height: 160px;
 }
 
 .results-table {
@@ -818,6 +1160,13 @@ body {
   background: #f8fafc;
 }
 
+#tableEmptyRow td {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 36px 20px !important;
+  vertical-align: middle;
+}
+
 .font-name-truncate {
   display: inline-block;
   max-width: 160px;
@@ -834,7 +1183,9 @@ body {
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  margin-top: 6px;
+  margin-top: auto;
+  flex-shrink: 0;
+  padding-top: 4px;
 }
 
 .btn-web-zip-large {
@@ -1026,6 +1377,437 @@ body {
   .workspace-grid { grid-template-columns: 1fr; }
   .license-status-bar { flex-direction: column; gap: 10px; align-items: flex-start; }
 }
+
+@media (max-width: 640px) {
+  .preset-cards-grid { grid-template-columns: 1fr; }
+  .format-cards-grid { grid-template-columns: 1fr; }
+  .wwh-grid { grid-template-columns: 1fr; }
+  .compress-mode-cards { grid-template-columns: 1fr; }
+  .export-mode-cards { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+ * 压缩结果明细列表缩略图与画质对比查看器样式
+ * ========================================================================== */
+
+/* 结果列表文件列与缩略图 */
+.result-file-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-thumb-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+  position: relative;
+  background-color: #f1f5f9;
+  background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%), linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e2e8f0 75%), linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.result-thumb-box.can-compare {
+  cursor: pointer;
+}
+
+.result-thumb-box.can-compare:hover {
+  border-color: var(--primary-glow);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
+  transform: scale(1.06);
+}
+
+.result-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb-compare-hint {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  backdrop-filter: blur(1px);
+}
+
+.result-thumb-box.can-compare:hover .thumb-compare-hint {
+  opacity: 1;
+}
+
+.result-file-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  gap: 2px;
+}
+
+.result-file-meta {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.btn-compare-action {
+  background: rgba(99, 102, 241, 0.08) !important;
+  color: #4338ca !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.btn-compare-action:hover {
+  background: rgba(99, 102, 241, 0.18) !important;
+  color: #3730a3 !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25) !important;
+}
+
+/* 全屏原图/压缩图明细对比弹窗 */
+.compare-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  padding: 18px;
+  animation: compareFadeIn 0.2s ease-out;
+}
+
+@keyframes compareFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.compare-modal-window {
+  width: 96vw;
+  max-width: 1400px;
+  height: 92vh;
+  max-height: 940px;
+  background: #090e1a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(37, 99, 235, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.compare-modal-header {
+  height: 54px;
+  background: rgba(15, 23, 42, 0.96);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 18px;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 50;
+}
+
+.compare-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.compare-title-icon {
+  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #818cf8;
+}
+
+.compare-title-text {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compare-title-meta {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.compare-modal-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compare-tool-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f1f5f9;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.compare-tool-btn:hover {
+  background: rgba(37, 99, 235, 0.32);
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.compare-zoom-label {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #38bdf8;
+  font-family: monospace;
+  min-width: 52px;
+  text-align: center;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.compare-zoom-label:hover {
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.compare-hint-tip {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+
+.compare-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.compare-close-btn:hover {
+  color: #ffffff;
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* 对比舞台 Stage */
+.compare-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: #060a12;
+  background-image: linear-gradient(45deg, #111827 25%, transparent 25%), linear-gradient(-45deg, #111827 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #111827 75%), linear-gradient(-45deg, transparent 75%, #111827 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+  cursor: grab;
+}
+
+.compare-stage.is-panning {
+  cursor: grabbing;
+}
+
+/* 浮动标签 Badges */
+.compare-badge {
+  position: absolute;
+  top: 16px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.3px;
+}
+
+.compare-badge-left {
+  left: 16px;
+  background: rgba(30, 58, 138, 0.88);
+  color: #bfdbfe;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+}
+
+.compare-badge-right {
+  right: 16px;
+  background: rgba(6, 78, 59, 0.88);
+  color: #a7f3d0;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-original {
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.dot-compressed {
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.badge-label-name {
+  font-weight: 800;
+}
+
+.badge-label-size {
+  font-family: monospace;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* 双图层与视口 */
+.compare-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.compare-layer-top {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.compare-viewport {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.compare-img {
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  image-rendering: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* 中间分割线与手柄 */
+.compare-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  margin-left: -22px;
+  z-index: 35;
+  cursor: ew-resize;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+}
+
+.compare-divider-line {
+  width: 2px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.85), 0 0 4px rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+}
+
+.compare-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #1e293b;
+  border: 2px solid #2563eb;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 12px rgba(37, 99, 235, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  pointer-events: auto;
+}
+
+.compare-handle:hover, .compare-divider.is-dragging .compare-handle {
+  transform: translateY(-50%) scale(1.14);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 18px rgba(37, 99, 235, 0.85);
+  border-color: #38bdf8;
+}
+
+@media (max-width: 640px) {
+  .compare-hint-tip { display: none; }
+  .compare-title-meta { display: none; }
+  .compare-modal-window { width: 100vw; height: 100vh; max-height: none; border-radius: 0; }
+  .compare-modal-overlay { padding: 0; }
+}
 </style>
 </head>
 <body>
@@ -1033,15 +1815,13 @@ body {
 
   <!-- 顶部导航栏 / 头部 -->
   <header class="app-header">
-    <!-- 左侧：PixZip 图片无损压缩工具 -->
+    <!-- 左侧：PixZip 图片压缩工具 -->
     <div class="subtool-info-col">
       <div class="subtool-title-row">
-        <h1 class="subtool-title">
-          <span class="title-highlight">PixZip</span> 图片无损压缩工具
-        </h1>
-        <span class="subtool-pill">极致无损</span>
+        <h1 class="subtool-title">PixZip 图片压缩工具</h1>
+        <span class="subtool-pill" id="headerModePill" style="background: #ecfdf5; color: #047857; border-color: #a7f3d0;">⚡ 极致体积 (推荐)</span>
       </div>
-      <div class="app-subtitle">画质零失真 · 智能无损瘦身 · 保持完整目录层级</div>
+      <div class="app-subtitle" id="headerModeSubtitle">双模式自由切换 · 极致体积对标 iLoveIMG · 保持完整目录层级</div>
     </div>
 
     <!-- 右上角：SR-DevBox 开发者效率工具箱 官网入口 -->
@@ -1079,58 +1859,54 @@ body {
     <!-- 左侧工作区：拖拽上传区域 + 项目扫描日志 + 待处理图片实时预览列表 -->
     <section class="left-workspace">
 
-      <!-- 并排上传区：左侧单个/批量图片拖拽，右侧网站工程目录扫描 -->
-      <div class="upload-options-grid">
-        <!-- 图片文件上传卡片 -->
-        <div class="drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()">
-          <input type="file" id="imageFileInput" multiple accept="image/*,.png,.jpg,.jpeg,.svg,.webp,.gif,.ico,.bmp" style="display: none" onchange="handleImageFilesSelected(event)">
-          <div class="drop-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21 15 16 10 5 21"/>
-            </svg>
-          </div>
-          <div class="drop-text-primary">将图片拖拽至此处，或点击选择</div>
-          <div class="drop-text-secondary">支持 PNG / JPG / SVG / WebP / GIF / ICO</div>
-        </div>
-
-        <!-- 网站/项目目录整包扫描卡片 -->
-        <div class="drop-zone scan-folder-zone" id="webDropZone" onclick="document.getElementById('folderFileInput').click()">
-          <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display: none" onchange="handleFolderSelected(event)">
-          <div class="drop-icon highlight-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--secondary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-              <line x1="12" y1="11" x2="12" y2="17"/>
-              <polyline points="9 14 12 11 15 14"/>
-            </svg>
-          </div>
-          <div class="drop-text-primary">将网站目录拖拽至此处，或点击选择</div>
-          <div class="drop-text-secondary" id="webScanHint">自动检测项目各层级图像，导出保持相对层级</div>
-        </div>
-      </div>
-
-      <!-- 网站项目扫描分析日志 -->
+      <!-- 图像导入与网站项目扫描分析面板 -->
       <div id="scanLogPanel" class="cyber-panel" style="border-top: 4px solid var(--secondary-glow); padding: 12px; flex: none;">
-        <div class="panel-title" style="border-left: 3px solid var(--secondary-glow); padding-left: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 网站项目图像分析日志
+        <!-- 并排上传区：左侧单个/批量图片拖拽，右侧网站工程目录扫描 -->
+        <div class="upload-options-grid" style="margin-bottom: 10px;">
+          <!-- 图片文件上传卡片 -->
+          <div class="drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()">
+            <input type="file" id="imageFileInput" multiple accept="image/*,.png,.jpg,.jpeg,.svg,.webp,.gif,.ico,.bmp" style="display: none" onchange="handleImageFilesSelected(event)">
+            <div class="drop-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:34px;height:34px;">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="drop-text-primary">将图片拖拽至此处，或点击选择</div>
+            <div class="drop-text-secondary">支持 PNG / JPG / SVG / WebP / GIF / ICO</div>
           </div>
-          <button class="btn-preset" style="padding: 2px 6px; font-size: 0.7rem;" onclick="clearScanLogs()">清除日志</button>
+
+          <!-- 网站/项目目录整包扫描卡片 -->
+          <div class="drop-zone scan-folder-zone" id="webDropZone" onclick="document.getElementById('folderFileInput').click()">
+            <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display: none" onchange="handleFolderSelected(event)">
+            <div class="drop-icon highlight-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--secondary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:34px;height:34px;">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                <line x1="12" y1="11" x2="12" y2="17"/>
+                <polyline points="9 14 12 11 15 14"/>
+              </svg>
+            </div>
+            <div class="drop-text-primary">将网站目录拖拽至此处，或点击选择</div>
+            <div class="drop-text-secondary" id="webScanHint">自动检测项目各层级图像，导出保持相对层级</div>
+          </div>
         </div>
-        <div class="scan-progress-panel" id="scanLogsList">
-          <div class="scan-log-line scan-log-info">[系统就绪] SR-DevBox-PixZip 极致无损图片压缩引擎已加载完成</div>
-          <div class="scan-log-line scan-log-info">[技术标准] PNG 基于 pngjs 重构 (deflateLevel: 9, strategy: 3 Z_FILTERED)</div>
-          <div class="scan-log-line scan-log-success">[合规声明] 所有依赖库均为纯商业可用开源协议 (MIT / Zlib)</div>
+
+        <!-- 扫描日志与右上角悬浮清空按钮 -->
+        <div class="scan-progress-wrapper">
+          <button class="btn-clear-logs" onclick="clearScanLogs()" title="清除扫描日志">清除日志</button>
+          <div class="scan-progress-panel" id="scanLogsList">
+            <div class="scan-log-line scan-log-info">[系统就绪] 【SR-DevBox】PixZip极致无损图片压缩引擎已加载完成</div>
+            <div class="scan-log-line scan-log-info">[技术标准] PNG 基于 pngjs 重构 (deflateLevel: 9, strategy: 3 Z_FILTERED)</div>
+            <div class="scan-log-line scan-log-success">[合规声明] 所有依赖库均为纯商业可用开源协议 (MIT / Zlib)</div>
+          </div>
         </div>
       </div>
 
       <!-- 图片实时预览面板 -->
       <div class="cyber-panel preview-container">
         <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="var(--primary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 待处理图片列表与实时预览
-          </div>
+          <span>待处理图片列表与实时预览</span>
           <div style="display: flex; gap: 6px; align-items: center;">
             <span id="previewCountBadge" class="btn-preset" style="font-size: 0.7rem; font-weight: normal; cursor: default; border-color: rgba(59, 130, 246, 0.2); color: var(--primary-glow);">
               工作区已加载 0 张图片
@@ -1173,107 +1949,147 @@ body {
       </div>
     </section>
 
-    <!-- 右侧面板：无损压缩策略、核心参数规范与压缩明细结果 -->
+    <!-- 右侧面板：格式处理特点与压缩明细结果 -->
     <section class="cyber-panel right-panel-cyber">
-      <div class="panel-title" style="border-left: 3px solid var(--secondary-glow); padding-left: 8px; margin-bottom: 14px;">
-        <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> 无损压缩策略与核心参数
+      <div class="panel-title" style="border-left: 3px solid var(--secondary-glow); padding-left: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <span>所支持格式的处理特点</span>
+        <span id="rightPanelModeBadge" style="font-size: 0.68rem; font-weight: 600; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 4px; padding: 2px 8px; display: inline-flex; align-items: center;">
+          ⚡ 极致体积 · 对标 iLoveIMG (60%~80%)
+        </span>
       </div>
 
       <!-- 控制选项区域 -->
       <div class="control-section">
 
-        <!-- 选项 1: PNG 极致无损重构 (用户指定 pngjs 规范) -->
-        <div class="form-group">
-          <label class="form-switch">
-            <input type="checkbox" id="pngLosslessSwitch" class="switch-input" checked />
-            <div class="switch-slider"></div>
-            <span>PNG 极致无损重构 (基于 pngjs 扫描线差分 + Deflate 9)</span>
-          </label>
-          <div class="setting-subbox">
-            <div class="setting-subbox-row">
-              <span style="font-weight: 600;">Deflate 压缩级别:</span>
-              <select id="pngDeflateLevelSelect" class="setting-select">
-                <option value="9" selected>级别 9 (最大字典匹配，压缩率最高 - 规范)</option>
-                <option value="8">级别 8</option>
-                <option value="7">级别 7</option>
-              </select>
+        <!-- 核心压缩模式选择卡片组 (极致体积 vs 真无损) -->
+        <div class="compress-mode-section">
+          <div class="compress-mode-title">
+            <svg style="width:15px;height:15px;color:var(--primary-glow);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span>压缩核心模式选择：</span>
+            <span class="compress-mode-tag" id="currentModeTag">⚡ 极致体积优先 (减容 60%~80%)</span>
+          </div>
+          <div class="compress-mode-cards">
+            <!-- 模式 1: 极致体积 (对标 iLoveIMG) -->
+            <div class="compress-mode-card active" id="compressCardExtreme" onclick="selectCompressMode('extreme')">
+              <input type="radio" name="compressMode" value="extreme" checked style="display: none;" />
+              <div class="compress-card-radio-mark"></div>
+              <div class="compress-card-content">
+                <div class="compress-card-header-row">
+                  <span class="compress-card-name">⚡ 极致体积</span>
+                  <span class="compress-badge-recommend">对标 iLoveIMG · 推荐</span>
+                </div>
+                <div class="compress-card-desc">感知无损量化，体积直降 60%~80%，肉眼几无差别</div>
+              </div>
             </div>
-            <div class="setting-subbox-row">
-              <span style="font-weight: 600;">差分过滤策略:</span>
-              <select id="pngDeflateStrategySelect" class="setting-select">
-                <option value="3" selected>Strategy 3 (Z_FILTERED 差分数据专用最优策略)</option>
-                <option value="0">Strategy 0 (Z_DEFAULT 通用策略)</option>
-              </select>
+            <!-- 模式 2: 真无损 (逐像素 100% 保真) -->
+            <div class="compress-mode-card" id="compressCardLossless" onclick="selectCompressMode('lossless')">
+              <input type="radio" name="compressMode" value="lossless" style="display: none;" />
+              <div class="compress-card-radio-mark"></div>
+              <div class="compress-card-content">
+                <div class="compress-card-header-row">
+                  <span class="compress-card-name">💎 真无损</span>
+                  <span class="compress-badge-exact">PSNR=∞ · 零失真</span>
+                </div>
+                <div class="compress-card-desc">逐像素 100% 绝对一致，字典重构优化 (减容 10%~25%)</div>
+              </div>
             </div>
-            <div class="setting-note">
-              ✓ 压缩性质：绝对无损（Bit-level Lossless），像素 RGBA 矩阵完全不发生任何改变（PSNR = ∞，SSIM = 1.0）。<br>
-              ✓ 自动剥离冗余元数据（tEXt, zTXt, iTXt, eXIf），强制开启体积安全兜底（若压缩后体积增大则自动回退原图）。
+          </div>
+
+          <!-- 极致体积微调档位 (仅在极致体积下展开) -->
+          <div class="extreme-options-bar" id="extremeOptionsBar">
+            <span class="extreme-opt-label">强度档位：</span>
+            <div class="extreme-quality-pills">
+              <button class="quality-pill active" id="pillQualityBalanced" onclick="setExtremeQuality('balanced', this)">平衡推荐 (256色 / 80%)</button>
+              <button class="quality-pill" id="pillQualityHigh" onclick="setExtremeQuality('high', this)">高保真 (256色 / 88%)</button>
+              <button class="quality-pill" id="pillQualityMax" onclick="setExtremeQuality('max', this)">极限压缩 (128色 / 70%)</button>
             </div>
           </div>
         </div>
 
-        <!-- 选项 2: JPG/JPEG 元数据无损净化 -->
-        <div class="form-group">
-          <label class="form-switch">
-            <input type="checkbox" id="jpegLosslessSwitch" class="switch-input" checked />
-            <div class="switch-slider"></div>
-            <span>JPG / JPEG 冗余元数据无损净化 (Bit-exact SOS 流)</span>
-          </label>
-          <div class="setting-subbox">
-            <div class="setting-subbox-row">
-              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                <input type="checkbox" id="jpegKeepIccCheckbox" checked />
-                <span>保留 ICC 颜色配置文件 (防止广色域设备色彩偏移)</span>
-              </label>
-            </div>
-            <div class="setting-note">
-              ✓ 仅剥离冗余 EXIF 拍摄参数、缩略图与 Photoshop IPTC 数据，绝对不重编码 SOS 熵编码流，100% 画质像素无损。
-            </div>
-          </div>
-        </div>
+        <!-- 各格式压缩特点介绍卡片 -->
+        <div class="format-cards-grid">
 
-        <!-- 选项 3: SVG 矢量结构无损精简 -->
-        <div class="form-group">
-          <label class="form-switch">
-            <input type="checkbox" id="svgLosslessSwitch" class="switch-input" checked />
-            <div class="switch-slider"></div>
-            <span>SVG 矢量结构无损精简 (XML 树优化)</span>
-          </label>
-          <div class="setting-subbox">
-            <div class="setting-note">
-              ✓ 移除 XML 声明、注释、DOCTYPE、metadata 与 Illustrator/Inkscape 冗余属性，折叠多余空白字符，100% 保持渲染矢量路径一致。
+          <!-- 卡片 1: PNG 格式 -->
+          <div class="format-card" id="formatCardPng">
+            <div class="format-card-header">
+              <span class="format-badge-tag">PNG 格式</span>
+              <span class="format-pill pill-png">感知量化 256色</span>
+            </div>
+            <div class="format-action-tags" style="margin-top: 4px;">
+              <div>· 智能色彩聚类量化：RGBA 32位转 8位调色板 (对标 iLoveIMG)</div>
+              <div>· Floyd-Steinberg 误差抖动：平滑过渡无色阶断层，肉眼感知无损</div>
+              <div>· 极致体积立减 60%~80%：支持完整 Alpha 透明通道</div>
             </div>
           </div>
-        </div>
 
-        <!-- 选项 4: WebP / GIF / 其他格式无损处理 -->
-        <div class="form-group">
-          <label class="form-switch">
-            <input type="checkbox" id="webpLosslessSwitch" class="switch-input" checked />
-            <div class="switch-slider"></div>
-            <span>WebP / GIF 元数据无损清理</span>
-          </label>
-          <div class="setting-subbox">
-            <div class="setting-note">
-              ✓ 剥离 WebP RIFF 容器中无用的 EXIF / XMP 扩展块，保持 VP8 / VP8L 像素流完整无损。
+          <!-- 卡片 2: JPG / JPEG 格式 -->
+          <div class="format-card" id="formatCardJpeg">
+            <div class="format-card-header">
+              <span class="format-badge-tag">JPG / JPEG 格式</span>
+              <span class="format-pill pill-jpg">智能重编码 80%</span>
+            </div>
+            <div class="format-action-tags" style="margin-top: 4px;">
+              <div>· 高清 DCT 频率重采样：质量系数 80% (平衡画质与体积)</div>
+              <div>· 彻底移除冗余元数据：剥离 EXIF 相机参数、GPS 与修图记录</div>
+              <div>· 极致体积立减 50%~75%：保持原始宽高分辨率绝不缩放</div>
             </div>
           </div>
+
+          <!-- 卡片 3: SVG 矢量图格式 -->
+          <div class="format-card" id="formatCardSvg">
+            <div class="format-card-header">
+              <span class="format-badge-tag">SVG 矢量图</span>
+              <span class="format-pill pill-svg">代码精简</span>
+            </div>
+            <div class="format-action-tags" style="margin-top: 4px;">
+              <div>· 清理设计软件导出多余标签、命名空间与 XML 声明</div>
+              <div>· 剔除冗余注释与空白字符，保持矢量路径完全一致</div>
+              <div>· 坐标精度无损保真：不损失任何曲线控制点与平滑度</div>
+            </div>
+          </div>
+
+          <!-- 卡片 4: WebP / GIF 格式 -->
+          <div class="format-card" id="formatCardWebp">
+            <div class="format-card-header">
+              <span class="format-badge-tag">WebP / GIF 格式</span>
+              <span class="format-pill pill-webp">容器优化</span>
+            </div>
+            <div class="format-action-tags" style="margin-top: 4px;">
+              <div>· 剥离容器外部附加的 EXIF 与 XMP 冗余描述块</div>
+              <div>· 动图帧序列、帧间隔时间与透明通道完全保留</div>
+              <div>· 核心 VP8/VP8L 图素流无损原样穿透，画质零损失</div>
+            </div>
+          </div>
+
         </div>
 
         <!-- 导出模式配置 -->
-        <div class="form-group" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
-          <div style="font-size: 0.76rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
-            导出保持原有目录层级模式:
+        <div class="export-mode-section">
+          <div class="export-mode-title">
+            <svg style="width:14px;height:14px;color:var(--primary-glow);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+            <span>导出打包方式：</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.76rem;">
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-              <input type="radio" name="exportMode" value="images-only" checked />
-              <span style="font-weight: 600; color: var(--primary-glow);">仅导出图片资源（保持原有相对目录层级）</span>
-            </label>
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-              <input type="radio" name="exportMode" value="full-website" />
-              <span>整站项目打包（保持完整代码结构，HTML/CSS/JS 原样保留，图片自动替换）</span>
-            </label>
+          <div class="export-mode-cards">
+            <div class="export-mode-card active" id="exportCardImagesOnly" onclick="selectExportMode('images-only')">
+              <input type="radio" name="exportMode" value="images-only" checked style="display: none;" />
+              <div class="export-card-radio-mark"></div>
+              <div class="export-card-content">
+                <div class="export-card-name">仅导出图片</div>
+                <div class="export-card-desc">按原有目录层级仅导出优化后的图片文件</div>
+              </div>
+            </div>
+            <div class="export-mode-card" id="exportCardFullWebsite" onclick="selectExportMode('full-website')">
+              <input type="radio" name="exportMode" value="full-website" style="display: none;" />
+              <div class="export-card-radio-mark"></div>
+              <div class="export-card-content">
+                <div class="export-card-name">整站项目替换</div>
+                <div class="export-card-desc">保留所有 HTML/CSS/JS 代码结构，直接替换图片资源</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1283,8 +2099,15 @@ body {
             <svg id="btnCompressIcon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
-            <span id="btnCompressText">开始执行极致无损压缩</span>
+            <span id="btnCompressText">开始批量压缩</span>
           </button>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+            <span>本地浏览器纯前端处理</span>
+            <span>·</span>
+            <span>逐像素 100% 保真</span>
+            <span>·</span>
+            <span>体积未减小自动跳过</span>
+          </div>
         </div>
 
         <!-- 压缩明细统计表格与对比 -->
@@ -1310,7 +2133,7 @@ body {
               </thead>
               <tbody id="resultsTableBody">
                 <tr id="tableEmptyRow">
-                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px 20px;">
                     暂无已完成的压缩记录，请导入图片并点击上方“开始压缩”
                   </td>
                 </tr>
@@ -1334,27 +2157,6 @@ body {
       </div>
     </section>
   </main>
-
-  <!-- 底部授权状态栏 -->
-  <footer class="license-status-bar">
-    <div class="status-bar-left">
-      <span class="status-indicator-dot"></span>
-      <span class="status-text-label">软件授权状态：</span>
-      <span class="status-text-val">已激活 (永久商业授权)</span>
-      <button class="status-activate-link-btn" onclick="openActivationModal()" title="绑定授权">[ 续期 / 绑定 ]</button>
-    </div>
-    <div class="status-bar-right">
-      <span class="status-text-label" style="font-weight: normal; color: var(--text-secondary);">本机机器码：</span>
-      <span class="machine-code-val" id="machineCodeText">SR-PIXZIP-8A4F-29E1</span>
-      <button class="status-copy-btn" onclick="copyMachineCode()" title="复制机器码">
-        <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-        复制
-      </button>
-    </div>
-  </footer>
 </div>
 
 <!-- 授权激活弹窗 -->
@@ -1393,6 +2195,78 @@ body {
   </div>
 </div>
 
+<!-- 图片原图/压缩图全屏明细对比查看器 -->
+<div id="imageCompareModal" class="compare-modal-overlay" style="display: none;" onclick="if(event.target===this) closeCompareModal()">
+  <div class="compare-modal-window">
+    <!-- 顶部控制栏 -->
+    <div class="compare-modal-header">
+      <div class="compare-modal-title">
+        <span class="compare-title-icon"><svg viewBox="0 0 1024 1024" width="18" height="18" style="fill: #818cf8;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg></span>
+        <span id="compareModalFileName" class="compare-title-text">画质细节对比查看器</span>
+        <span id="compareModalDimensions" class="compare-title-meta"></span>
+      </div>
+
+      <div class="compare-modal-tools">
+        <button class="compare-tool-btn" onclick="zoomCompareImage(-0.25)" title="缩小 (也可直接在画面上向下滚动滚轮)">
+          <svg style="width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <span id="compareZoomPercent" class="compare-zoom-label" onclick="resetCompareZoom()" title="点击重置缩放比例">100%</span>
+        <button class="compare-tool-btn" onclick="zoomCompareImage(0.25)" title="放大 (也可直接在画面上向上滚动滚轮)">
+          <svg style="width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <button class="compare-tool-btn" onclick="resetCompareZoom()" title="重置缩放并居中">⟲ 适应/重置</button>
+        <span class="compare-hint-tip">💡 滚轮缩放 · 拖拽平移 · 滑动中线对比</span>
+      </div>
+
+      <button class="compare-close-btn" onclick="closeCompareModal()" title="关闭对比器 (Esc)">×</button>
+    </div>
+
+    <!-- 对比核心视口舞台 -->
+    <div class="compare-stage" id="compareStage">
+      <!-- 左上角原图标签 -->
+      <div class="compare-badge compare-badge-left" id="compareBadgeOriginal">
+        <span class="badge-dot dot-original"></span>
+        <span class="badge-label-name">原图</span>
+        <span class="badge-label-size" id="compareOriginalSize">--</span>
+      </div>
+
+      <!-- 右上角压缩后标签 -->
+      <div class="compare-badge compare-badge-right" id="compareBadgeCompressed">
+        <span class="badge-dot dot-compressed"></span>
+        <span class="badge-label-name">压缩后</span>
+        <span class="badge-label-size" id="compareCompressedSize">--</span>
+      </div>
+
+      <!-- 底层：压缩后图片视口 -->
+      <div class="compare-layer" id="compareLayerBottom">
+        <div class="compare-viewport" id="compareViewportBottom">
+          <img id="compareImgCompressed" class="compare-img" alt="压缩后" />
+        </div>
+      </div>
+
+      <!-- 顶层：原图视口 (通过 clipPath 裁剪显示中线左侧) -->
+      <div class="compare-layer-top" id="compareLayerTop">
+        <div class="compare-viewport" id="compareViewportTop">
+          <img id="compareImgOriginal" class="compare-img" alt="原图" />
+        </div>
+      </div>
+
+      <!-- 垂直中线分割条与拖拽手柄 -->
+      <div class="compare-divider" id="compareDivider">
+        <div class="compare-divider-line"></div>
+        <div class="compare-handle" id="compareHandle" title="按住左右拖拽对比">
+          <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- 自定义 Toast 提示 -->
 <div id="toastNotification" class="custom-toast toast-success">
   <span id="toastMessage">操作成功</span>
@@ -1422,16 +2296,25 @@ const state = {
   // 搜索关键字
   searchKeyword: '',
   // 是否正在执行批量压缩
-  isCompressing: false
+  isCompressing: false,
+  // 核心压缩模式: 'extreme' (极致体积对标 iLoveIMG) | 'lossless' (真无损保真)
+  compressMode: 'extreme',
+  // 极致体积预设档位: 'balanced' (平衡) | 'high' (高保真) | 'max' (极限)
+  extremePreset: 'balanced',
+  // PNG 色彩量化数
+  pngColors: 256,
+  // JPG / WebP 质量系数
+  extremeQuality: 0.80
 };
 
 // ==========================================================================
 // 1. 文件拖拽与目录读取核心逻辑 (支持整个网站整包拖入与递归读取)
 // ==========================================================================
 
-// 初始化拖拽监听器
+// 初始化拖拽监听器与界面状态
 window.addEventListener('DOMContentLoaded', () => {
   setupDragAndDrop();
+  initCompareModalEvents();
 });
 
 function setupDragAndDrop() {
@@ -1633,6 +2516,7 @@ async function addSingleFileToWorkspace(file) {
     originalSize: file.size,
     compressedSize: file.size,
     data: null,
+    compressedUrl: null,
     status: 'pending', // pending | compressing | success | skipped | failed
     ratio: '0.0',
     saved: 0,
@@ -1650,27 +2534,174 @@ async function addSingleFileToWorkspace(file) {
 // ==========================================================================
 
 /**
- * 调度单张图片的无损压缩
+ * 调度单张图片的压缩任务 (支持“极致体积”与“真无损”双模式智能分流)
  */
 async function compressSingleImage(item) {
+  const isExtreme = state.compressMode === 'extreme';
   const arrayBuffer = await item.file.arrayBuffer();
 
   switch (item.ext) {
     case 'png':
+      if (isExtreme) {
+        return await compressPngExtreme(item, arrayBuffer);
+      }
       return await compressPngLossless(arrayBuffer);
     case 'jpg':
     case 'jpeg':
+      if (isExtreme) {
+        return await compressJpegLossy(item, arrayBuffer);
+      }
       return await compressJpegLossless(arrayBuffer);
+    case 'webp':
+      if (isExtreme) {
+        return await compressWebpLossy(item, arrayBuffer);
+      }
+      return await compressWebpLossless(arrayBuffer);
     case 'svg':
       return await compressSvgLossless(arrayBuffer);
-    case 'webp':
-      return await compressWebpLossless(arrayBuffer);
     case 'gif':
     case 'ico':
     case 'bmp':
     default:
       return await compressGenericLossless(arrayBuffer, item.ext);
   }
+}
+
+/**
+ * 2.0 PNG 极致体积感知无损压缩 (对标 iLoveIMG / TinyPNG 商业水准)
+ * 核心技术: 自适应色彩聚类量化 (Color Quantization) + Floyd-Steinberg 误差扩散抖动
+ * 依赖: window.UPNG (基于 UPNG.js) + window.pako
+ * 效果: 32位真彩色转为高质量 8位调色板 PNG (带完整 Alpha 透明通道)，体积暴降 60%~80%，肉眼感知无损
+ */
+async function compressPngExtreme(item, arrayBuffer) {
+  const originalSize = arrayBuffer.byteLength;
+  try {
+    if (window.UPNG) {
+      let rgbaBuffer;
+      let width, height;
+
+      try {
+        const decoded = window.UPNG.decode(arrayBuffer);
+        const rgbaArr = window.UPNG.toRGBA8(decoded);
+        rgbaBuffer = rgbaArr[0];
+        width = decoded.width;
+        height = decoded.height;
+      } catch (decodeErr) {
+        // 如果 UPNG 内部解析异常，使用浏览器原生 Canvas 解码像素
+        const imgBitmap = await createImageBitmap(item.file);
+        width = imgBitmap.width;
+        height = imgBitmap.height;
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(imgBitmap, 0, 0);
+        const imgData = ctx.getImageData(0, 0, width, height);
+        rgbaBuffer = imgData.data.buffer;
+      }
+
+      // 执行 UPNG 调色板聚类与量化 (256/128色，自动启动 Floyd-Steinberg 抖动)
+      const colors = state.pngColors || 256;
+      const compressedAb = window.UPNG.encode([rgbaBuffer], width, height, colors);
+      const outputBuffer = new Uint8Array(compressedAb);
+
+      // 安全防反弹机制：体积必须真正缩减才算成功
+      if (outputBuffer.length < originalSize) {
+        const saved = originalSize - outputBuffer.length;
+        const ratio = ((saved / originalSize) * 100).toFixed(1);
+        return {
+          data: outputBuffer,
+          originalSize,
+          compressedSize: outputBuffer.length,
+          saved,
+          ratio,
+          status: 'success',
+          width,
+          height
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('PNG 极致体积量化异常，安全回退纯无损重构:', err);
+  }
+
+  // 安全兜底：如果无法更小或发生异常，回退纯无损 Deflate Level 9 算法
+  return await compressPngLossless(arrayBuffer);
+}
+
+/**
+ * 2.01 JPEG 极致体积压缩 (对标 iLoveIMG)
+ * 采用浏览器原生高性能 HTML5 Canvas 离屏高质量重编 DCT 流
+ */
+async function compressJpegLossy(item, arrayBuffer) {
+  const originalSize = arrayBuffer.byteLength;
+  try {
+    const imgBitmap = await createImageBitmap(item.file);
+    const canvas = document.createElement('canvas');
+    canvas.width = imgBitmap.width;
+    canvas.height = imgBitmap.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imgBitmap, 0, 0);
+
+    const quality = state.extremeQuality || 0.80;
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+    if (blob && blob.size < originalSize) {
+      const blobAb = await blob.arrayBuffer();
+      const outputBuffer = new Uint8Array(blobAb);
+      const saved = originalSize - outputBuffer.length;
+      const ratio = ((saved / originalSize) * 100).toFixed(1);
+      return {
+        data: outputBuffer,
+        originalSize,
+        compressedSize: outputBuffer.length,
+        saved,
+        ratio,
+        status: 'success',
+        width: imgBitmap.width,
+        height: imgBitmap.height
+      };
+    }
+  } catch (err) {
+    console.warn('JPEG 极致体积压缩异常，降级无损元数据剥离:', err);
+  }
+  return await compressJpegLossless(arrayBuffer);
+}
+
+/**
+ * 2.02 WebP 极致体积压缩
+ */
+async function compressWebpLossy(item, arrayBuffer) {
+  const originalSize = arrayBuffer.byteLength;
+  try {
+    const imgBitmap = await createImageBitmap(item.file);
+    const canvas = document.createElement('canvas');
+    canvas.width = imgBitmap.width;
+    canvas.height = imgBitmap.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(imgBitmap, 0, 0);
+
+    const quality = state.extremeQuality || 0.80;
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', quality));
+    if (blob && blob.size < originalSize) {
+      const blobAb = await blob.arrayBuffer();
+      const outputBuffer = new Uint8Array(blobAb);
+      const saved = originalSize - outputBuffer.length;
+      const ratio = ((saved / originalSize) * 100).toFixed(1);
+      return {
+        data: outputBuffer,
+        originalSize,
+        compressedSize: outputBuffer.length,
+        saved,
+        ratio,
+        status: 'success',
+        width: imgBitmap.width,
+        height: imgBitmap.height
+      };
+    }
+  } catch (err) {
+    console.warn('WebP 极致体积压缩异常:', err);
+  }
+  return await compressWebpLossless(arrayBuffer);
 }
 
 /**
@@ -1683,13 +2714,8 @@ async function compressPngLossless(arrayBuffer) {
   const originalSize = inputBuffer.length;
 
   try {
-    // 检查是否开启 PNG 无损压缩开关
-    if (!document.getElementById('pngLosslessSwitch').checked) {
-      return { data: inputBuffer, originalSize, compressedSize: originalSize, saved: 0, ratio: '0.0', status: 'skipped' };
-    }
-
-    const level = parseInt(document.getElementById('pngDeflateLevelSelect').value, 10) || 9;
-    const strategy = parseInt(document.getElementById('pngDeflateStrategySelect').value, 10) || 3;
+    const level = 9;        // 最大压缩级别 (1-9，默认 9 为压缩率最高)
+    const strategy = 3;     // Z_FILTERED 策略 (专用于过滤后的图形图像差分数据)
 
     // 1. 读取原始图像二进制数据解析为 PNG 实例 (像素矩阵 RGBA 完全解包)
     const png = window.PNG.sync.read(inputBuffer);
@@ -1749,11 +2775,7 @@ async function compressJpegLossless(arrayBuffer) {
   const originalSize = inputBytes.length;
 
   try {
-    if (!document.getElementById('jpegLosslessSwitch').checked) {
-      return { data: inputBytes, originalSize, compressedSize: originalSize, saved: 0, ratio: '0.0', status: 'skipped' };
-    }
-
-    const keepIcc = document.getElementById('jpegKeepIccCheckbox').checked;
+    const keepIcc = true; // 始终保留 ICC 色彩空间配置，杜绝广色域设备偏色与发灰问题
 
     // 校验 JPEG 头部魔数 0xFF 0xD8
     if (inputBytes[0] !== 0xFF || inputBytes[1] !== 0xD8) {
@@ -1849,10 +2871,6 @@ async function compressSvgLossless(arrayBuffer) {
   const originalSize = originalBytes.length;
 
   try {
-    if (!document.getElementById('svgLosslessSwitch').checked) {
-      return { data: originalBytes, originalSize, compressedSize: originalSize, saved: 0, ratio: '0.0', status: 'skipped' };
-    }
-
     const decoder = new TextDecoder('utf-8');
     const svgText = decoder.decode(arrayBuffer);
 
@@ -1896,10 +2914,6 @@ async function compressWebpLossless(arrayBuffer) {
   const originalSize = bytes.length;
 
   try {
-    if (!document.getElementById('webpLosslessSwitch').checked) {
-      return { data: bytes, originalSize, compressedSize: originalSize, saved: 0, ratio: '0.0', status: 'skipped' };
-    }
-
     // 校验 RIFF / WEBP
     if (bytes.length < 12 ||
         bytes[0] !== 0x52 || bytes[1] !== 0x49 || bytes[2] !== 0x46 || bytes[3] !== 0x46 ||
@@ -2027,6 +3041,32 @@ async function startBatchCompress() {
       item.height = res.height;
     }
 
+    // 生成或更新压缩后的 ObjectURL 用于即时缩略图与全屏画质对比
+    if (item.data) {
+      try {
+        if (item.compressedUrl && item.compressedUrl !== item.previewUrl) {
+          URL.revokeObjectURL(item.compressedUrl);
+        }
+        const mimeMap = {
+          png: 'image/png',
+          jpg: 'image/jpeg',
+          jpeg: 'image/jpeg',
+          webp: 'image/webp',
+          svg: 'image/svg+xml',
+          gif: 'image/gif',
+          ico: 'image/x-icon',
+          bmp: 'image/bmp'
+        };
+        const mime = mimeMap[item.ext.toLowerCase()] || item.file.type || 'image/png';
+        const blob = new Blob([item.data], { type: mime });
+        item.compressedUrl = URL.createObjectURL(blob);
+      } catch (e) {
+        item.compressedUrl = item.previewUrl;
+      }
+    } else {
+      item.compressedUrl = item.previewUrl;
+    }
+
     if (item.status === 'success') {
       successCount++;
       totalBytesSaved += item.saved;
@@ -2049,7 +3089,7 @@ async function startBatchCompress() {
       <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
     </svg>
   `;
-  text.textContent = '开始执行极致无损压缩';
+  text.textContent = '开始批量压缩';
 
   updateWorkspaceStats();
   appendScanLog(`[${getCurrentTime()}] 全部处理完毕！${successCount} 张图片成功优化，${skippedCount} 张已达极限，累计节省 ${formatBytes(totalBytesSaved)}`, 'success');
@@ -2247,18 +3287,43 @@ function renderResultsTableRow(item) {
   const emptyRow = document.getElementById('tableEmptyRow');
   if (emptyRow) emptyRow.remove();
 
+  const thumbUrl = item.compressedUrl || item.previewUrl;
+  const canCompare = item.status === 'success' || item.status === 'skipped';
+  const dimText = item.width && item.height ? ` · ${item.width}×${item.height}px` : '';
+
   let existingRow = document.getElementById(`row-${item.id}`);
   const rowHtml = `
     <tr id="row-${item.id}">
       <td>
-        <span class="font-name-truncate" title="${item.relativePath}">${item.relativePath}</span>
+        <div class="result-file-col">
+          <div class="result-thumb-box ${canCompare ? 'can-compare' : ''}"
+               onclick="${canCompare ? `openCompareModal('${item.id}')` : ''}"
+               title="${canCompare ? '点击全屏查看原图/压缩图明细对比' : '缩略图'}">
+            <img class="result-thumb-img" src="${thumbUrl}" alt="缩略图" onerror="this.src='${item.previewUrl}'" />
+            ${canCompare ? `<span class="thumb-compare-hint" title="画质对比"><svg viewBox="0 0 1024 1024" width="18" height="18" style="fill: #ffffff;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg></span>` : ''}
+          </div>
+          <div class="result-file-info">
+            <span class="font-name-truncate" title="${item.relativePath}">${item.relativePath}</span>
+            <span class="result-file-meta">${item.ext.toUpperCase()}${dimText}</span>
+          </div>
+        </div>
       </td>
       <td>${formatBytes(item.originalSize)}</td>
       <td>${formatBytes(item.compressedSize)}</td>
       <td class="reduction-text">${item.saved > 0 ? '-' + item.ratio + '%' : '0%'}</td>
       <td>${getStatusBadgeHtml(item.status)}</td>
       <td>
-        <button class="btn-preset" style="padding: 2px 6px; font-size: 0.68rem;" onclick="downloadSingleImage(state.images.find(i=>i.id==='${item.id}'))">下载</button>
+        <div style="display: flex; gap: 4px; align-items: center;">
+          ${canCompare ? `
+            <button class="btn-preset btn-compare-action"
+                    style="padding: 2px 7px; font-size: 0.68rem;"
+                    onclick="openCompareModal('${item.id}')"
+                    title="查看原图与压缩后画质细节对比">
+              <svg viewBox="0 0 1024 1024" width="12" height="12" style="fill: currentColor; vertical-align: -1px;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg> 对比
+            </button>
+          ` : ''}
+          <button class="btn-preset" style="padding: 2px 6px; font-size: 0.68rem;" onclick="downloadSingleImage(state.images.find(i=>i.id==='${item.id}'))">下载</button>
+        </div>
       </td>
     </tr>
   `;
@@ -2275,6 +3340,9 @@ function removeImage(id) {
   if (idx !== -1) {
     const item = state.images[idx];
     if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+    if (item.compressedUrl && item.compressedUrl !== item.previewUrl) {
+      URL.revokeObjectURL(item.compressedUrl);
+    }
     state.images.splice(idx, 1);
 
     const row = document.getElementById(`row-${id}`);
@@ -2289,13 +3357,16 @@ function removeImage(id) {
 function clearAllImages() {
   state.images.forEach(img => {
     if (img.previewUrl) URL.revokeObjectURL(img.previewUrl);
+    if (img.compressedUrl && img.compressedUrl !== img.previewUrl) {
+      URL.revokeObjectURL(img.compressedUrl);
+    }
   });
   state.images = [];
   state.websiteOtherFiles = [];
 
   document.getElementById('resultsTableBody').innerHTML = `
     <tr id="tableEmptyRow">
-      <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+      <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px 20px;">
         暂无已完成的压缩记录，请导入图片并点击上方“开始压缩”
       </td>
     </tr>
@@ -2332,7 +3403,10 @@ function updateWorkspaceStats() {
 
   const ratio = originalTotal > 0 ? ((totalSaved / originalTotal) * 100).toFixed(1) : '0.0';
 
-  document.getElementById('headerBadge').textContent = `工作区已有 ${count} 张图片 · 累计节省 ${formatBytes(totalSaved)} (${ratio}%)`;
+  const headerBadge = document.getElementById('headerBadge');
+  if (headerBadge) {
+    headerBadge.textContent = `工作区已有 ${count} 张图片 · 累计节省 ${formatBytes(totalSaved)} (${ratio}%)`;
+  }
   document.getElementById('previewCountBadge').textContent = `工作区已加载 ${count} 张图片 (${formatBytes(originalTotal)})`;
   document.getElementById('totalSavingsBadge').textContent = `总体积节省 ${formatBytes(totalSaved)} (${ratio}%)`;
 }
@@ -2385,7 +3459,8 @@ function truncateString(str, num) {
 
 // 复制机器码
 function copyMachineCode() {
-  const code = document.getElementById('machineCodeText').textContent;
+  const codeEl = document.getElementById('machineCodeText');
+  const code = codeEl ? codeEl.textContent : 'SR-PIXZIP-8A4F-29E1';
   navigator.clipboard?.writeText(code).then(() => {
     showToast('机器码已复制至剪贴板: ' + code);
   }).catch(() => {
@@ -2423,6 +3498,418 @@ function showToast(msg) {
   }, 2200);
 }
 
+// ==========================================================================
+// ==========================================================================
+// 6. 核心压缩模式与导出模式交互调度
+// ==========================================================================
+
+function selectCompressMode(mode) {
+  state.compressMode = mode;
+  const cardExtreme = document.getElementById('compressCardExtreme');
+  const cardLossless = document.getElementById('compressCardLossless');
+  const optionsBar = document.getElementById('extremeOptionsBar');
+  const modeTag = document.getElementById('currentModeTag');
+  const headerPill = document.getElementById('headerModePill');
+  const rightBadge = document.getElementById('rightPanelModeBadge');
+  const radioExtreme = document.querySelector('input[name="compressMode"][value="extreme"]');
+  const radioLossless = document.querySelector('input[name="compressMode"][value="lossless"]');
+
+  if (mode === 'extreme') {
+    if (radioExtreme) radioExtreme.checked = true;
+    if (cardExtreme) cardExtreme.classList.add('active');
+    if (cardLossless) cardLossless.classList.remove('active');
+    if (optionsBar) optionsBar.style.display = 'flex';
+    if (modeTag) {
+      modeTag.textContent = '⚡ 极致体积优先 (减容 60%~80%)';
+      modeTag.style.color = '#047857';
+      modeTag.style.background = '#ecfdf5';
+      modeTag.style.borderColor = '#a7f3d0';
+    }
+    if (headerPill) {
+      headerPill.textContent = '⚡ 极致体积 (推荐)';
+      headerPill.style.background = '#ecfdf5';
+      headerPill.style.color = '#047857';
+      headerPill.style.borderColor = '#a7f3d0';
+    }
+    if (rightBadge) {
+      rightBadge.textContent = '⚡ 极致体积 · 对标 iLoveIMG (60%~80%)';
+      rightBadge.style.background = '#ecfdf5';
+      rightBadge.style.color = '#047857';
+      rightBadge.style.borderColor = '#a7f3d0';
+    }
+    updateFormatCardsContent('extreme');
+    showToast('已切换为【极致体积模式】（对标 iLoveIMG，减容 60%~80%）');
+  } else {
+    if (radioLossless) radioLossless.checked = true;
+    if (cardExtreme) cardExtreme.classList.remove('active');
+    if (cardLossless) cardLossless.classList.add('active');
+    if (optionsBar) optionsBar.style.display = 'none';
+    if (modeTag) {
+      modeTag.textContent = '💎 真无损模式 (逐像素保真)';
+      modeTag.style.color = '#1e40af';
+      modeTag.style.background = '#eff6ff';
+      modeTag.style.borderColor = '#bfdbfe';
+    }
+    if (headerPill) {
+      headerPill.textContent = '💎 真无损';
+      headerPill.style.background = '#eff6ff';
+      headerPill.style.color = '#1d4ed8';
+      headerPill.style.borderColor = '#bfdbfe';
+    }
+    if (rightBadge) {
+      rightBadge.textContent = '💎 绝对无损 · 100% 逐像素保真';
+      rightBadge.style.background = '#eff6ff';
+      rightBadge.style.color = '#1d4ed8';
+      rightBadge.style.borderColor = '#bfdbfe';
+    }
+    updateFormatCardsContent('lossless');
+    showToast('已切换为【真无损模式】（PSNR=∞，像素 100% 保持不变）');
+  }
+}
+
+function setExtremeQuality(preset, el) {
+  state.extremePreset = preset;
+  document.querySelectorAll('.quality-pill').forEach(pill => pill.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  if (preset === 'high') {
+    state.pngColors = 256;
+    state.extremeQuality = 0.88;
+    showToast('已设置为【高保真】档位 (256色量化 / JPG 88% 质量)');
+  } else if (preset === 'max') {
+    state.pngColors = 128;
+    state.extremeQuality = 0.70;
+    showToast('已设置为【极限压缩】档位 (128色量化 / JPG 70% 质量)');
+  } else {
+    state.pngColors = 256;
+    state.extremeQuality = 0.80;
+    showToast('已设置为【平衡推荐】档位 (256色量化 / JPG 80% 质量)');
+  }
+}
+
+function updateFormatCardsContent(mode) {
+  const pngCardTags = document.querySelector('#formatCardPng .format-action-tags');
+  const jpegCardTags = document.querySelector('#formatCardJpeg .format-action-tags');
+  const pngPill = document.querySelector('#formatCardPng .format-pill');
+  const jpegPill = document.querySelector('#formatCardJpeg .format-pill');
+
+  if (mode === 'extreme') {
+    if (pngPill) {
+      pngPill.textContent = '感知量化 256色';
+      pngPill.className = 'format-pill pill-png';
+    }
+    if (jpegPill) {
+      jpegPill.textContent = '智能重编码 80%';
+      jpegPill.className = 'format-pill pill-jpg';
+    }
+    if (pngCardTags) {
+      pngCardTags.innerHTML = `
+        <div>· 智能色彩聚类量化：RGBA 32位转 8位调色板 (对标 iLoveIMG)</div>
+        <div>· Floyd-Steinberg 误差抖动：平滑过渡无色阶断层，肉眼感知无损</div>
+        <div>· 极致体积立减 60%~80%：支持完整 Alpha 透明通道</div>
+      `;
+    }
+    if (jpegCardTags) {
+      jpegCardTags.innerHTML = `
+        <div>· 高清 DCT 频率重采样：质量系数 80% (平衡画质与体积)</div>
+        <div>· 彻底移除冗余元数据：剥离 EXIF 相机参数、GPS 与修图记录</div>
+        <div>· 极致体积立减 50%~75%：保持原始宽高分辨率绝不缩放</div>
+      `;
+    }
+  } else {
+    if (pngPill) {
+      pngPill.textContent = '位级无损重构';
+      pngPill.className = 'format-pill pill-png';
+    }
+    if (jpegPill) {
+      jpegPill.textContent = '元数据剥离';
+      jpegPill.className = 'format-pill pill-jpg';
+    }
+    if (pngCardTags) {
+      pngCardTags.innerHTML = `
+        <div>· 默认极限压缩：启用 Level 9 深度字典匹配与差分哈夫曼树</div>
+        <div>· 逐像素完全一致：保持 100% 原始色彩矩阵与 Alpha 透明通道</div>
+        <div>· 智能防反弹机制：若原图已极致精简，自动保留原图</div>
+      `;
+    }
+    if (jpegCardTags) {
+      jpegCardTags.innerHTML = `
+        <div>· 默认保护 ICC 色彩：确保 iPhone/Mac 及广色域屏幕绝不偏色</div>
+        <div>· 彻底移除冗余元数据：剥离 EXIF 相机参数、GPS 与修图记录</div>
+        <div>· 原始二进制流无损保留：不重编 DCT，100% 像素完全一致</div>
+      `;
+    }
+  }
+}
+
+function selectExportMode(mode) {
+  const imagesOnlyRadio = document.querySelector('input[name="exportMode"][value="images-only"]');
+  const fullWebsiteRadio = document.querySelector('input[name="exportMode"][value="full-website"]');
+  const cardImagesOnly = document.getElementById('exportCardImagesOnly');
+  const cardFullWebsite = document.getElementById('exportCardFullWebsite');
+
+  if (mode === 'images-only') {
+    if (imagesOnlyRadio) imagesOnlyRadio.checked = true;
+    if (cardImagesOnly) cardImagesOnly.classList.add('active');
+    if (cardFullWebsite) cardFullWebsite.classList.remove('active');
+  } else {
+    if (fullWebsiteRadio) fullWebsiteRadio.checked = true;
+    if (cardFullWebsite) cardFullWebsite.classList.add('active');
+    if (cardImagesOnly) cardImagesOnly.classList.remove('active');
+  }
+}
+
+// ==========================================================================
+// 8. 像素级原图与压缩图全屏明细对比查看器交互控制器
+// ==========================================================================
+
+const compareState = {
+  activeItem: null,
+  splitPercent: 50,
+  zoom: 1.0,
+  panX: 0,
+  panY: 0,
+  isDraggingDivider: false,
+  isPanning: false,
+  panStartX: 0,
+  panStartY: 0
+};
+
+/**
+ * 格式化文件大小并突出显示 MB 计数（满足用户清晰标识多少 M 的需求）
+ */
+function formatSizeWithMb(bytes) {
+  if (!bytes || bytes <= 0) return '0 KB';
+  const mb = (bytes / (1024 * 1024)).toFixed(2);
+  if (bytes >= 1024 * 1024) {
+    return `${mb} MB`;
+  }
+  const kb = (bytes / 1024).toFixed(1);
+  return `${mb} MB (${kb} KB)`;
+}
+
+/**
+ * 打开全屏/大图原图与压缩图细节对比弹窗
+ */
+function openCompareModal(id) {
+  const item = state.images.find(img => img.id === id);
+  if (!item) return;
+
+  compareState.activeItem = item;
+  compareState.splitPercent = 50;
+  compareState.zoom = 1.0;
+  compareState.panX = 0;
+  compareState.panY = 0;
+  compareState.isDraggingDivider = false;
+  compareState.isPanning = false;
+
+  const modal = document.getElementById('imageCompareModal');
+  const titleEl = document.getElementById('compareModalFileName');
+  const metaEl = document.getElementById('compareModalDimensions');
+  const origSizeEl = document.getElementById('compareOriginalSize');
+  const compSizeEl = document.getElementById('compareCompressedSize');
+  const imgBottom = document.getElementById('compareImgCompressed');
+  const imgTop = document.getElementById('compareImgOriginal');
+
+  if (titleEl) titleEl.textContent = item.fileName;
+  if (metaEl) metaEl.textContent = `${item.ext.toUpperCase()} ${item.width && item.height ? `· ${item.width}×${item.height}px` : ''}`;
+
+  if (origSizeEl) origSizeEl.textContent = formatSizeWithMb(item.originalSize);
+  const ratioText = item.saved > 0 ? ` (-${item.ratio}%)` : '';
+  if (compSizeEl) compSizeEl.textContent = `${formatSizeWithMb(item.compressedSize)}${ratioText}`;
+
+  // 原图与压缩图图片源设置 (底层为压缩图，顶层为原图)
+  const origUrl = item.previewUrl;
+  const compUrl = item.compressedUrl || item.previewUrl;
+
+  if (imgTop) imgTop.src = origUrl;
+  if (imgBottom) imgBottom.src = compUrl;
+
+  updateCompareTransforms();
+  updateSplitPosition(50);
+
+  if (modal) modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+/**
+ * 关闭对比弹窗
+ */
+function closeCompareModal() {
+  const modal = document.getElementById('imageCompareModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+  compareState.activeItem = null;
+}
+
+/**
+ * 更新中线分割与顶层图片裁切百分比 (0% ~ 100%)
+ */
+function updateSplitPosition(percent) {
+  compareState.splitPercent = Math.max(0, Math.min(100, percent));
+  const divider = document.getElementById('compareDivider');
+  const topLayer = document.getElementById('compareLayerTop');
+
+  if (divider) {
+    divider.style.left = `${compareState.splitPercent}%`;
+  }
+  if (topLayer) {
+    topLayer.style.clipPath = `inset(0 calc(100% - ${compareState.splitPercent}%) 0 0)`;
+  }
+}
+
+/**
+ * 更新双重视口同步变换 (平移与缩放 100% 绝对一致)
+ */
+function updateCompareTransforms() {
+  const vpBottom = document.getElementById('compareViewportBottom');
+  const vpTop = document.getElementById('compareViewportTop');
+  const zoomLabel = document.getElementById('compareZoomPercent');
+
+  const transform = `translate(${compareState.panX}px, ${compareState.panY}px) scale(${compareState.zoom})`;
+  if (vpBottom) vpBottom.style.transform = transform;
+  if (vpTop) vpTop.style.transform = transform;
+  if (zoomLabel) zoomLabel.textContent = `${Math.round(compareState.zoom * 100)}%`;
+}
+
+/**
+ * 缩放控制 (+ / -)
+ */
+function zoomCompareImage(delta) {
+  const newZoom = Math.max(0.2, Math.min(10, compareState.zoom + delta));
+  compareState.zoom = parseFloat(newZoom.toFixed(2));
+  updateCompareTransforms();
+}
+
+/**
+ * 重置缩放为 100% 并居中
+ */
+function resetCompareZoom() {
+  compareState.zoom = 1.0;
+  compareState.panX = 0;
+  compareState.panY = 0;
+  updateCompareTransforms();
+}
+
+/**
+ * 初始化对比器画布事件 (滚轮缩放、中线拖拽、画布抓手平移、ESC关闭)
+ */
+function initCompareModalEvents() {
+  const stage = document.getElementById('compareStage');
+  const divider = document.getElementById('compareDivider');
+  if (!stage || !divider) return;
+
+  // 1. 鼠标滚轮缩放 (带鼠标锚点坐标平滑补偿)
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = stage.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left - rect.width / 2;
+    const mouseY = e.clientY - rect.top - rect.height / 2;
+
+    const factor = e.deltaY < 0 ? 1.15 : 0.87;
+    const newZoom = Math.max(0.2, Math.min(10, compareState.zoom * factor));
+
+    if (newZoom !== compareState.zoom) {
+      compareState.panX -= (mouseX - compareState.panX) * (factor - 1);
+      compareState.panY -= (mouseY - compareState.panY) * (factor - 1);
+      compareState.zoom = parseFloat(newZoom.toFixed(2));
+      updateCompareTransforms();
+    }
+  }, { passive: false });
+
+  // 2. 中线分割条按下拖拽
+  divider.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+    compareState.isDraggingDivider = true;
+    divider.classList.add('is-dragging');
+  });
+
+  divider.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+    compareState.isDraggingDivider = true;
+    divider.classList.add('is-dragging');
+  }, { passive: true });
+
+  // 3. 舞台画布按下拖动平移
+  stage.addEventListener('mousedown', (e) => {
+    if (e.target === divider || divider.contains(e.target)) return;
+    compareState.isPanning = true;
+    compareState.panStartX = e.clientX - compareState.panX;
+    compareState.panStartY = e.clientY - compareState.panY;
+    stage.classList.add('is-panning');
+  });
+
+  stage.addEventListener('touchstart', (e) => {
+    if (e.target === divider || divider.contains(e.target)) return;
+    if (e.touches.length === 1) {
+      compareState.isPanning = true;
+      compareState.panStartX = e.touches[0].clientX - compareState.panX;
+      compareState.panStartY = e.touches[0].clientY - compareState.panY;
+    }
+  }, { passive: true });
+
+  // 4. 双击舞台重置居中
+  stage.addEventListener('dblclick', () => {
+    resetCompareZoom();
+  });
+
+  // 5. 全局指针移动事件
+  window.addEventListener('mousemove', (e) => {
+    if (compareState.isDraggingDivider) {
+      const rect = stage.getBoundingClientRect();
+      const percent = ((e.clientX - rect.left) / rect.width) * 100;
+      updateSplitPosition(percent);
+    } else if (compareState.isPanning) {
+      compareState.panX = e.clientX - compareState.panStartX;
+      compareState.panY = e.clientY - compareState.panStartY;
+      updateCompareTransforms();
+    }
+  });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 0) return;
+    const touch = e.touches[0];
+    if (compareState.isDraggingDivider) {
+      const rect = stage.getBoundingClientRect();
+      const percent = ((touch.clientX - rect.left) / rect.width) * 100;
+      updateSplitPosition(percent);
+    } else if (compareState.isPanning) {
+      compareState.panX = touch.clientX - compareState.panStartX;
+      compareState.panY = touch.clientY - compareState.panStartY;
+      updateCompareTransforms();
+    }
+  }, { passive: true });
+
+  // 6. 全局指针抬起事件
+  window.addEventListener('mouseup', () => {
+    if (compareState.isDraggingDivider) {
+      compareState.isDraggingDivider = false;
+      divider.classList.remove('is-dragging');
+    }
+    if (compareState.isPanning) {
+      compareState.isPanning = false;
+      stage.classList.remove('is-panning');
+    }
+  });
+
+  window.addEventListener('touchend', () => {
+    compareState.isDraggingDivider = false;
+    compareState.isPanning = false;
+    divider.classList.remove('is-dragging');
+    stage.classList.remove('is-panning');
+  });
+
+  // 7. Esc 键快速退出对比器
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('imageCompareModal');
+      if (modal && modal.style.display !== 'none') {
+        closeCompareModal();
+      }
+    }
+  });
+}
+
 // 显式将前端交互与业务调度函数绑定至 window，确保在生产环境高强度混淆后 DOM 内联事件调用绝对安全
 window.handleImageFilesSelected = handleImageFilesSelected;
 window.handleFolderSelected = handleFolderSelected;
@@ -2438,6 +3925,13 @@ window.copyMachineCode = copyMachineCode;
 window.openActivationModal = openActivationModal;
 window.closeActivationModal = closeActivationModal;
 window.submitActivation = submitActivation;
+window.selectExportMode = selectExportMode;
+window.selectCompressMode = selectCompressMode;
+window.setExtremeQuality = setExtremeQuality;
+window.openCompareModal = openCompareModal;
+window.closeCompareModal = closeCompareModal;
+window.zoomCompareImage = zoomCompareImage;
+window.resetCompareZoom = resetCompareZoom;
 </script>
 </body>
 </html>

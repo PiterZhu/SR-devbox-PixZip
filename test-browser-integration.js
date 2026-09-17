@@ -48,7 +48,7 @@ sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 
 // 依次加载 lib 目录中的库
-['lib/buffer.min.js', 'lib/pngjs.min.js', 'lib/pako.min.js', 'lib/jszip.min.js'].forEach(file => {
+['lib/buffer.min.js', 'lib/pngjs.min.js', 'lib/pako.min.js', 'lib/upng.min.js', 'lib/jszip.min.js'].forEach(file => {
   const code = fs.readFileSync(file, 'utf8');
   vm.runInContext(code, sandbox);
 });
@@ -57,6 +57,7 @@ console.log('--- 验证浏览器环境全局对象挂载情况 ---');
 console.log('window.Buffer 可用:', typeof sandbox.window.Buffer);
 console.log('window.PNG 可用:', typeof sandbox.window.PNG);
 console.log('window.pako 可用:', typeof sandbox.window.pako);
+console.log('window.UPNG 可用:', typeof sandbox.window.UPNG);
 console.log('window.JSZip 可用:', typeof sandbox.window.JSZip);
 
 // 测试端到端压缩一个 PNG 图像

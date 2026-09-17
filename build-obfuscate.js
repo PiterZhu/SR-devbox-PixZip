@@ -172,6 +172,7 @@ async function runObfuscationPipeline() {
       '^document$',
       '^Buffer$',
       '^PNG$',
+      '^UPNG$',
       '^pako$',
       '^JSZip$',
       '^state$',
@@ -188,7 +189,14 @@ async function runObfuscationPipeline() {
       '^copyMachineCode$',
       '^openActivationModal$',
       '^closeActivationModal$',
-      '^submitActivation$'
+      '^submitActivation$',
+      '^selectExportMode$',
+      '^selectCompressMode$',
+      '^setExtremeQuality$',
+      '^openCompareModal$',
+      '^closeCompareModal$',
+      '^zoomCompareImage$',
+      '^resetCompareZoom$'
     ]
   };
 

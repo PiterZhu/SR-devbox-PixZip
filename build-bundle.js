@@ -53,6 +53,20 @@ const pngjsCode = pngjsMin.outputFiles[0].text + '\n' +
 
 fs.writeFileSync('lib/pngjs.min.js', pngjsCode, 'utf8');
 
+// 5. 构建 upng-js 浏览器版 (纯前端 256 色量化与抖动压缩引擎，MIT 协议)
+const upngMin = esbuild.buildSync({
+  entryPoints: ['node_modules/upng-js/UPNG.js'],
+  bundle: false,
+  minify: true,
+  write: false
+});
+
+const upngCode = upngMin.outputFiles[0].text + '\n' +
+  'if (typeof window !== "undefined" && typeof UPNG !== "undefined") { window.UPNG = window.UPNG || UPNG; }\n' +
+  'if (typeof globalThis !== "undefined" && typeof UPNG !== "undefined") { globalThis.UPNG = globalThis.UPNG || UPNG; }\n';
+
+fs.writeFileSync('lib/upng.min.js', upngCode, 'utf8');
+
 console.log('✅ 前端所有核心商用库构建成功:');
 fs.readdirSync('lib').forEach(f => {
   const stat = fs.statSync(path.join('lib', f));
