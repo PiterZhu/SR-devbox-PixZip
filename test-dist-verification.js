@@ -51,7 +51,7 @@ if (html.includes('<script src="app.core.min.js"></script>')) {
 }
 
 // 检查第三方库是否完整保留在 dist/lib
-const libs = ['buffer.min.js', 'jszip.min.js', 'pako.min.js', 'pngjs.min.js', 'upng.min.js'];
+const libs = ['buffer.min.js', 'jszip.min.js', 'pako.min.js', 'pngjs.min.js', 'upng.min.js', 'omggif.min.js'];
 for (const lib of libs) {
   const libPath = path.join(__dirname, 'dist', 'lib', lib);
   if (fs.existsSync(libPath)) {

@@ -175,6 +175,9 @@ async function runObfuscationPipeline() {
       '^UPNG$',
       '^pako$',
       '^JSZip$',
+      '^omggif$',
+      '^GifReader$',
+      '^GifWriter$',
       '^state$',
       '^handleImageFilesSelected$',
       '^handleFolderSelected$',
@@ -196,7 +199,9 @@ async function runObfuscationPipeline() {
       '^openCompareModal$',
       '^closeCompareModal$',
       '^zoomCompareImage$',
-      '^resetCompareZoom$'
+      '^resetCompareZoom$',
+      '^compressGifExtreme$',
+      '^compressGifLossless$'
     ]
   };
 
@@ -244,7 +249,7 @@ async function runObfuscationPipeline() {
 1. index.html            : 推荐商业部署主页面 (已引入 dist/app.core.min.js 与 dist/lib/)
 2. app.core.min.js       : 核心商业逻辑防逆向加固文件 (控制流平坦化、RC4加密、防调试)
 3. index.standalone.html : 单文件离线便携版 (内联核心混淆代码，便于独立分发)
-4. lib/                  : 纯商业可用底层支持库 (Buffer, PNG.js, Pako, JSZip)
+4. lib/                  : 纯商业可用底层支持库 (Buffer, PNG.js, Pako, JSZip, UPNG, omggif)
 `;
   fs.writeFileSync(path.join(DIST_DIR, 'RELEASE_NOTES.txt'), releaseInfo, 'utf8');
 

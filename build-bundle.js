@@ -67,6 +67,19 @@ const upngCode = upngMin.outputFiles[0].text + '\n' +
 
 fs.writeFileSync('lib/upng.min.js', upngCode, 'utf8');
 
+// 6. 构建 omggif 浏览器版 (纯前端 GIF89a 动图多帧解密、重编码与量化打包引擎，MIT 协议)
+esbuild.buildSync({
+  entryPoints: ['node_modules/omggif/omggif.js'],
+  bundle: true,
+  outfile: 'lib/omggif.min.js',
+  minify: true,
+  format: 'iife',
+  globalName: 'SR_Omggif_Module',
+  footer: {
+    js: 'if (typeof window !== "undefined") { window.omggif = SR_Omggif_Module; window.GifReader = SR_Omggif_Module.GifReader; window.GifWriter = SR_Omggif_Module.GifWriter; }\nif (typeof globalThis !== "undefined") { globalThis.omggif = SR_Omggif_Module; globalThis.GifReader = SR_Omggif_Module.GifReader; globalThis.GifWriter = SR_Omggif_Module.GifWriter; }'
+  }
+});
+
 console.log('✅ 前端所有核心商用库构建成功:');
 fs.readdirSync('lib').forEach(f => {
   const stat = fs.statSync(path.join('lib', f));

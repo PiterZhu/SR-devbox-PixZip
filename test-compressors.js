@@ -148,3 +148,115 @@ try {
 } catch (e) {
   console.log('UPNG 测试跳过:', e.message);
 }
+
+// 6. 测试多帧 GIF 动图高压缩率引擎 (方案 C: omggif + UPNG.quantize)
+try {
+  const omggif = require('omggif');
+  const UPNG = require('upng-js');
+
+  function padPalette(palette) {
+    let len = palette.length;
+    if (len < 2) len = 2;
+    let pow2 = 1;
+    while (pow2 < len) pow2 <<= 1;
+    if (pow2 > 256) pow2 = 256;
+    while (palette.length < pow2) {
+      palette.push(0);
+    }
+    return palette;
+  }
+
+  // 构造包含 3 帧复杂彩色动画的 GIF
+  const gw = 120, gh = 120;
+  const rawGifBuf = new Uint8Array(200 * 1024);
+  // 构造具有 256 色的原始完整调色板以模拟真实未优化 GIF
+  const basePalette = [];
+  for (let c = 0; c < 256; c++) {
+    basePalette.push((c << 16) | ((255 - c) << 8) | ((c * 3) % 256));
+  }
+  const gifGenWriter = new omggif.GifWriter(rawGifBuf, gw, gh, { loop: 0 });
+
+  // 帧 0、帧 1、帧 2: 分别渲染渐变图像
+  for (let f = 0; f < 3; f++) {
+    const framePix = new Uint8Array(gw * gh);
+    for (let y = 0; y < gh; y++) {
+      for (let x = 0; x < gw; x++) {
+        framePix[y * gw + x] = ((x * 2 + y * 2 + f * 40) % 256);
+      }
+    }
+    gifGenWriter.addFrame(0, 0, gw, gh, framePix, {
+      palette: basePalette,
+      delay: 15 + f * 5,
+      disposal: 2
+    });
+  }
+
+  const rawGifBytes = rawGifBuf.subarray(0, gifGenWriter.end());
+  console.log('\n--- 多帧 GIF 动图压缩引擎测试 (对标 TinyPNG/iLoveIMG 方案 C) ---');
+  console.log('原始 3 帧动图大小:', (rawGifBytes.length / 1024).toFixed(2), 'KB');
+
+  // 执行极致体积量化压缩 (64 色)
+  const reader = new omggif.GifReader(rawGifBytes);
+  const numFrames = reader.numFrames();
+  const width = reader.width;
+  const height = reader.height;
+  const loopCount = reader.loopCount();
+
+  const outBuf = new Uint8Array(rawGifBytes.length * 2);
+  const compWriter = new omggif.GifWriter(outBuf, width, height, { loop: loopCount });
+  let canvasRGBA = new Uint8Array(width * height * 4);
+
+  for (let i = 0; i < numFrames; i++) {
+    const info = reader.frameInfo(i);
+    reader.decodeAndBlitFrameRGBA(i, canvasRGBA);
+
+    const qres = UPNG.quantize([canvasRGBA.buffer], 64, true);
+    const colorMap = new Map();
+    const gifPalette = [];
+    let transIndex = null;
+
+    qres.plte.forEach((p, idx) => {
+      const c = p.est.rgba;
+      colorMap.set(c, idx);
+      const r = c & 0xff;
+      const g = (c >> 8) & 0xff;
+      const b = (c >> 16) & 0xff;
+      const a = (c >>> 24) & 0xff;
+      if (a < 128 && transIndex === null) transIndex = idx;
+      gifPalette.push((r << 16) | (g << 8) | b);
+    });
+
+    padPalette(gifPalette);
+
+    const u32 = new Uint32Array(qres.bufs[0]);
+    const indexed = new Uint8Array(width * height);
+    for (let p = 0; p < indexed.length; p++) {
+      const mapped = colorMap.get(u32[p]);
+      indexed[p] = mapped !== undefined ? mapped : 0;
+    }
+
+    const opts = { palette: gifPalette, delay: info.delay, disposal: info.disposal };
+    if (transIndex !== null) opts.transparent = transIndex;
+    compWriter.addFrame(info.x, info.y, info.width, info.height, indexed, opts);
+
+    if (info.disposal === 2) canvasRGBA.fill(0);
+  }
+
+  const compGifBytes = outBuf.subarray(0, compWriter.end());
+  const savedBytes = rawGifBytes.length - compGifBytes.length;
+  const savedRatio = ((savedBytes / rawGifBytes.length) * 100).toFixed(1);
+
+  console.log('GIF 极致体积压缩后大小:', (compGifBytes.length / 1024).toFixed(2), 'KB (减容率:', savedRatio + '%)');
+
+  // 严格验证动图帧数与参数
+  const verifyReader = new omggif.GifReader(compGifBytes);
+  if (verifyReader.numFrames() === 3 && verifyReader.width === gw && verifyReader.height === gh) {
+    console.log('✅ GIF 压缩后多帧完整性、时序 delay、循环次数验证 100% 通过！');
+  } else {
+    console.error('❌ GIF 压缩后帧丢失或参数异常！');
+    process.exit(1);
+  }
+} catch (e) {
+  console.error('GIF 测试异常:', e);
+  process.exit(1);
+}

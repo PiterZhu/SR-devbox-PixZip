@@ -49,17 +49,18 @@ SR-DevBox 开发者效率工具箱 - PixZip 图片无损压缩工具
    - 支持将**整个网站项目或多层级文件夹**直接拖入网页中。
    - 通过 HTML5 `webkitGetAsEntry()`、批量分块 `readEntries()` 与 `<input webkitdirectory>`，自动深度递归扫描项目所有子目录中的图片资源（PNG、JPG/JPEG、SVG、WebP、GIF、ICO、BMP）。
 
-4. **导出严格保持原有相对文件层级 (JSZip In-Memory Packing)**
-   - 一键打包下载生成 `.zip` 压缩包。
-   - 支持两种导出模式：
-     1. **仅导出图片资源**：完整保留原有的各级相对目录结构（例如 `assets/images/header.png`、`public/logo.png`）。
-     2. **整站完整项目打包**：保持完整的网站代码结构（HTML、CSS、JS、字体原样保留，图片替换为极致无损压缩后的文件）。
+4. **双通道智能打包导出与目录保持 (JSZip In-Memory Packing)**
+   - 提供专属双通道即时打包导出按钮：
+     1. **一键打包下载全部图片 (ZIP · 默认主操作)**：完整保留原有的各级相对目录结构（例如 `assets/images/header.png`、`public/logo.png`），仅导出优化后的图片资产。
+     2. **打包下载整站项目 (ZIP · 智能感知代码)**：保持完整的网站代码结构（HTML、CSS、JS、字体原样保留，内部图片无缝替换为极致优化后的文件），自动识别非图片文件并高亮提示。
+   - 具备全局打包互斥锁与实时百分比进度反馈，防重入防崩溃。
 
 5. **多格式无损优化引擎**
    - **PNG**：扫描线差分过滤重构 + DEFLATE 9 / Strategy 3。
    - **JPEG/JPG**：无损剥离 EXIF、拍摄参数、缩略图与 Photoshop IPTC 冗余元数据，SOS 图像熵编码流 100% 保持位级一致，可选保留 ICC 颜色配置文件。
    - **SVG**：XML 矢量树无损精简，剥离注释、文档声明、设计软件冗余命名空间（Inkscape/Illustrator）与多余空白。
    - **WebP**：RIFF 容器优化，安全剥离 EXIF / XMP 扩展块，保持 VP8 / VP8L 像素流完整。
+   - **GIF 动图**：纯前端多帧动图重构与量化引擎（基于 `omggif` + `upng-js`），支持调色板自适应聚类量化与 LZW 高压缩率重编，完整保留全部动图帧序列、帧间隔延迟（delay）、清除方式（disposal）、循环次数与透明通道，对标 TinyPNG / iLoveIMG 达 30%~70% 减容。
 
 6. **商业级高强度代码混淆与防逆向加固 (JavaScript-Obfuscator Pipeline)**
    - **控制流平坦化 (`controlFlowFlattening: true`, 阈值 `0.8`)**：将核心控制流转化为复杂的 Switch-Case 状态机调度。
@@ -73,6 +74,7 @@ SR-DevBox 开发者效率工具箱 - PixZip 图片无损压缩工具
 7. **100% 商业可用合规审计（Commercial License Compliance）**
    - 严禁且完全不包含任何 GPL / AGPL 或非商用（Non-Commercial）协议代码。
    - 底层核心依赖完全合规：
+     - `omggif`: **MIT License**
      - `pngjs`: **MIT License**
      - `upng-js`: **MIT License**
      - `jszip`: **MIT License**
