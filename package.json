@@ -1,11 +1,14 @@
 {
-  "name": "sr-devbox-image-compressor",
+  "name": "sr-devbox-pixzip",
   "version": "1.0.0",
-  "description": "SR-DevBox 极致无损图片压缩工具 - 浏览器纯前端高性能无损压缩",
+  "description": "SR-DevBox-PixZip 极致无损图片压缩工具 - 浏览器纯前端高性能无损压缩",
   "author": "Zhu Rui <30501250@qq.com> (https://srdevbox.com)",
   "license": "Commercial",
   "scripts": {
-    "build": "node build-bundle.js"
+    "build": "node build-bundle.js",
+    "obfuscate": "node build-obfuscate.js",
+    "build:all": "node build-bundle.js && node build-obfuscate.js",
+    "test": "node test-browser-integration.js"
   },
   "dependencies": {
     "buffer": "^6.0.3",
@@ -14,6 +17,7 @@
     "pngjs": "^7.0.0"
   },
   "devDependencies": {
-    "esbuild": "^0.28.2"
+    "esbuild": "^0.28.2",
+    "javascript-obfuscator": "^5.7.0"
   }
 }

@@ -1,11 +1,12 @@
 /**
- * SR-DevBox 开发者效率工具箱
+ * SR-DevBox-PixZip 开发者效率工具箱
  * @author     Zhu Rui
  * @website    https://srdevbox.com
  * @email      30501250@qq.com
+ * @date       2026-09-17
  * @copyright  © 2026 Zhu Rui. All Rights Reserved.
  *
- * 本文件为 SR-DevBox 项目的组成部分，版权归作者 Zhu Rui 所有。
+ * 本文件为 SR-DevBox-PixZip 项目的组成部分，版权归作者 Zhu Rui 所有。
  * 未经书面许可，禁止以任何形式复制、修改、分发或用于商业目的。
  */
 

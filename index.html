@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <!--
-  SR-DevBox 开发者效率工具箱
+  SR-DevBox-PixZip 开发者效率工具箱
   @author     Zhu Rui
   @website    https://srdevbox.com
   @email      30501250@qq.com
+  @date       2026-09-17
   @copyright  © 2026 Zhu Rui. All Rights Reserved.
 
-  本文件为 SR-DevBox 项目的组成部分，版权归作者 Zhu Rui 所有。
+  本文件为 SR-DevBox-PixZip 项目的组成部分，版权归作者 Zhu Rui 所有。
   未经书面许可，禁止以任何形式复制、修改、分发或用于商业目的。
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SR-DevBox 极致无损图片压缩工具 - 浏览器纯前端高性能无损压缩</title>
+  <title>PixZip 图片无损压缩工具 - SR-DevBox 开发者效率工具箱</title>
 
   <!-- 引入本地商业依赖库 (MIT 许可，离线与商用完全合规) -->
   <script src="lib/buffer.min.js"></script>
@@ -29,8 +30,9 @@
 
 <style>
 /* ==========================================================================
-   PREMIUM LIGHT MODE STYLE SYSTEM - SR-DEVBOX IMAGE COMPRESSOR
+   PREMIUM LIGHT MODE STYLE SYSTEM - SR-DEVBOX-PIXZIP IMAGE COMPRESSOR
    作者: Zhu Rui (30501250@qq.com)
+   日期: 2026-09-17
    版权: © 2026 Zhu Rui. All Rights Reserved.
    ========================================================================== */
 :root {
@@ -103,35 +105,153 @@ body {
   border-bottom: 1px solid #e2e8f0;
   padding-bottom: 10px;
   flex-shrink: 0;
+  gap: 16px;
 }
 
-.header-title-group {
+.header-main-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* 官方 SR-DevBox 母体品牌链接 (Logo 与名称为一个整体，悬停高亮，点击直达官网) */
+.sr-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 4px 10px 4px 6px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: inherit;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.sr-brand-link:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+  transform: translateY(-1px);
 }
 
 .app-logo {
   width: 36px;
   height: 36px;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
+  filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.35));
+  transition: transform 0.2s ease;
 }
 
-.app-title {
+.sr-brand-link:hover .app-logo {
+  transform: scale(1.06);
+}
+
+.sr-brand-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.sr-brand-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: var(--text-primary);
+  line-height: 1.15;
+  transition: color 0.2s;
+}
+
+.sr-brand-link:hover .sr-brand-name {
+  color: var(--primary-glow);
+}
+
+.sr-brand-tag {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.2;
+  transition: color 0.2s;
+}
+
+.sr-brand-link:hover .sr-brand-tag {
+  color: var(--primary-glow);
+}
+
+/* 品牌与子工具的层级分隔线 */
+.header-divider {
+  width: 1px;
+  height: 32px;
+  background: #cbd5e1;
+  flex-shrink: 0;
+}
+
+/* 当前子工具：PixZip 图片无损压缩工具 排版 */
+.subtool-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.subtool-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.subtool-title {
   font-size: 1.35rem;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  background: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
+  letter-spacing: 0.2px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.title-highlight {
+  background: linear-gradient(135deg, var(--primary-glow) 0%, var(--secondary-glow) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+
+.subtool-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #eff6ff;
+  color: var(--primary-glow);
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  padding: 1px 6px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.header-stat-badge {
+  background: #ffffff;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 8px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--primary-glow);
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .app-subtitle {
   font-size: 0.72rem;
   color: var(--text-secondary);
   font-family: monospace;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 /* 工作区网格 */
@@ -913,7 +1033,19 @@ body {
 
   <!-- 顶部导航栏 / 头部 -->
   <header class="app-header">
-    <div class="header-title-group">
+    <!-- 左侧：PixZip 图片无损压缩工具 -->
+    <div class="subtool-info-col">
+      <div class="subtool-title-row">
+        <h1 class="subtool-title">
+          <span class="title-highlight">PixZip</span> 图片无损压缩工具
+        </h1>
+        <span class="subtool-pill">极致无损</span>
+      </div>
+      <div class="app-subtitle">画质零失真 · 智能无损瘦身 · 保持完整目录层级</div>
+    </div>
+
+    <!-- 右上角：SR-DevBox 开发者效率工具箱 官网入口 -->
+    <a href="https://srdevbox.com" target="_blank" rel="noopener noreferrer" class="sr-brand-link" title="前往 SR-DevBox 开发者效率工具箱官网 (https://srdevbox.com)">
       <!-- 官方 SR-DevBox Logo -->
       <svg class="app-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 348.208 320.079">
         <defs>
@@ -927,16 +1059,18 @@ body {
           <path d="M221.431,181.903c0.005,25.064-20.947,46.693-46.338,46.843c-25.208,0.149-47.819-20.75-48.003-47.101 c-0.175-25.044,21.114-47.197,47.448-47.106C200.484,134.629,221.419,155.697,221.431,181.903z"/>
         </g>
       </svg>
-      <div>
-        <h1 class="app-title">SR-DevBox 极致无损图片压缩工具</h1>
-        <div class="app-subtitle">Pure Web Edition · Bit-level Lossless Compression · Zero Pixel Loss</div>
+      <div class="sr-brand-text-col">
+        <span class="sr-brand-name">SR-DevBox</span>
+        <span class="sr-brand-tag">
+          开发者效率工具箱
+          <svg style="width: 10px; height: 10px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </span>
       </div>
-    </div>
-
-    <!-- 顶部状态统计徽章 -->
-    <div id="headerBadge" class="btn-preset" style="cursor: default; border-color: rgba(0, 242, 254, 0.3); color: var(--primary-glow);">
-      工作区已有 0 张图片 · 累计节省 0 KB (0%)
-    </div>
+    </a>
   </header>
 
   <!-- 主工作区 -->
@@ -985,7 +1119,7 @@ body {
           <button class="btn-preset" style="padding: 2px 6px; font-size: 0.7rem;" onclick="clearScanLogs()">清除日志</button>
         </div>
         <div class="scan-progress-panel" id="scanLogsList">
-          <div class="scan-log-line scan-log-info">[系统就绪] SR-DevBox 极致无损图片压缩引擎已加载完成</div>
+          <div class="scan-log-line scan-log-info">[系统就绪] SR-DevBox-PixZip 极致无损图片压缩引擎已加载完成</div>
           <div class="scan-log-line scan-log-info">[技术标准] PNG 基于 pngjs 重构 (deflateLevel: 9, strategy: 3 Z_FILTERED)</div>
           <div class="scan-log-line scan-log-success">[合规声明] 所有依赖库均为纯商业可用开源协议 (MIT / Zlib)</div>
         </div>
@@ -1211,7 +1345,7 @@ body {
     </div>
     <div class="status-bar-right">
       <span class="status-text-label" style="font-weight: normal; color: var(--text-secondary);">本机机器码：</span>
-      <span class="machine-code-val" id="machineCodeText">SR-8A4F-29E1-C3B7</span>
+      <span class="machine-code-val" id="machineCodeText">SR-PIXZIP-8A4F-29E1</span>
       <button class="status-copy-btn" onclick="copyMachineCode()" title="复制机器码">
         <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -1241,7 +1375,7 @@ body {
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: left;">
       <div style="font-size: 0.72rem; color: var(--text-secondary); font-weight: bold; margin-bottom: 4px;">本机机器码</div>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-family: monospace; font-size: 0.95rem; font-weight: bold; color: var(--primary-glow);">SR-8A4F-29E1-C3B7</span>
+        <span style="font-family: monospace; font-size: 0.95rem; font-weight: bold; color: var(--primary-glow);">SR-PIXZIP-8A4F-29E1</span>
         <button class="btn-preset" style="padding: 2px 6px; font-size: 0.7rem;" onclick="copyMachineCode()">复制</button>
       </div>
     </div>
@@ -1249,7 +1383,7 @@ body {
     <input
       type="text"
       id="activationInput"
-      placeholder="例: SRDEV-IMG-30D-XXXX-XXXX"
+      placeholder="例: SR-PIXZIP-30D-XXXX-XXXX"
       style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; font-size: 0.9rem; font-family: monospace; outline: none; margin-bottom: 16px; text-align: center;"
     />
 
@@ -1266,13 +1400,14 @@ body {
 
 <script>
 /**
- * SR-DevBox 开发者效率工具箱 - 核心业务与无损压缩控制器
+ * SR-DevBox-PixZip 开发者效率工具箱 - 核心业务与无损压缩控制器
  * @author     Zhu Rui
  * @website    https://srdevbox.com
  * @email      30501250@qq.com
+ * @date       2026-09-17
  * @copyright  © 2026 Zhu Rui. All Rights Reserved.
  *
- * 本文件为 SR-DevBox 项目的组成部分，版权归作者 Zhu Rui 所有。
+ * 本文件为 SR-DevBox-PixZip 项目的组成部分，版权归作者 Zhu Rui 所有。
  * 未经书面许可，禁止以任何形式复制、修改、分发或用于商业目的。
  */
 
@@ -1970,7 +2105,7 @@ async function exportZipArchive() {
 
     // 触发下载
     const dateStr = new Date().toISOString().slice(0, 10);
-    const filename = exportMode === 'full-website' ? `srdevbox_optimized_website_${dateStr}.zip` : `srdevbox_compressed_images_${dateStr}.zip`;
+    const filename = exportMode === 'full-website' ? `srdevbox_pixzip_optimized_website_${dateStr}.zip` : `srdevbox_pixzip_compressed_images_${dateStr}.zip`;
 
     const downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(zipBlob);
@@ -2287,6 +2422,22 @@ function showToast(msg) {
     toast.classList.remove('show');
   }, 2200);
 }
+
+// 显式将前端交互与业务调度函数绑定至 window，确保在生产环境高强度混淆后 DOM 内联事件调用绝对安全
+window.handleImageFilesSelected = handleImageFilesSelected;
+window.handleFolderSelected = handleFolderSelected;
+window.clearScanLogs = clearScanLogs;
+window.clearAllImages = clearAllImages;
+window.filterImageCards = filterImageCards;
+window.setFormatFilter = setFormatFilter;
+window.startBatchCompress = startBatchCompress;
+window.exportZipArchive = exportZipArchive;
+window.downloadSingleImage = downloadSingleImage;
+window.removeImage = removeImage;
+window.copyMachineCode = copyMachineCode;
+window.openActivationModal = openActivationModal;
+window.closeActivationModal = closeActivationModal;
+window.submitActivation = submitActivation;
 </script>
 </body>
 </html>
