@@ -1354,6 +1354,7 @@ body {
 .results-table {
   width: 100%;
   min-width: 580px; /* 保护基准宽度，低于此宽度自动水平滚动，绝不挤扁按钮与表头 */
+  table-layout: fixed; /* 列宽由表头预设宽度分配，文件列只吃剩余空间，长文件名不再撑出横向滚动条 */
   border-collapse: collapse;
   text-align: left;
   font-size: 0.74rem;
@@ -1375,6 +1376,8 @@ body {
   top: 0;
   z-index: 10;
   font-size: 0.7rem;
+  overflow: hidden; /* 面板极窄时表头文字省略号降级，绝不撑宽列 */
+  text-overflow: ellipsis;
   letter-spacing: 0.2px;
   user-select: none;
 }
@@ -1394,8 +1397,8 @@ body {
 
 /* 各列专属宽度与对齐体系 */
 .col-file {
-  width: auto;
-  min-width: 170px;
+  width: auto; /* fixed 布局下只吃五列定宽之外的剩余空间 */
+  min-width: 0; /* 不设下限：长文件名由省略号截断 + title 悬停提示，避免把表格顶宽出横向滚动条 */
   text-align: left;
 }
 
@@ -1547,10 +1550,22 @@ body {
   gap: 1px;
 }
 
+/* 文件名/相对路径单行省略号截断 (配合 table-layout: fixed 生效，鼠标悬停由 title 显示完整路径) */
+.font-name-truncate {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .result-file-meta {
   font-size: 0.64rem;
   color: var(--text-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* 制作软件独立换行展示 (颜色/字体与上方 result-file-meta 保持一致) */
@@ -1665,28 +1680,28 @@ body {
   line-height: 1.3;
 }
 
-/* 按钮 2: 次导出操作 (极简纯白卡片，与主按钮完美呼应) */
-.btn-export-website {
+/* 按钮 2: 平铺打包次操作 (极简纯白卡片，与主按钮完美呼应) */
+.btn-export-flat {
   background: #ffffff !important;
   color: var(--text-primary) !important;
   border: 1.5px solid var(--border-medium) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 8px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-.export-icon-box-website {
+.export-icon-box-flat {
   background: #eff6ff;
   color: var(--primary);
   border: 1px solid #bfdbfe;
 }
 
-.btn-export-website:hover:not(:disabled) {
+.btn-export-flat:hover:not(:disabled) {
   background: #ffffff !important;
   border-color: var(--primary) !important;
   box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.12) !important;
   transform: translateY(-2px);
 }
 
-.btn-export-website .export-btn-sub {
+.btn-export-flat .export-btn-sub {
   color: var(--text-secondary);
 }
 
@@ -1732,20 +1747,6 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.export-website-badge {
-  font-size: 0.62rem;
-  font-weight: 600;
-  background: var(--success-light);
-  color: var(--success);
-  border: 1px solid var(--success-border);
-  border-radius: var(--radius-xs);
-  padding: 1px 6px;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  line-height: 1.3;
 }
 
 /* 右侧交互提示微箭头 */
@@ -2287,11 +2288,11 @@ body {
           </div>
         </div>
         <div class="scan-progress-panel" id="scanLogsList">
-          <div class="scan-log-line scan-log-info">[系统就绪] PixZip 极致无损图片压缩引擎已加载</div>
-          <div class="scan-log-line scan-log-info">[技术标准] PNG 基于 pngjs 重构 (deflateLevel: 9, strategy: 3)</div>
-          <div class="scan-log-line scan-log-info">[技术标准] GIF 基于 omggif 引擎 (多帧调色板自适应量化)</div>
-          <div class="scan-log-line scan-log-success">[安全保证] 纯本地离线处理，数据绝不上传服务器</div>
-          <div class="scan-log-line scan-log-success">[元数据清洗] 自动清除 EXIF/XMP 制作软件与设备隐私痕迹，导出文件统一标记 SR-DevBox PixZip</div>
+          <div class="scan-log-line scan-log-info">[系统就绪] PixZip 图片压缩引擎已启动</div>
+          <div class="scan-log-line scan-log-info">[模块加载] PNG 压缩模块初始化完成</div>
+          <div class="scan-log-line scan-log-info">[模块加载] GIF 压缩模块初始化完成</div>
+          <div class="scan-log-line scan-log-success">[安全保证] 隐私保护模式已启用，数据在安全环境中处理</div>
+          <div class="scan-log-line scan-log-success">[元数据清洗] 隐私痕迹防护已自动开启，输出文件更干净</div>
         </div>
       </div>
 
@@ -2503,8 +2504,8 @@ body {
           <!-- 保存与导出选项栏 (双通道打包下载：大方、醒目、权威的工业级导出区) -->
           <div class="save-options-bar">
             <div class="export-dual-bar">
-              <!-- 按钮 1: 仅打包下载全部图片 (主操作 Primary - 深色工业质感) -->
-              <button class="btn-action btn-export-zip btn-export-images" id="btnExportImagesOnly" onclick="exportZipArchive('images-only')" title="仅打包下载优化后的图片资产，严格保持原有目录层级">
+              <!-- 按钮 1: 按原有目录结构打包下载 (主操作 Primary - 深色工业质感) -->
+              <button class="btn-action btn-export-zip btn-export-images" id="btnExportStructured" onclick="exportZipArchive('structured')" title="通过「选择或拖拽网站/工程目录」导入文件夹后启用，目录层级与相对路径原样保留" disabled>
                 <div class="export-icon-box export-icon-box-primary">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -2514,10 +2515,10 @@ body {
                 </div>
                 <div class="export-btn-content">
                   <div class="export-btn-main-row">
-                    <span class="export-btn-title" id="btnExportImagesTitle">一键打包下载全部图片 (ZIP)</span>
+                    <span class="export-btn-title" id="btnExportStructuredTitle">按目录结构打包下载 (ZIP)</span>
                     <span class="export-pill-badge export-pill-primary">推荐</span>
                   </div>
-                  <span class="export-btn-sub">按原有相对路径与目录层级导出所有优化资产</span>
+                  <span class="export-btn-sub">严格按原有相对路径与目录层级导出所有优化资产</span>
                 </div>
                 <div class="export-arrow-cue">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -2526,21 +2527,21 @@ body {
                 </div>
               </button>
 
-              <!-- 按钮 2: 打包下载整站项目 (包含所有代码及替换图片) -->
-              <button class="btn-action btn-export-zip btn-export-website" id="btnExportFullWebsite" onclick="exportZipArchive('full-website')" title="保留所有 HTML/CSS/JS/字体等网站文件，直接将内部图片替换为优化后图片">
-                <div class="export-icon-box export-icon-box-website">
+              <!-- 按钮 2: 平铺打包下载 (所有图片打平至 ZIP 根目录，重名自动去重) -->
+              <button class="btn-action btn-export-zip btn-export-flat" id="btnExportFlat" onclick="exportZipArchive('flat')" title="忽略目录层级，所有优化后图片平铺打包到 ZIP 根目录，重名文件自动编号去重">
+                <div class="export-icon-box export-icon-box-flat">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
-                    <polyline points="10 11 8 13 10 15"/>
-                    <polyline points="14 11 16 13 14 15"/>
+                    <rect x="3" y="3" width="7.5" height="7.5" rx="1"/>
+                    <rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/>
+                    <rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/>
+                    <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/>
                   </svg>
                 </div>
                 <div class="export-btn-content">
                   <div class="export-btn-main-row">
-                    <span class="export-btn-title" id="btnExportWebsiteTitle">打包下载整站项目 (ZIP)</span>
-                    <span class="export-website-badge" id="exportWebsiteCountBadge" style="display: none;">已识别代码</span>
+                    <span class="export-btn-title" id="btnExportFlatTitle">平铺打包下载 (ZIP)</span>
                   </div>
-                  <span class="export-btn-sub">保留完整前端工程代码，原位替换优化后图片</span>
+                  <span class="export-btn-sub">所有图片打平至同一目录，重名文件自动编号去重</span>
                 </div>
                 <div class="export-arrow-cue">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -2613,7 +2614,7 @@ body {
           <svg style="width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
         </button>
         <button class="compare-tool-btn" onclick="resetCompareZoom()" title="重置缩放并居中">⟲ 重置</button>
-        <span class="compare-hint-tip">💡 滚轮缩放 · 拖拽平移 · 滑动中线对比</span>
+        <span class="compare-hint-tip">滚轮缩放 · 拖拽平移 · 滑动中线对比</span>
       </div>
 
       <button class="compare-close-btn" onclick="closeCompareModal()" title="关闭对比器 (Esc)">×</button>
@@ -2687,8 +2688,6 @@ body {
 const state = {
   // 图片任务队列: Array<{ id, file, relativePath, ext, originalSize, compressedSize, data, status, ratio, saved, previewUrl, width, height }>
   images: [],
-  // 网站项目中识别到的非图片文件 (用于完整项目打包导出): Array<{ relativePath, file }>
-  websiteOtherFiles: [],
   // 当前格式过滤分类
   currentFilter: 'all',
   // 搜索关键字
@@ -3487,8 +3486,7 @@ async function addSingleFileToWorkspace(file) {
   const supportedImageExts = ['png', 'jpg', 'jpeg', 'svg', 'webp', 'gif', 'ico', 'bmp'];
 
   if (!supportedImageExts.includes(ext)) {
-    // 登记为网站项目的其他代码/资源文件 (用于整站导出)
-    state.websiteOtherFiles.push({ relativePath, file });
+    // 非图片文件 (HTML/CSS/JS/字体等) 不进入压缩队列，两种导出模式均自动忽略
     return false;
   }
 
@@ -4823,7 +4821,7 @@ async function startBatchCompress() {
 // 4. 打包导出并保持原有目录结构 (JSZip 深度目录保持)
 // ==========================================================================
 
-async function exportZipArchive(mode = 'images-only') {
+async function exportZipArchive(mode = 'structured') {
   if (state.images.length === 0) {
     showToast('当前工作区无图片可供导出');
     return;
@@ -4833,43 +4831,57 @@ async function exportZipArchive(mode = 'images-only') {
     return;
   }
 
-  const isWebsite = mode === 'full-website';
-  const btnImages = document.getElementById('btnExportImagesOnly');
-  const btnWebsite = document.getElementById('btnExportFullWebsite');
-  const titleImages = document.getElementById('btnExportImagesTitle');
-  const titleWebsite = document.getElementById('btnExportWebsiteTitle');
+  // mode: 'structured' (保持原有目录层级导出) | 'flat' (所有图片平铺至 ZIP 根目录)
+  const isFlat = mode === 'flat';
+  const btnStructured = document.getElementById('btnExportStructured');
+  const btnFlat = document.getElementById('btnExportFlat');
+  const titleStructured = document.getElementById('btnExportStructuredTitle');
+  const titleFlat = document.getElementById('btnExportFlatTitle');
 
-  const origImagesTitle = titleImages ? titleImages.textContent : '一键打包下载全部图片 (ZIP)';
-  const origWebsiteTitle = titleWebsite ? titleWebsite.textContent : '打包下载整站项目 (ZIP)';
+  const origStructuredTitle = titleStructured ? titleStructured.textContent : '按目录结构打包下载 (ZIP)';
+  const origFlatTitle = titleFlat ? titleFlat.textContent : '平铺打包下载 (ZIP)';
 
   state.isExporting = true;
-  if (btnImages) btnImages.disabled = true;
-  if (btnWebsite) btnWebsite.disabled = true;
+  if (btnStructured) btnStructured.disabled = true;
+  if (btnFlat) btnFlat.disabled = true;
 
-  const activeTitle = isWebsite ? titleWebsite : titleImages;
+  const activeTitle = isFlat ? titleFlat : titleStructured;
   if (activeTitle) {
-    activeTitle.textContent = isWebsite ? '正在打包整站项目 ZIP...' : '正在打包图片 ZIP...';
+    activeTitle.textContent = isFlat ? '正在平铺打包 ZIP...' : '正在打包图片 ZIP...';
   }
 
-  appendScanLog(`[${getCurrentTime()}] 开始构建 ZIP 文件结构 (模式: ${isWebsite ? '整站项目包含代码' : '仅图片保持层级'})...`, 'info');
+  appendScanLog(`[${getCurrentTime()}] 开始构建 ZIP 文件结构 (模式: ${isFlat ? '平铺打包 · 重名自动去重' : '严格保持原有目录层级'})...`, 'info');
 
   try {
     const zip = new window.JSZip();
+    const usedNames = new Set();
+    let dedupCount = 0;
 
-    // 1. 写入所有图片文件 (保持其相对于根目录的原始路径)
+    // 写入所有优化后图片:
+    // structured — 按上传时的相对路径保留完整目录层级;
+    // flat — 全部打平至 ZIP 根目录，重名文件自动编号去重 (如 logo (2).png)
     for (const item of state.images) {
       const finalData = item.data || await item.file.arrayBuffer();
-      // 在 zip 中按原有相对层级保存
-      zip.file(item.relativePath, finalData);
+      if (isFlat) {
+        let flatName = item.fileName;
+        if (usedNames.has(flatName)) {
+          const dot = flatName.lastIndexOf('.');
+          const base = dot > 0 ? flatName.slice(0, dot) : flatName;
+          const ext = dot > 0 ? flatName.slice(dot) : '';
+          let seq = 2;
+          while (usedNames.has(`${base} (${seq})${ext}`)) seq++;
+          flatName = `${base} (${seq})${ext}`;
+          dedupCount++;
+        }
+        usedNames.add(flatName);
+        zip.file(flatName, finalData);
+      } else {
+        zip.file(item.relativePath, finalData);
+      }
     }
 
-    // 2. 如果选择整站打包，写入其他前端代码文件
-    if (isWebsite && state.websiteOtherFiles.length > 0) {
-      appendScanLog(`[${getCurrentTime()}] 正在合并 ${state.websiteOtherFiles.length} 个非图片资源 (HTML/CSS/JS/字体等)...`, 'info');
-      for (const other of state.websiteOtherFiles) {
-        const content = await other.file.arrayBuffer();
-        zip.file(other.relativePath, content);
-      }
+    if (isFlat && dedupCount > 0) {
+      appendScanLog(`[${getCurrentTime()}] 平铺打包检测到 ${dedupCount} 个重名文件，已自动编号去重 (如 logo (2).png)`, 'warning');
     }
 
     // 生成 ZIP Blob
@@ -4885,7 +4897,7 @@ async function exportZipArchive(mode = 'images-only') {
 
     // 触发下载
     const dateStr = new Date().toISOString().slice(0, 10);
-    const filename = isWebsite ? `srdevbox_pixzip_optimized_website_${dateStr}.zip` : `srdevbox_pixzip_compressed_images_${dateStr}.zip`;
+    const filename = isFlat ? `srdevbox_pixzip_flat_images_${dateStr}.zip` : `srdevbox_pixzip_compressed_images_${dateStr}.zip`;
 
     const downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(zipBlob);
@@ -4902,10 +4914,11 @@ async function exportZipArchive(mode = 'images-only') {
     showToast('打包失败: ' + err.message);
   } finally {
     state.isExporting = false;
-    if (btnImages) btnImages.disabled = false;
-    if (btnWebsite) btnWebsite.disabled = false;
-    if (titleImages) titleImages.textContent = origImagesTitle;
-    if (titleWebsite) titleWebsite.textContent = origWebsiteTitle;
+    if (btnFlat) btnFlat.disabled = false;
+    if (titleStructured) titleStructured.textContent = origStructuredTitle;
+    if (titleFlat) titleFlat.textContent = origFlatTitle;
+    // structured 按钮按工作区是否真实存在目录结构恢复可用性 (散图导入时保持禁用)
+    updateExportButtonsAvailability();
   }
 }
 
@@ -5015,7 +5028,7 @@ function getStatusBadgeHtml(status) {
     case 'success':
       return `<span class="status-badge status-success">压缩成功</span>`;
     case 'skipped':
-      return `<span class="status-badge status-skipped">已达极限 (保留原图)</span>`;
+      return `<span class="status-badge status-skipped">已达极限</span>`;
     case 'failed':
       return `<span class="status-badge status-failed">处理异常</span>`;
     case 'pending':
@@ -5123,7 +5136,6 @@ function clearAllImages() {
     }
   });
   state.images = [];
-  state.websiteOtherFiles = [];
 
   document.getElementById('resultsTableBody').innerHTML = `
     <tr id="tableEmptyRow">
@@ -5158,6 +5170,44 @@ function setFormatFilter(type, el) {
   renderImageCards();
 }
 
+/**
+ * 判断当前工作区是否存在真实目录结构
+ * 表达依据: 每个图片任务的 relativePath
+ *  - 散图导入 (选择图片/拖入散图): relativePath 仅为文件名 (如 logo.png)，不含 "/"
+ *  - 目录导入 (选择文件夹/拖入网站工程目录): relativePath 为完整相对路径 (如 assets/img/logo.png)，含 "/"
+ * 因此「存在目录结构」等价于队列中任意一个 relativePath 包含 "/"
+ */
+function hasDirectoryStructure() {
+  return state.images.some(img => img.relativePath && img.relativePath.includes('/'));
+}
+
+/**
+ * 根据工作区目录结构状态，联动「按目录结构打包下载」按钮的可用性
+ * 散图导入 (无目录层级) 时禁用该按钮并动态改写引导文案，存在目录结构时自动恢复
+ */
+function updateExportButtonsAvailability() {
+  const btnStructured = document.getElementById('btnExportStructured');
+  // 导出进行中的禁用状态由 exportZipArchive 流程自行管理，此处不干预
+  if (!btnStructured || state.isExporting) return;
+
+  const subEl = btnStructured.querySelector('.export-btn-sub');
+  const hasDir = hasDirectoryStructure();
+  const isEmpty = state.images.length === 0;
+
+  btnStructured.disabled = !hasDir;
+
+  if (hasDir) {
+    btnStructured.title = '按上传时的文件夹结构导出，目录层级与相对路径原样保留';
+    if (subEl) subEl.textContent = '严格按原有相对路径与目录层级导出所有优化资产';
+  } else if (isEmpty) {
+    btnStructured.title = '通过「选择或拖拽网站/工程目录」导入文件夹后启用，目录层级与相对路径原样保留';
+    if (subEl) subEl.textContent = '导入整个文件夹后自动启用，散图导入无目录层级可保留';
+  } else {
+    btnStructured.title = '当前为散图导入，未检测到文件夹目录结构；如需按目录导出，请使用「选择或拖拽网站/工程目录」方式导入';
+    if (subEl) subEl.textContent = '散图无目录层级，推荐使用「平铺打包下载」';
+  }
+}
+
 function updateWorkspaceStats() {
   const count = state.images.length;
   let originalTotal = 0;
@@ -5183,15 +5233,8 @@ function updateWorkspaceStats() {
 
   updateTabCounts();
 
-  const websiteBadge = document.getElementById('exportWebsiteCountBadge');
-  if (websiteBadge) {
-    if (state.websiteOtherFiles && state.websiteOtherFiles.length > 0) {
-      websiteBadge.style.display = 'inline-flex';
-      websiteBadge.textContent = `已识别 ${state.websiteOtherFiles.length} 个代码文件`;
-    } else {
-      websiteBadge.style.display = 'none';
-    }
-  }
+  // 联动导出按钮可用性: 仅当工作区存在真实目录结构时，「按目录结构打包下载」才可点击
+  updateExportButtonsAvailability();
 
   // 动态更新主操作按钮上的待处理图片计数标记
   const compressCountBadge = document.getElementById('btnCompressCountBadge');
@@ -5545,23 +5588,6 @@ function updateFormatCardsContent(mode) {
   }
 }
 
-function selectExportMode(mode) {
-  const imagesOnlyRadio = document.querySelector('input[name="exportMode"][value="images-only"]');
-  const fullWebsiteRadio = document.querySelector('input[name="exportMode"][value="full-website"]');
-  const cardImagesOnly = document.getElementById('exportCardImagesOnly');
-  const cardFullWebsite = document.getElementById('exportCardFullWebsite');
-
-  if (mode === 'images-only') {
-    if (imagesOnlyRadio) imagesOnlyRadio.checked = true;
-    if (cardImagesOnly) cardImagesOnly.classList.add('active');
-    if (cardFullWebsite) cardFullWebsite.classList.remove('active');
-  } else {
-    if (fullWebsiteRadio) fullWebsiteRadio.checked = true;
-    if (cardFullWebsite) cardFullWebsite.classList.add('active');
-    if (cardImagesOnly) cardImagesOnly.classList.remove('active');
-  }
-}
-
 // ==========================================================================
 // 8. 像素级原图与压缩图全屏明细对比查看器交互控制器
 // ==========================================================================
@@ -5831,7 +5857,6 @@ window.copyMachineCode = copyMachineCode;
 window.openActivationModal = openActivationModal;
 window.closeActivationModal = closeActivationModal;
 window.submitActivation = submitActivation;
-window.selectExportMode = selectExportMode;
 window.selectCompressMode = selectCompressMode;
 window.setExtremeQuality = setExtremeQuality;
 window.openCompareModal = openCompareModal;
