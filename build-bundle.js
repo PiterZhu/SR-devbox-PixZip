@@ -68,17 +68,64 @@ const upngCode = upngMin.outputFiles[0].text + '\n' +
 fs.writeFileSync('lib/upng.min.js', upngCode, 'utf8');
 
 // 6. 构建 omggif 浏览器版 (纯前端 GIF89a 动图多帧解密、重编码与量化打包引擎，MIT 协议)
-esbuild.buildSync({
-  entryPoints: ['node_modules/omggif/omggif.js'],
+let omggifSource = fs.readFileSync('node_modules/omggif/omggif.js', 'utf8');
+
+// 注入原生像素索引直接解码方法 decodeFrameIndices (100% 保持原生调色板映射，避免 RGBA 往返失真与黑屏)
+const injectMarker = 'this.decodeAndBlitFrameRGBA = function(frame_num, pixels) {';
+const decodeIndicesMethod = `  this.decodeFrameIndices = function(frame_num, output) {
+    var frame = this.frameInfo(frame_num);
+    var num_pixels = frame.width * frame.height;
+    var index_stream = new Uint8Array(num_pixels);
+    GifReaderLZWOutputIndexStream(buf, frame.data_offset, index_stream, num_pixels);
+    if (!frame.interlaced) {
+      if (output) { output.set(index_stream); return output; }
+      return index_stream;
+    }
+    var deinterlaced = output || new Uint8Array(num_pixels);
+    var rows = [
+      { start: 0, step: 8 },
+      { start: 4, step: 8 },
+      { start: 2, step: 4 },
+      { start: 1, step: 2 }
+    ];
+    var srcRow = 0;
+    for (var pass = 0; pass < 4; pass++) {
+      var step = rows[pass].step;
+      for (var dstRow = rows[pass].start; dstRow < frame.height; dstRow += step) {
+        var srcOff = srcRow * frame.width;
+        var dstOff = dstRow * frame.width;
+        deinterlaced.set(index_stream.subarray(srcOff, srcOff + frame.width), dstOff);
+        srcRow++;
+      }
+    }
+    return deinterlaced;
+  };
+
+  `;
+
+if (omggifSource.includes(injectMarker)) {
+  omggifSource = omggifSource.replace(injectMarker, decodeIndicesMethod + injectMarker);
+}
+
+const omggifMin = esbuild.buildSync({
+  stdin: {
+    contents: omggifSource,
+    resolveDir: path.resolve('node_modules/omggif'),
+    sourcefile: 'omggif.js',
+    loader: 'js'
+  },
   bundle: true,
-  outfile: 'lib/omggif.min.js',
   minify: true,
   format: 'iife',
   globalName: 'SR_Omggif_Module',
-  footer: {
-    js: 'if (typeof window !== "undefined") { window.omggif = SR_Omggif_Module; window.GifReader = SR_Omggif_Module.GifReader; window.GifWriter = SR_Omggif_Module.GifWriter; }\nif (typeof globalThis !== "undefined") { globalThis.omggif = SR_Omggif_Module; globalThis.GifReader = SR_Omggif_Module.GifReader; globalThis.GifWriter = SR_Omggif_Module.GifWriter; }'
-  }
+  write: false
 });
+
+const omggifCode = omggifMin.outputFiles[0].text + '\n' +
+  'if (typeof window !== "undefined") { window.omggif = SR_Omggif_Module; window.GifReader = SR_Omggif_Module.GifReader; window.GifWriter = SR_Omggif_Module.GifWriter; }\n' +
+  'if (typeof globalThis !== "undefined") { globalThis.omggif = SR_Omggif_Module; globalThis.GifReader = SR_Omggif_Module.GifReader; globalThis.GifWriter = SR_Omggif_Module.GifWriter; }\n';
+
+fs.writeFileSync('lib/omggif.min.js', omggifCode, 'utf8');
 
 console.log('✅ 前端所有核心商用库构建成功:');
 fs.readdirSync('lib').forEach(f => {
