@@ -448,6 +448,10 @@ body {
   user-select: none;
 }
 
+.drop-zone * {
+  pointer-events: none;
+}
+
 .drop-zone:hover, .drop-zone.active {
   border-color: var(--primary);
   background: #f4f8ff;
@@ -1025,25 +1029,36 @@ body {
   background: var(--danger-light);
 }
 
-.btn-clear-queue {
+.btn-clear-queue,
+.btn-clear-results {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.7rem;
   color: var(--danger);
   border-color: var(--danger-border);
-}
-.btn-clear-queue:hover {
-  background: var(--danger-light);
-  border-color: var(--danger);
 }
 
-.btn-clear-results {
-  font-size: 0.7rem;
-  color: var(--danger);
-  border-color: var(--danger-border);
-}
+.btn-clear-queue:hover,
 .btn-clear-results:hover {
   background: var(--danger-light);
   border-color: var(--danger);
 }
+
+.btn-clear-queue .btn-clear-icon,
+.btn-clear-results .btn-clear-icon {
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+  flex-shrink: 0;
+  transition: transform 0.16s ease;
+}
+
+.btn-clear-queue:hover:not(:disabled) .btn-clear-icon,
+.btn-clear-results:hover:not(:disabled) .btn-clear-icon {
+  transform: rotate(-15deg);
+}
+
 .btn-clear-results:disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -2666,7 +2681,7 @@ body {
             <span class="workspace-section-title">待处理图片队列</span>
             <span class="workspace-section-meta" id="queueTotalBadge">0 项</span>
           </div>
-          <button class="btn-preset btn-clear-queue" id="btnClearQueue" onclick="clearAllImages()" title="清空当前队列全部图片">清空列表</button>
+          <button class="btn-preset btn-clear-queue" id="btnClearQueue" onclick="clearAllImages()" title="清空当前队列全部图片"><svg class="btn-clear-icon" viewBox="0 0 1024 1024" width="11" height="11" fill="currentColor"><path d="M953.2 374.9l-253-253c-39.8-39.8-104.8-39.8-144.6 0L447.2 230.3 302.6 85.7c-59.6-59.6-157.2-59.6-216.9 0-59.6 59.6-59.6 157.2 0 216.9l144.6 144.6-108.5 108.4c-39.8 39.8-39.8 104.8 0 144.6l253 253c39.8 39.8 104.8 39.8 144.6 0l433.8-433.8c39.8-39.7 39.8-104.8 0-144.5z m-758.8 224l93.8-93.8 29-29c16-16 16-41.9 0-57.9l-29-29-144.6-144.6c-27.9-27.9-27.9-73.2 0-101 27.9-27.9 73.2-27.9 101 0l144.6 144.6 29 29c16 16 41.9 16 57.9 0l29-29 93.8-93.8c15.9-15.9 42-15.9 57.9 0l42.3 42.3-462.4 462.5-42.3-42.3c-16-16-16-42 0-58z m686.3-122.8L778.8 578l-80.1-80.1c-15.9-15.9-42-15.9-57.9 0-15.9 15.9-15.9 42 0 57.9l80.1 80.1-86.9 87-80.1-80.1c-15.9-15.9-42-15.9-57.9 0-15.9 15.9-15.9 42 0 57.9l80.1 80.1-99.9 99.9c-15.9 15.9-42 15.9-57.9 0L294.6 757.1l462.5-462.5 123.6 123.6c15.9 15.9 15.9 42 0 57.9z"></path></svg><span>清空列表</span></button>
         </div>
 
         <!-- 左右交换：左侧分类选项卡，右侧一体化搜索框 -->
@@ -2834,7 +2849,7 @@ body {
               <span id="totalSavingsBadge" class="savings-pill">
                 总体积节省 0 KB (0.0%)
               </span>
-              <button class="btn-preset btn-clear-results" id="btnClearResults" onclick="clearCompressedResults()" title="清空所有已压缩的结果，图片留在待处理队列">清空结果</button>
+              <button class="btn-preset btn-clear-results" id="btnClearResults" onclick="clearCompressedResults()" title="清空所有已压缩的结果，图片留在待处理队列"><svg class="btn-clear-icon" viewBox="0 0 1024 1024" width="11" height="11" fill="currentColor"><path d="M953.2 374.9l-253-253c-39.8-39.8-104.8-39.8-144.6 0L447.2 230.3 302.6 85.7c-59.6-59.6-157.2-59.6-216.9 0-59.6 59.6-59.6 157.2 0 216.9l144.6 144.6-108.5 108.4c-39.8 39.8-39.8 104.8 0 144.6l253 253c39.8 39.8 104.8 39.8 144.6 0l433.8-433.8c39.8-39.7 39.8-104.8 0-144.5z m-758.8 224l93.8-93.8 29-29c16-16 16-41.9 0-57.9l-29-29-144.6-144.6c-27.9-27.9-27.9-73.2 0-101 27.9-27.9 73.2-27.9 101 0l144.6 144.6 29 29c16 16 41.9 16 57.9 0l29-29 93.8-93.8c15.9-15.9 42-15.9 57.9 0l42.3 42.3-462.4 462.5-42.3-42.3c-16-16-16-42 0-58z m686.3-122.8L778.8 578l-80.1-80.1c-15.9-15.9-42-15.9-57.9 0-15.9 15.9-15.9 42 0 57.9l80.1 80.1-86.9 87-80.1-80.1c-15.9-15.9-42-15.9-57.9 0-15.9 15.9-15.9 42 0 57.9l80.1 80.1-99.9 99.9c-15.9 15.9-42 15.9-57.9 0L294.6 757.1l462.5-462.5 123.6 123.6c15.9 15.9 15.9 42 0 57.9z"></path></svg><span>清空结果</span></button>
             </div>
           </div>
 
@@ -3124,25 +3139,49 @@ window.addEventListener('DOMContentLoaded', () => {
 function setupDragAndDrop() {
   const imageDropZone = document.getElementById('imageDropZone');
   const webDropZone = document.getElementById('webDropZone');
+  const uploadGrid = document.querySelector('.upload-options-grid');
+  const previewContainer = document.querySelector('.preview-container');
 
-  [imageDropZone, webDropZone].forEach(zone => {
+  // 全局拦截页面默认文件拖拽行为，防止用户脱离目标区误拖拽导致浏览器直接跳转打开图片
+  window.addEventListener('dragover', (e) => e.preventDefault());
+  window.addEventListener('drop', (e) => e.preventDefault());
+
+  // 绑定图片投放卡片、项目目录投放卡片、并排网格容器及整个下方预览区，确保拖入任一合理区域均可捕获
+  const zones = [imageDropZone, webDropZone, uploadGrid, previewContainer].filter(Boolean);
+
+  zones.forEach(zone => {
     zone.addEventListener('dragover', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      // 锁定期间不再给出可投放的高亮反馈
-      if (!isWorkspaceBusy()) zone.classList.add('active');
+      if (!isWorkspaceBusy()) {
+        zone.classList.add('active');
+        if (zone === uploadGrid) {
+          if (imageDropZone) imageDropZone.classList.add('active');
+          if (webDropZone) webDropZone.classList.add('active');
+        }
+      }
     });
 
     zone.addEventListener('dragleave', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      zone.classList.remove('active');
+      if (!zone.contains(e.relatedTarget)) {
+        zone.classList.remove('active');
+        if (zone === uploadGrid) {
+          if (imageDropZone) imageDropZone.classList.remove('active');
+          if (webDropZone) webDropZone.classList.remove('active');
+        }
+      }
     });
 
     zone.addEventListener('drop', async (e) => {
       e.preventDefault();
       e.stopPropagation();
       zone.classList.remove('active');
+      if (imageDropZone) imageDropZone.classList.remove('active');
+      if (webDropZone) webDropZone.classList.remove('active');
+      if (uploadGrid) uploadGrid.classList.remove('active');
+      if (previewContainer) previewContainer.classList.remove('active');
 
       // 联动锁定：压缩/打包进行中禁止导入新图，防止新图卷入正在运行的批次产生混合模式结果
       if (isWorkspaceBusy()) {
@@ -3150,85 +3189,55 @@ function setupDragAndDrop() {
         return;
       }
 
-      const items = e.dataTransfer.items;
-      if (items && items.length > 0) {
-        await processDataTransferItems(items);
-      } else if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        await processFileList(Array.from(e.dataTransfer.files));
-      }
+      await handleDropDataTransfer(e.dataTransfer);
     });
   });
 }
 
 /**
- * 递归解析拖拽的 DataTransferItemList (支持无限层级文件夹读取)
+ * 递归遍历现代 W3C FileSystemDirectoryHandle (Chrome 86+ 原生支持，极其稳定高效)
  */
-async function processDataTransferItems(items) {
-  appendScanLog(`[${getCurrentTime()}] 开始分析拖入的项目/文件...`, 'info');
-  const fileEntries = [];
-
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    if (typeof item.webkitGetAsEntry === 'function') {
-      const entry = item.webkitGetAsEntry();
-      if (entry) {
-        fileEntries.push(entry);
-      }
-    } else {
-      const f = item.getAsFile();
-      if (f) {
-        f._relativePath = f.name;
-        await addSingleFileToWorkspace(f);
+async function traverseFileSystemDirectoryHandle(dirHandle, currentPath = '') {
+  const nextPath = currentPath ? `${currentPath}/${dirHandle.name}` : dirHandle.name;
+  const results = [];
+  try {
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind === 'file') {
+        try {
+          const file = await entry.getFile();
+          file._relativePath = `${nextPath}/${file.name}`;
+          results.push(file);
+        } catch (e) {
+          console.warn('[PixZip] 读取句柄文件失败:', entry.name, e);
+        }
+      } else if (entry.kind === 'directory') {
+        const subFiles = await traverseFileSystemDirectoryHandle(entry, nextPath);
+        results.push(...subFiles);
       }
     }
+  } catch (err) {
+    console.warn('[PixZip] 目录句柄遍历异常:', dirHandle.name, err);
   }
-
-  let totalScanned = 0;
-  let imageFound = 0;
-
-  for (const entry of fileEntries) {
-    const files = await traverseDirectoryEntry(entry, '');
-    for (const file of files) {
-      totalScanned++;
-      const isImg = await addSingleFileToWorkspace(file);
-      if (isImg) imageFound++;
-    }
-  }
-
-  appendScanLog(`[${getCurrentTime()}] 遍历扫描完成: 共检索 ${totalScanned} 个文件，成功加载 ${imageFound} 张图片`, 'success');
-  updateWorkspaceStats();
-  renderImageCards();
-  showToast(`扫描完成，已加载 ${imageFound} 张图片至工作区`);
-}
-
-/**
- * 处理直接拖入的 FileList (浏览器不支持 DataTransferItem Entry API 时的兜底路径)
- * 注：此前 drop 处理器调用了该函数但从未定义，属于潜在 ReferenceError，此处补齐实现
- */
-async function processFileList(files) {
-  appendScanLog(`[${getCurrentTime()}] 开始分析拖入的文件 (共 ${files.length} 个)...`, 'info');
-  let imageFound = 0;
-  for (const file of files) {
-    file._relativePath = file.webkitRelativePath || file.name;
-    const isImg = await addSingleFileToWorkspace(file);
-    if (isImg) imageFound++;
-  }
-  appendScanLog(`[${getCurrentTime()}] 分析完成: 成功加载 ${imageFound} 张图片`, 'success');
-  updateWorkspaceStats();
-  renderImageCards();
-  showToast(`扫描完成，已加载 ${imageFound} 张图片至工作区`);
+  return results;
 }
 
 /**
  * 递归遍历目录 Entry 树 (处理分批返回限制)
  */
 async function traverseDirectoryEntry(entry, currentPath = '') {
+  if (!entry) return [];
   if (entry.isFile) {
     return new Promise((resolve) => {
-      entry.file((file) => {
-        file._relativePath = currentPath ? `${currentPath}/${file.name}` : file.name;
-        resolve([file]);
-      }, () => resolve([]));
+      entry.file(
+        (file) => {
+          file._relativePath = currentPath ? `${currentPath}/${file.name}` : file.name;
+          resolve([file]);
+        },
+        (err) => {
+          console.warn('[PixZip] 目录文件读取失败:', entry.fullPath || entry.name, err);
+          resolve([]);
+        }
+      );
     });
   } else if (entry.isDirectory) {
     const dirReader = entry.createReader();
@@ -3252,17 +3261,149 @@ function readAllEntriesFromReader(dirReader) {
   return new Promise((resolve) => {
     const entries = [];
     function readNext() {
-      dirReader.readEntries((batch) => {
-        if (!batch || batch.length === 0) {
+      dirReader.readEntries(
+        (batch) => {
+          if (!batch || batch.length === 0) {
+            resolve(entries);
+          } else {
+            entries.push(...batch);
+            readNext();
+          }
+        },
+        (err) => {
+          console.warn('[PixZip] 目录读取异常:', err);
           resolve(entries);
-        } else {
-          entries.push(...batch);
-          readNext();
         }
-      }, () => resolve(entries));
+      );
     }
     readNext();
   });
+}
+
+/**
+ * 核心拖拽数据解析引擎 (彻底解决 DataTransferItemList / FileSystem Entry API 检测为 0 的问题)
+ * 具备四级容灾提取机制：
+ * 1. 优先尝试现代 W3C FileSystemDirectoryHandle (getAsFileSystemHandle)，完美解析多层级文件夹
+ * 2. 传统 WebKit FileSystem Entry API，递归展开目录树并维护相对路径
+ * 3. 对普通文件优先调用同步标准 API item.getAsFile()，杜绝 entry.file() 异步跨域/权限丢失/file://协议拦截造成的 0 文件漏检
+ * 4. 若 items 全流程未提取到有效文件，降级遍历 dataTransfer.files
+ */
+async function handleDropDataTransfer(dataTransfer) {
+  if (!dataTransfer) return;
+  appendScanLog(`[${getCurrentTime()}] 开始分析拖入的项目/文件...`, 'info');
+
+  const items = dataTransfer.items;
+  const rawFiles = dataTransfer.files;
+  const gatheredFiles = [];
+
+  if (items && items.length > 0) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind && item.kind !== 'file') continue;
+
+      // 1. 优先尝试现代 W3C File System Access API
+      let handledAsDir = false;
+      if (typeof item.getAsFileSystemHandle === 'function') {
+        try {
+          const handle = await item.getAsFileSystemHandle();
+          if (handle && handle.kind === 'directory') {
+            const dirFiles = await traverseFileSystemDirectoryHandle(handle, '');
+            gatheredFiles.push(...dirFiles);
+            handledAsDir = true;
+          }
+        } catch (e) {
+          // getAsFileSystemHandle 在特定安全上下文中可能降级
+        }
+      }
+
+      if (handledAsDir) continue;
+
+      // 2. 传统 WebKit FileSystem Entry API
+      let entry = null;
+      if (typeof item.webkitGetAsEntry === 'function') {
+        try {
+          entry = item.webkitGetAsEntry();
+        } catch (e) {
+          entry = null;
+        }
+      }
+
+      if (entry && entry.isDirectory) {
+        // 目录：递归遍历目录树，自动拼接相对路径
+        try {
+          const dirFiles = await traverseDirectoryEntry(entry, '');
+          gatheredFiles.push(...dirFiles);
+          continue;
+        } catch (e) {
+          console.warn('[PixZip] 目录解析异常:', entry.name, e);
+        }
+      }
+
+      // 3. 文件提取：优先利用 item.getAsFile() 获取原生 File，同步可靠、全环境通用
+      let f = null;
+      if (typeof item.getAsFile === 'function') {
+        try {
+          f = item.getAsFile();
+        } catch (e) {
+          f = null;
+        }
+      }
+      // 兜底：若 getAsFile 未获取到且 entry 存在且为 isFile，尝试 entry.file
+      if (!f && entry && entry.isFile) {
+        try {
+          f = await new Promise((resolve) => {
+            entry.file(resolve, () => resolve(null));
+          });
+        } catch (e) {
+          f = null;
+        }
+      }
+      if (f) {
+        f._relativePath = f._relativePath || f.name;
+        gatheredFiles.push(f);
+      }
+    }
+  }
+
+  // 4. 全局兜底：若从 items 中未提取到任何文件，但 dataTransfer.files 存在，直接降级遍历 files
+  if (gatheredFiles.length === 0 && rawFiles && rawFiles.length > 0) {
+    for (let i = 0; i < rawFiles.length; i++) {
+      const f = rawFiles[i];
+      f._relativePath = f.webkitRelativePath || f.name;
+      gatheredFiles.push(f);
+    }
+  }
+
+  let totalScanned = gatheredFiles.length;
+  let imageFound = 0;
+
+  for (const file of gatheredFiles) {
+    const isImg = await addSingleFileToWorkspace(file);
+    if (isImg) imageFound++;
+  }
+
+  appendScanLog(`[${getCurrentTime()}] 遍历扫描完成: 共检索 ${totalScanned} 个文件，成功加载 ${imageFound} 张图片`, imageFound > 0 ? 'success' : (totalScanned > 0 ? 'warning' : 'info'));
+  updateWorkspaceStats();
+  renderImageCards();
+  if (imageFound > 0) {
+    showToast(`扫描完成，已加载 ${imageFound} 张图片至工作区`);
+  } else if (totalScanned > 0) {
+    showToast(`未识别到有效图片（共检索 ${totalScanned} 个文件，均非支持格式或已被跳过）`);
+  } else {
+    showToast('未检测到有效图片文件，请拖入图片或包含图片的文件夹');
+  }
+}
+
+/** 兼容旧接口别名 */
+async function processDataTransferItems(items) {
+  if (items && items[0] && items[0].dataTransfer) {
+    await handleDropDataTransfer(items[0].dataTransfer);
+  }
+}
+async function processFileList(files) {
+  if (files && files.length > 0) {
+    await handleDropDataTransfer({ files });
+  }
 }
 
 /**
@@ -3920,18 +4061,28 @@ async function extractImageMetadata(file, previewUrl) {
  * @returns {Promise<boolean>} 是否为图片文件
  */
 async function addSingleFileToWorkspace(file) {
-  const relativePath = file._relativePath || file.name;
-  const ext = getFileExtension(file.name).toLowerCase();
-  const supportedImageExts = ['png', 'jpg', 'jpeg', 'svg', 'webp', 'gif', 'ico', 'bmp'];
+  if (!file) return false;
+  const relativePath = file._relativePath || file.name || 'unknown';
+  let ext = getFileExtension(file.name).toLowerCase();
 
-  if (!supportedImageExts.includes(ext)) {
-    // 非图片文件 (HTML/CSS/JS/字体等) 不进入压缩队列，两种导出模式均自动忽略
-    return false;
+  // 扩展名别名归一化
+  if (ext === 'jpeg' || ext === 'jfif' || ext === 'pjpeg' || ext === 'pjp') ext = 'jpg';
+  if (ext === 'tiff') ext = 'tif';
+
+  const supportedImageExts = ['png', 'jpg', 'svg', 'webp', 'gif', 'ico', 'bmp', 'avif', 'tif'];
+
+  // 若扩展名未能命中，但 MIME 类型明确为 image/* (例如无扩展名拖拽、截图或剪贴板生成的文件)
+  if (!supportedImageExts.includes(ext) && file.type && file.type.startsWith('image/')) {
+    const mimeSub = file.type.replace('image/', '').toLowerCase().split('+')[0];
+    if (mimeSub === 'jpeg' || mimeSub === 'pjpeg') ext = 'jpg';
+    else if (supportedImageExts.includes(mimeSub)) ext = mimeSub;
   }
 
-  // 防止重复添加同路径的文件
-  const existing = state.images.find(img => img.relativePath === relativePath);
-  if (existing) return false;
+  if (!supportedImageExts.includes(ext)) {
+    // 非图片文件 (HTML/CSS/JS/字体/系统隐藏文件等) 不进入压缩队列，给出清晰指引
+    appendScanLog(`[${getCurrentTime()}] 跳过非图片文件: ${file.name || '未知项'} (支持格式: PNG/JPG/SVG/WebP/GIF/ICO/BMP)`, 'warning');
+    return false;
+  }
 
   // 生成缩略图 URL
   let previewUrl = '';
@@ -3949,6 +4100,55 @@ async function addSingleFileToWorkspace(file) {
     height = meta.height;
     software = meta.software;
   } catch (e) {}
+
+  // 检查是否已存在同相对路径文件：若已存在，直接刷新已有项数据并重置状态，防止重复拖入时判定为 0 张图片
+  const existingIndex = state.images.findIndex(img => img.relativePath === relativePath);
+  if (existingIndex !== -1) {
+    const existing = state.images[existingIndex];
+    if (existing.previewUrl) {
+      try { URL.revokeObjectURL(existing.previewUrl); } catch (e) {}
+    }
+    if (existing.compressedUrl && existing.compressedUrl !== existing.previewUrl) {
+      try { URL.revokeObjectURL(existing.compressedUrl); } catch (e) {}
+    }
+
+    existing.file = file;
+    existing.fileName = file.name;
+    existing.ext = ext;
+    existing.originalSize = file.size;
+    existing.compressedSize = file.size;
+    existing.data = null;
+    existing.compressedUrl = null;
+    existing.status = 'pending';
+    existing.ratio = '0.0';
+    existing.saved = 0;
+    existing.previewUrl = previewUrl;
+    existing.width = width;
+    existing.height = height;
+    existing.software = software;
+    existing.originalSoftware = software;
+    existing.outputSoftware = null;
+
+    if ((!width || !height) && previewUrl && typeof Image !== 'undefined') {
+      const bgImg = new Image();
+      bgImg.onload = () => {
+        if (bgImg.naturalWidth && bgImg.naturalHeight) {
+          existing.width = bgImg.naturalWidth;
+          existing.height = bgImg.naturalHeight;
+          const dimEl = document.getElementById(`dim-${existing.id}`);
+          if (dimEl) {
+            dimEl.textContent = ` · ${bgImg.naturalWidth}×${bgImg.naturalHeight}px`;
+            dimEl.title = `原始分辨率: ${bgImg.naturalWidth} × ${bgImg.naturalHeight} 像素`;
+            dimEl.style.display = 'inline';
+          }
+        }
+      };
+      bgImg.src = previewUrl;
+    }
+
+    appendScanLog(`[${getCurrentTime()}] 队列已存在同名图片，已自动刷新重置: ${relativePath}`, 'info');
+    return true;
+  }
 
   const imageItem = {
     id: 'img-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6),
@@ -6342,7 +6542,9 @@ function formatBytes(bytes) {
 }
 
 function getFileExtension(filename) {
-  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+  if (!filename || typeof filename !== 'string') return '';
+  const idx = filename.lastIndexOf(".");
+  return idx !== -1 ? filename.slice(idx + 1).trim() : '';
 }
 
 function truncateString(str, num) {
