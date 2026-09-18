@@ -736,6 +736,141 @@ body {
   box-shadow: var(--shadow-xs);
 }
 
+/* ===== 目录分组视图 (工程目录导入后按 relativePath 目录层级分组表达路径结构) ===== */
+.folder-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+/* 粘性分组头：滚动时吸附在列表顶部，完整展示当前所属目录 */
+.folder-group-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.folder-group-header:hover {
+  background: #f1f5f9;
+  border-color: var(--border-medium);
+}
+
+.folder-group-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.folder-group.collapsed .folder-group-chevron {
+  transform: rotate(-90deg);
+}
+
+.folder-group-icon {
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+.folder-group-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.folder-group-count {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 组内卡片：左移缩进 + 虚线树形导轨，表达"隶属于该目录"的层级关系 */
+.folder-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 15px;
+  padding-left: 11px;
+  border-left: 1px dashed var(--border-medium);
+}
+
+.folder-group.collapsed .folder-group-items {
+  display: none;
+}
+
+/* 底部「下一个目录」粘性预告条：与顶部粘性分组头互补 ——
+   顶部告诉你"正在看哪个目录"，底部告诉你"下面还有哪些目录"，点击直达 */
+.queue-next-peek {
+  position: sticky;
+  bottom: 0;
+  z-index: 6;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 -4px 10px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.queue-next-peek:hover {
+  background: #f1f5f9;
+  border-color: var(--border-medium);
+}
+
+.next-peek-arrow,
+.next-peek-prefix {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.next-peek-prefix {
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+.next-peek-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.next-peek-count {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* 精致无缝浅灰透明棋盘缩略图 */
 .image-thumbnail-box {
   width: 42px;
@@ -786,49 +921,9 @@ body {
   max-width: 240px;
 }
 
-.image-path-text {
-  font-size: 0.67rem;
-  color: var(--text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  line-height: 1.4;
-}
-
-.image-path-text .meta-path {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color: var(--text-muted);
-}
-
-.image-path-text .meta-dim {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* 制作软件与整行路径文字颜色保持一致 (统一为 text-muted，不再加深强调) */
-.image-path-text .meta-software {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-/* 精细格式微徽章 (专业中性微彩色，不突兀) */
-.preview-card-badge {
-  font-size: 0.62rem;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  line-height: 1.3;
-}
-
-.badge-png { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.badge-jpg, .badge-jpeg { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
-.badge-svg { background: #fdf4ff; color: #86198f; border: 1px solid #f5d0fe; }
-.badge-webp { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-.badge-gif { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-.badge-ico, .badge-bmp { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+/* 队列卡片元信息行不再维护独立样式：preview-card 格式微徽章已退役，
+   卡片的「PNG · 800×600px」「制作软件: xxx」两行直接复用明细统计表的
+   .result-file-meta / .result-file-software 类，左右两栏排版天然同源 */
 
 .status-badge {
   font-size: 0.65rem;
@@ -1339,10 +1434,10 @@ body {
 }
 
 /* ==========================================================================
-   明细统计表格系统 (绝对杜绝任何折行挤压，锁定列宽与水平滑动保护)
+   明细统计表格系统 (绝不折行 + 绝不出横向滚动条：定宽列紧凑化，文件列弹性吃剩余空间并省略号截断)
    ========================================================================== */
 .results-table-wrapper {
-  overflow-x: auto;
+  overflow-x: hidden; /* 永不出现横向滚动条：表格 width:100% + table-layout:fixed 本身不会超宽，此处兜底裁掉任何意外溢出 */
   overflow-y: auto;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -1353,8 +1448,7 @@ body {
 
 .results-table {
   width: 100%;
-  min-width: 580px; /* 保护基准宽度，低于此宽度自动水平滚动，绝不挤扁按钮与表头 */
-  table-layout: fixed; /* 列宽由表头预设宽度分配，文件列只吃剩余空间，长文件名不再撑出横向滚动条 */
+  table-layout: fixed; /* 列宽由表头预设宽度分配，文件列只吃剩余空间，长文件名省略号截断，任何面板宽度下都不产生横向滚动 */
   border-collapse: collapse;
   text-align: left;
   font-size: 0.74rem;
@@ -1403,30 +1497,30 @@ body {
 }
 
 .col-size {
-  width: 72px;
-  min-width: 72px;
+  width: 68px;
+  min-width: 68px;
   text-align: right;
   white-space: nowrap !important;
 }
 
 .col-ratio {
-  width: 76px;
-  min-width: 76px;
+  width: 70px;
+  min-width: 70px;
   text-align: right;
   font-weight: 700;
   white-space: nowrap !important;
 }
 
 .col-status {
-  width: 86px;
-  min-width: 86px;
+  width: 80px;
+  min-width: 80px;
   text-align: center;
   white-space: nowrap !important;
 }
 
 .col-actions {
-  width: 114px;
-  min-width: 114px;
+  width: 122px; /* 精确容纳「对比+下载」双按钮实际内容宽 (2×50px 按钮 + 4px 间距 + 18px 单元格内边距)，杜绝按钮溢出撑出横向滚动条 */
+  min-width: 122px;
   text-align: center;
   white-space: nowrap !important;
 }
@@ -1436,7 +1530,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap !important;
   flex-wrap: nowrap !important;
 }
@@ -1445,9 +1539,9 @@ body {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3.5px !important;
+  gap: 3px !important;
   height: 24px !important;
-  padding: 0 7px !important;
+  padding: 0 6px !important; /* 紧凑内边距：确保双按钮总宽严格落在 col-actions 定宽之内，不外溢 */
   font-size: 0.68rem !important;
   font-weight: 600 !important;
   line-height: 1 !important;
@@ -1482,6 +1576,41 @@ body {
   background: #f8fafc !important;
   color: var(--text-primary) !important;
   border-color: var(--border-strong) !important;
+}
+
+/* 明细表目录分组行：与左侧队列 folder-group-header 同一视觉语言 (📁 + 等宽路径 + 右侧小计)，
+   跨全列 colspan=6，声明位置在 .results-table td 之后以覆盖其内边距与底边框 */
+.results-group-row td {
+  padding: 0 !important;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.results-group-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px;
+}
+
+.results-group-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.results-group-summary {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .result-file-col {
@@ -2007,7 +2136,8 @@ body {
   height: auto;
   object-fit: contain;
   display: block;
-  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
+  /* 严禁任何阴影/滤镜：上下两层图片在分割线处裁切，阴影叠加深浅不一，
+     会被误判为压缩画质差异；舞台棋盘格背景已足够界定图片范围 */
 }
 
 .compare-divider {
@@ -2705,7 +2835,9 @@ const state = {
   // JPG / WebP 质量系数
   extremeQuality: 0.80,
   // 是否正在打包导出 ZIP
-  isExporting: false
+  isExporting: false,
+  // 队列目录分组视图中处于折叠状态的目录集合 (键为 relativePath 的目录前缀，'' 代表根目录散文件)
+  collapsedGroups: new Set()
 };
 
 // ==========================================================================
@@ -2716,6 +2848,7 @@ const state = {
 window.addEventListener('DOMContentLoaded', () => {
   setupDragAndDrop();
   initCompareModalEvents();
+  initQueueNextPeek();
   updateWorkspaceStats();
 });
 
@@ -3541,7 +3674,8 @@ async function addSingleFileToWorkspace(file) {
         imageItem.height = bgImg.naturalHeight;
         const dimEl = document.getElementById(`dim-${imageItem.id}`);
         if (dimEl) {
-          dimEl.textContent = ` · 尺寸: ${bgImg.naturalWidth}×${bgImg.naturalHeight}`;
+          // 队列卡片 meta 行与明细表同构：「PNG · 800×600px」，尺寸段永远紧跟格式文本之后
+          dimEl.textContent = ` · ${bgImg.naturalWidth}×${bgImg.naturalHeight}px`;
           dimEl.title = `原始分辨率: ${bgImg.naturalWidth} × ${bgImg.naturalHeight} 像素`;
           dimEl.style.display = 'inline';
         }
@@ -4943,7 +5077,6 @@ async function downloadSingleImage(item) {
 
 function renderImageCards() {
   const container = document.getElementById('imageCardsContainer');
-  const emptyNotice = document.getElementById('emptyQueueNotice');
 
   // 过滤
   const filtered = state.images.filter(item => {
@@ -4966,19 +5099,171 @@ function renderImageCards() {
     return;
   }
 
-  let html = '';
+  // 视图判定：任意 relativePath 含目录层级即启用「目录分组」视图，纯散图保持平铺列表
+  const hasDirs = filtered.some(item => item.relativePath && item.relativePath.includes('/'));
+
+  if (!hasDirs) {
+    container.innerHTML = filtered.map(item => createImageCardHtml(item)).join('');
+    return;
+  }
+
+  // 按目录前缀分组，保持首次出现顺序（根目录散文件以 '' 为组键）
+  const groups = new Map();
   filtered.forEach(item => {
-    html += createImageCardHtml(item);
+    const dir = getDirPrefix(item.relativePath);
+    if (!groups.has(dir)) groups.set(dir, []);
+    groups.get(dir).push(item);
   });
+
+  // 搜索/过滤时强制展开全部分组，避免命中结果被折叠目录藏住
+  const forceExpand = !!state.searchKeyword;
+
+  let html = '';
+  groups.forEach((items, dir) => {
+    html += createFolderGroupHtml(dir, items, forceExpand);
+  });
+
+  // 底部粘性预告条：粘在滚动视口底端，实时显示下一个尚未进入视野的目录分组
+  html += `
+    <div class="queue-next-peek" id="queueNextPeek" style="display: none;" onclick="scrollToNextGroupPeek()" title="下方还有目录，点击直接跳转">
+      <svg class="next-peek-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <span class="next-peek-prefix">接下来</span>
+      <svg class="folder-group-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <span class="next-peek-label"></span>
+      <span class="next-peek-count"></span>
+    </div>`;
+
   container.innerHTML = html;
+  updateQueueNextPeek();
+}
+
+/**
+ * 提取 relativePath 的目录前缀（含尾部 "/"，如 assets/img/）
+ * 文件位于队列根目录（散图或工程根散文件）时返回 ''
+ */
+function getDirPrefix(relativePath) {
+  if (!relativePath) return '';
+  const idx = relativePath.lastIndexOf('/');
+  return idx > 0 ? relativePath.slice(0, idx + 1) : '';
+}
+
+/**
+ * 渲染单个目录分组：粘性分组头（折叠/展开箭头 + 目录路径 + 张数/原始体积小计）
+ * + 树形导轨缩进的组内卡片列表；折叠状态由 state.collapsedGroups 跨渲染记忆
+ */
+function createFolderGroupHtml(dir, items, forceExpand) {
+  const isRoot = dir === '';
+  const collapsed = !forceExpand && state.collapsedGroups.has(dir);
+  const totalSize = items.reduce((sum, i) => sum + (i.originalSize || 0), 0);
+  const label = isRoot ? '根目录（散文件）' : dir;
+
+  return `
+    <div class="folder-group${collapsed ? ' collapsed' : ''}" data-dir="${escapeHtml(dir)}">
+      <div class="folder-group-header" onclick="toggleGroupCollapse(this)" title="点击折叠 / 展开此目录分组">
+        <svg class="folder-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg class="folder-group-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span class="folder-group-path">${escapeHtml(label)}</span>
+        <span class="folder-group-count">${items.length} 张 · ${formatBytes(totalSize)}</span>
+      </div>
+      <div class="folder-group-items">
+        ${items.map(item => createImageCardHtml(item)).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/** 点击分组头：就地切换折叠类名（不整体重渲染、不丢滚动位置），并把状态写回 state 供后续渲染记忆 */
+function toggleGroupCollapse(headerEl) {
+  const groupEl = headerEl.closest('.folder-group');
+  if (!groupEl) return;
+  const dir = groupEl.dataset.dir;
+  const nowCollapsed = groupEl.classList.toggle('collapsed');
+  if (nowCollapsed) {
+    state.collapsedGroups.add(dir);
+  } else {
+    state.collapsedGroups.delete(dir);
+  }
+  // 折叠改变了各分组高度，底部预告条的目标判定需要重新计算
+  requestQueuePeekUpdate();
+}
+
+/**
+ * 底部「下一个目录」粘性预告条机制
+ * 预告条是 .preview-list 的最后一个子元素，position: sticky; bottom: 0 使其在
+ * 列表内容超出视口期间始终粘在滚动框底端；滚动时由 updateQueueNextPeek 找出
+ * 第一个整体还在视口下方的分组，把它的目录名与张数/体积写进预告条。
+ */
+let queuePeekRafPending = false;
+
+function requestQueuePeekUpdate() {
+  if (queuePeekRafPending) return;
+  queuePeekRafPending = true;
+  requestAnimationFrame(() => {
+    queuePeekRafPending = false;
+    updateQueueNextPeek();
+  });
+}
+
+function initQueueNextPeek() {
+  const list = document.getElementById('imageCardsContainer');
+  if (!list) return;
+  // 容器元素本身常驻（重渲染只替换 innerHTML），监听器绑定一次即可
+  list.addEventListener('scroll', requestQueuePeekUpdate, { passive: true });
+  window.addEventListener('resize', requestQueuePeekUpdate, { passive: true });
+}
+
+function updateQueueNextPeek() {
+  const list = document.getElementById('imageCardsContainer');
+  const peek = document.getElementById('queueNextPeek');
+  if (!list || !peek) return; // 平铺模式/空队列没有预告条
+
+  const groups = list.querySelectorAll('.folder-group');
+  const listRect = list.getBoundingClientRect();
+  let target = null;
+  if (groups.length >= 2) {
+    for (const g of groups) {
+      // 分组顶端仍在视口底边之下 => 它就是"接下来"的目录
+      if (g.getBoundingClientRect().top >= listRect.bottom - 1) {
+        target = g;
+        break;
+      }
+    }
+  }
+
+  if (!target) {
+    peek.style.display = 'none';
+    peek._targetGroup = null;
+    return;
+  }
+
+  const labelEl = target.querySelector('.folder-group-path');
+  const countEl = target.querySelector('.folder-group-count');
+  peek.querySelector('.next-peek-label').textContent = labelEl ? labelEl.textContent : '';
+  peek.querySelector('.next-peek-count').textContent = countEl ? countEl.textContent : '';
+  peek._targetGroup = target;
+  peek.style.display = 'flex';
+}
+
+/** 点击预告条：只滚动队列列表本身，把目标分组平滑对齐到视口顶端（正好落在粘性分组头位置） */
+function scrollToNextGroupPeek() {
+  const list = document.getElementById('imageCardsContainer');
+  const peek = document.getElementById('queueNextPeek');
+  const target = peek && peek._targetGroup;
+  if (!list || !target || !target.isConnected) return;
+  const offset = target.getBoundingClientRect().top - list.getBoundingClientRect().top;
+  list.scrollTo({ top: list.scrollTop + offset, behavior: 'smooth' });
 }
 
 function createImageCardHtml(item) {
   const statusBadge = getStatusBadgeHtml(item.status);
   const sizeDesc = formatSizeComparison(item);
-  const dimText = item.width && item.height ? ` · 尺寸: ${item.width}×${item.height}` : '';
-  const softText = item.software ? ` · 制作软件: ${escapeHtml(item.software)}` : '';
-  const metaTooltip = `路径: ${item.relativePath}${dimText}${softText}`;
+
+  // 格式微徽章 (preview-card-badge) 已退役：队列卡片直接复用明细表的
+  // result-file-meta / result-file-software 类名，「PNG · 800×600px」「制作软件: xxx」
+  // 与右侧「压缩明细与缩减效果」表格排版完全同源同款
+  const dimReady = !!(item.width && item.height);
+  const metaLineHtml = `<span class="result-file-meta" title="路径: ${escapeHtml(item.relativePath)}">${item.ext.toUpperCase()}<span id="dim-${item.id}"${dimReady ? '' : ' style="display:none;"'}> · ${item.width || 0}×${item.height || 0}px</span></span>`;
+  const softLineHtml = item.software ? `<span class="result-file-software" title="原始制作软件 · 由 EXIF / XMP 元数据引擎深度解析">制作软件: ${escapeHtml(item.software)}</span>` : '';
 
   return `
     <div class="preview-card" id="card-${item.id}">
@@ -4988,13 +5273,11 @@ function createImageCardHtml(item) {
 
       <div class="card-info-col">
         <div class="card-info-header">
-          <span class="preview-card-badge badge-${item.ext}">${item.ext.toUpperCase()}</span>
-          <span class="image-name-text" title="${item.fileName}">${item.fileName}</span>
+          <span class="image-name-text" title="${escapeHtml(item.relativePath)}">${escapeHtml(item.fileName)}</span>
           ${statusBadge}
         </div>
-        <div class="image-path-text" title="${metaTooltip}">
-          <span class="meta-path">路径: ${item.relativePath}</span><span id="dim-${item.id}" class="meta-dim" ${!(item.width && item.height) ? 'style="display:none;"' : ''}> · 尺寸: ${item.width || 0}×${item.height || 0}</span>${item.software ? `<span class="meta-software" title="原始制作软件 · 由 EXIF / XMP 元数据引擎深度解析"> · 制作软件: ${escapeHtml(item.software)}</span>` : ''}
-        </div>
+        ${metaLineHtml}
+        ${softLineHtml}
         <div class="card-size-stat">
           <span>${sizeDesc}</span>
         </div>
@@ -5052,6 +5335,8 @@ function renderResultsTableRow(item) {
   const thumbUrl = item.compressedUrl || item.previewUrl;
   const canCompare = item.status === 'success' || item.status === 'skipped';
   const dimText = item.width && item.height ? ` · ${item.width}×${item.height}px` : '';
+  // 目录层级改由「目录分组行」表达（与左侧待处理队列同构），数据行内不再重复目录行，
+  // 完整相对路径保留在文件名悬停 tooltip 中
   // 压缩明细展示导出文件实际写入的软件标识 (已元数据清洗为 SR-DevBox PixZip)，独立换行展示
   const resultSoftware = item.outputSoftware || item.software;
   const softText = resultSoftware ? `<span class="result-file-software">制作软件: ${escapeHtml(resultSoftware)}</span>` : '';
@@ -5068,7 +5353,7 @@ function renderResultsTableRow(item) {
             ${canCompare ? `<span class="thumb-compare-hint" title="画质对比"><svg viewBox="0 0 1024 1024" width="18" height="18" style="fill: #ffffff;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg></span>` : ''}
           </div>
           <div class="result-file-info">
-            <span class="font-name-truncate" title="${item.relativePath}">${item.relativePath}</span>
+            <span class="font-name-truncate" title="${escapeHtml(item.relativePath)}">${escapeHtml(item.fileName)}</span>
             <span class="result-file-meta">${item.ext.toUpperCase()}${dimText}</span>${softText}
           </div>
         </div>
@@ -5102,11 +5387,108 @@ function renderResultsTableRow(item) {
     </tr>
   `;
 
+  const grouped = hasDirectoryStructure();
+  const dir = getDirPrefix(item.relativePath);
+
   if (existingRow) {
     existingRow.outerHTML = rowHtml;
-  } else {
-    tbody.insertAdjacentHTML('beforeend', rowHtml);
+    // 行数据 (缩减量/状态) 可能已刷新，同步所在分组的小计
+    if (grouped) updateResultsGroupSummary(dir);
+    return;
   }
+
+  if (!grouped) {
+    // 散图导入：维持原有平铺追加，零视觉变化
+    tbody.insertAdjacentHTML('beforeend', rowHtml);
+    return;
+  }
+
+  // 目录导入：先确保分组行就位 (按目录首次出现顺序排列，与左侧队列分组顺序一致)，
+  // 再把数据行按上传顺序插入组内正确位置 —— 而非按压缩完成先后乱序追加
+  const groupRow = ensureResultsGroupRow(tbody, dir);
+  const holder = document.createElement('tbody');
+  holder.innerHTML = rowHtml;
+  insertRowInGroupOrder(tbody, groupRow, holder.firstElementChild, item);
+  updateResultsGroupSummary(dir);
+}
+
+// ===== 明细表目录分组：分组行管理 (dir 前缀 -> 分组行 <tr>)，与左侧队列的分组视图同构 =====
+let resultsGroupRows = new Map();
+let resultsGroupSeq = 0;
+
+/** 确保分组行存在：缺失则创建 (📁 + 等宽路径 + 小计占位)，并插入到「目录首次出现顺序」靠后的第一个分组行之前 */
+function ensureResultsGroupRow(tbody, dir) {
+  const cached = resultsGroupRows.get(dir);
+  if (cached && cached.isConnected) return cached;
+
+  const groupRow = document.createElement('tr');
+  groupRow.className = 'results-group-row';
+  groupRow.id = `rgroup-${++resultsGroupSeq}`;
+  groupRow.dataset.dir = dir;
+  groupRow.innerHTML = `
+    <td colspan="6">
+      <div class="results-group-bar">
+        <svg class="folder-group-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span class="results-group-path">${escapeHtml(dir === '' ? '根目录（散文件）' : dir)}</span>
+        <span class="results-group-summary"></span>
+      </div>
+    </td>`;
+
+  const myFirst = firstIndexOfDir(dir);
+  let ref = null;
+  for (const g of tbody.querySelectorAll('tr.results-group-row')) {
+    if (firstIndexOfDir(g.dataset.dir) > myFirst) { ref = g; break; }
+  }
+  tbody.insertBefore(groupRow, ref); // ref 为 null 时落到表尾
+  resultsGroupRows.set(dir, groupRow);
+  return groupRow;
+}
+
+/** 目录中第一个文件在 state.images 里的下标 (分组行排序依据，与左侧队列"首次出现顺序"同一口径) */
+function firstIndexOfDir(dir) {
+  for (let i = 0; i < state.images.length; i++) {
+    if (getDirPrefix(state.images[i].relativePath) === dir) return i;
+  }
+  return Infinity;
+}
+
+/** 组内插入数据行：在第一个上传顺序比自己靠后的同行之前插入，保持与左侧队列完全相同的排序口径 */
+function insertRowInGroupOrder(tbody, groupRow, rowEl, item) {
+  const orderIndex = new Map(state.images.map((img, i) => [img.id, i]));
+  const myIdx = orderIndex.has(item.id) ? orderIndex.get(item.id) : Infinity;
+  let ref = groupRow.nextElementSibling;
+  while (ref && !ref.classList.contains('results-group-row')) {
+    const otherId = ref.id && ref.id.startsWith('row-') ? ref.id.slice(4) : null;
+    const otherIdx = otherId !== null && orderIndex.has(otherId) ? orderIndex.get(otherId) : Infinity;
+    if (otherIdx > myIdx) break;
+    ref = ref.nextElementSibling;
+  }
+  tbody.insertBefore(rowEl, ref);
+}
+
+/** 刷新分组行小计：N 张 · 缩减 X (-Y%)；分组被逐张移除清空后连同分组行一起收掉 */
+function updateResultsGroupSummary(dir) {
+  const groupRow = resultsGroupRows.get(dir);
+  if (!groupRow || !groupRow.isConnected) return;
+
+  const byId = new Map(state.images.map(img => [img.id, img]));
+  let count = 0, orig = 0, saved = 0;
+  for (let sib = groupRow.nextElementSibling; sib && !sib.classList.contains('results-group-row'); sib = sib.nextElementSibling) {
+    const it = sib.id && sib.id.startsWith('row-') ? byId.get(sib.id.slice(4)) : null;
+    if (it) {
+      count++;
+      orig += it.originalSize || 0;
+      saved += it.saved || 0;
+    }
+  }
+
+  if (count === 0) {
+    groupRow.remove();
+    resultsGroupRows.delete(dir);
+    return;
+  }
+  const pct = orig > 0 ? ((saved / orig) * 100).toFixed(1) : '0.0';
+  groupRow.querySelector('.results-group-summary').textContent = `${count} 张 · 缩减 ${formatBytes(saved)} (-${pct}%)`;
 }
 
 function removeImage(id) {
@@ -5121,6 +5503,8 @@ function removeImage(id) {
 
     const row = document.getElementById(`row-${id}`);
     if (row) row.remove();
+    // 明细表所在分组的小计同步刷新；分组被清空后其分组行由小计函数自动收掉
+    if (row) updateResultsGroupSummary(getDirPrefix(item.relativePath));
 
     renderImageCards();
     updateWorkspaceStats();
@@ -5136,6 +5520,9 @@ function clearAllImages() {
     }
   });
   state.images = [];
+  // 队列已清空，目录分组的折叠记忆与明细表分组行索引随之复位
+  state.collapsedGroups.clear();
+  resultsGroupRows.clear();
 
   document.getElementById('resultsTableBody').innerHTML = `
     <tr id="tableEmptyRow">
