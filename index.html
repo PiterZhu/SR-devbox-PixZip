@@ -14,7 +14,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixZip 图片无损压缩 · EXIF 元数据清洗 - SR-DevBox 开发者效率工具箱</title>
+  <title>PixZip 图片无损压缩 · 图片在线压缩 · EXIF 元数据清洗 - SR-DevBox 开发者效率工具箱</title>
 
   <!-- SEO 核心元信息 (搜索引擎收录与摘要展示) -->
   <meta name="description" content="SR-DevBox PixZip 是纯前端本地离线的在线图片无损压缩工具，支持 PNG/JPG/GIF/SVG/WebP/ICO 批量压缩，极致体积/高保真/真无损三模式最高降容 80%；独有元数据清洗引擎自动刷新图片数据源，清除 EXIF/XMP 制作软件与拍摄设备隐私痕迹，导出文件统一重写为 SR-DevBox PixZip 溯源标识，整包压缩保持完整目录层级，图片绝不上传服务器。">
@@ -193,11 +193,27 @@ body {
 }
 
 .subtool-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: 1.15;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3em;
+}
+
+.subtool-title-brand {
+  color: var(--primary);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.subtool-title-label {
+  font-size: 0.72em;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
 }
 
 .subtool-pill {
@@ -219,7 +235,7 @@ body {
 
 .app-subtitle {
   font-size: 0.74rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   letter-spacing: -0.01em;
   display: flex;
   align-items: center;
@@ -1019,6 +1035,25 @@ body {
   border-color: var(--danger);
 }
 
+.btn-clear-results {
+  font-size: 0.7rem;
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+.btn-clear-results:hover {
+  background: var(--danger-light);
+  border-color: var(--danger);
+}
+.btn-clear-results:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-clear-results:disabled:hover {
+  background: var(--bg-panel);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
 /* ==========================================================================
    右侧控制区：现代 Bento 模式卡片 (彻底摒弃大单选与廉价发光)
    ========================================================================== */
@@ -1433,6 +1468,19 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.savings-pill em {
+  font-style: normal;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.savings-pill .savings-ratio {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
 /* ==========================================================================
    明细统计表格系统 (绝不折行 + 绝不出横向滚动条：定宽列紧凑化，文件列弹性吃剩余空间并省略号截断)
    ========================================================================== */
@@ -1519,8 +1567,8 @@ body {
 }
 
 .col-actions {
-  width: 122px; /* 精确容纳「对比+下载」双按钮实际内容宽 (2×50px 按钮 + 4px 间距 + 18px 单元格内边距)，杜绝按钮溢出撑出横向滚动条 */
-  min-width: 122px;
+  width: 190px; /* 精确容纳「压缩前后对比+单图下载」双按钮实际内容宽 (93px + 72px 按钮 + 4px 间距 + 18px 单元格内边距)，杜绝按钮溢出撑出横向滚动条 */
+  min-width: 190px;
   text-align: center;
   white-space: nowrap !important;
 }
@@ -1579,11 +1627,18 @@ body {
 }
 
 /* 明细表目录分组行：与左侧队列 folder-group-header 同一视觉语言 (📁 + 等宽路径 + 右侧小计)，
-   跨全列 colspan=6，声明位置在 .results-table td 之后以覆盖其内边距与底边框 */
+   跨全列 colspan=6，声明位置在 .results-table td 之后以覆盖其内边距与底边框。
+   粘性吸附在粘性表头正下方（--results-head-h 由 initResultsGroupSticky 实测表头高度写入）：
+   300+ 行的大目录滚到中段时，当前目录条始终悬在明细上方；下一个分组行滚上来时
+   凭 DOM 靠后、同级 z-index 的后绘顺序自然将其顶替。z-index 9 低于表头(10)、高于普通单元格 */
 .results-group-row td {
   padding: 0 !important;
   background: #f8fafc;
   border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: calc(var(--results-head-h, 29px) - 1px); /* -1px 与表头底部轻微搭接，避免缝隙里透出滚动的行 */
+  z-index: 9;
+  box-shadow: inset 0 -1px 0 var(--border-subtle); /* border-collapse 下边框不随粘性单元格移动，用内阴影兜底常驻底部分隔线 */
 }
 
 .results-group-bar {
@@ -2270,6 +2325,177 @@ body {
   to { transform: rotate(360deg); }
 }
 
+/* ==========================================================================
+   按钮联动全局锁定态体系 (压缩中 / ZIP 打包中)
+   ========================================================================== */
+
+/* 压缩模式卡片锁定：置灰禁点 (点击由 JS 守卫拦截并 toast 说明原因) */
+.compress-mode-card.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.compress-mode-card.locked:hover:not(.active) {
+  border-color: var(--border-subtle);
+  background: var(--bg-panel);
+  transform: none;
+  box-shadow: var(--shadow-xs);
+}
+
+/* 拖拽投放区 / 目录选择入口锁定：压缩或打包中禁止导入新图 */
+.drop-zone.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.drop-zone.locked:hover,
+.drop-zone.locked.active {
+  border-color: var(--border-medium);
+  background: #fbfcfe;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 队列操作锁定：卡片删除按钮收敛，压缩/打包结束后恢复 */
+.queue-locked .preview-card-btn-delete {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* 预设按钮禁用态 (含「清空列表」) */
+.btn-preset:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-clear-queue:disabled:hover {
+  background: var(--bg-panel);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+/* 强度档位 pill 禁用态 (档位条当前隐藏，样式兜底保留) */
+.quality-pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 压缩进行中：主按钮转为红色「取消压缩」危险操作态 */
+.btn-primary.cancel-mode {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  border-color: #b91c1c;
+  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15), 0 4px 14px -2px rgba(220, 38, 38, 0.35);
+}
+.btn-primary.cancel-mode:hover:not(:disabled) {
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+  border-color: #991b1b;
+  box-shadow: 0 4px 18px -2px rgba(220, 38, 38, 0.45);
+  transform: translateY(-1px);
+}
+.btn-primary.cancel-mode:active:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(0) scale(0.995);
+}
+
+/* ==========================================================================
+   通用二次确认弹窗 (Promise 化，视觉与全局设计系统一致，替代原生 confirm)
+   ========================================================================== */
+.confirm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999998;
+  padding: 18px;
+  animation: compareFadeIn 0.18s ease-out;
+}
+
+.confirm-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-modal);
+  text-align: center;
+}
+
+.confirm-modal-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: var(--warning-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--warning);
+}
+
+.confirm-modal-icon.danger {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.confirm-modal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+.confirm-modal-message {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-modal-actions .btn-action {
+  height: 40px;
+  font-size: 0.82rem;
+}
+
+.btn-confirm-cancel {
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  color: var(--text-secondary);
+}
+.btn-confirm-cancel:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.btn-confirm-ok {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  border: 1px solid #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.15), 0 4px 14px -2px rgba(37, 99, 235, 0.35);
+}
+.btn-confirm-ok:hover {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+}
+.btn-confirm-ok.btn-confirm-danger {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  border-color: #b91c1c;
+  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15), 0 4px 14px -2px rgba(220, 38, 38, 0.35);
+}
+.btn-confirm-ok.btn-confirm-danger:hover {
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+}
+
 @media (max-width: 1024px) {
   body { overflow: auto; height: auto; }
   .app-container { height: auto; max-height: none; overflow: visible; }
@@ -2335,7 +2561,7 @@ body {
   <header class="app-header">
     <div class="subtool-info-col">
       <div class="subtool-title-row">
-        <h1 class="subtool-title">PixZip 图片压缩工具</h1>
+        <h1 class="subtool-title"><span class="subtool-title-brand">PixZip</span><span class="subtool-title-label">图片压缩</span></h1>
       </div>
       <div class="app-subtitle" id="headerModeSubtitle">三模式自由切换 · 极致体积 / 高保真 / 真无损 · 元数据清洗 · 保持完整目录层级</div>
     </div>
@@ -2377,7 +2603,7 @@ body {
       <!-- 并排上传区 (横向极简微悬浮卡片) -->
       <div class="upload-options-grid">
         <!-- 图片文件上传卡片 -->
-        <div class="drop-zone" id="imageDropZone" onclick="document.getElementById('imageFileInput').click()">
+        <div class="drop-zone" id="imageDropZone" onclick="openFilePicker('imageFileInput')">
           <input type="file" id="imageFileInput" multiple accept="image/*,.png,.jpg,.jpeg,.svg,.webp,.gif,.ico,.bmp" style="display: none" onchange="handleImageFilesSelected(event)">
           <div class="drop-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2391,7 +2617,7 @@ body {
         </div>
 
         <!-- 网站/项目目录整包扫描卡片 -->
-        <div class="drop-zone scan-folder-zone" id="webDropZone" onclick="document.getElementById('folderFileInput').click()">
+        <div class="drop-zone scan-folder-zone" id="webDropZone" onclick="openFilePicker('folderFileInput')">
           <input type="file" id="folderFileInput" webkitdirectory directory multiple style="display: none" onchange="handleFolderSelected(event)">
           <div class="drop-icon highlight-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2440,7 +2666,7 @@ body {
             <span class="workspace-section-title">待处理图片队列</span>
             <span class="workspace-section-meta" id="queueTotalBadge">0 项</span>
           </div>
-          <button class="btn-preset btn-clear-queue" onclick="clearAllImages()" title="清空当前队列全部图片">清空列表</button>
+          <button class="btn-preset btn-clear-queue" id="btnClearQueue" onclick="clearAllImages()" title="清空当前队列全部图片">清空列表</button>
         </div>
 
         <!-- 左右交换：左侧分类选项卡，右侧一体化搜索框 -->
@@ -2499,13 +2725,13 @@ body {
                 <span class="mode-selection-radio"></span>
                 <span class="mode-card-title">极致体积</span>
               </div>
-              <span class="mode-metric-badge badge-extreme">降 60%~80%</span>
+              <span class="mode-metric-badge badge-extreme">最高节省 80% 空间</span>
             </div>
             <div class="mode-card-body">
               <p class="mode-card-desc">自适应量化与真彩重采样，大幅缩减文件体积</p>
               <div class="mode-card-features">
-                <span class="feature-bullet">· 自适应调色板</span>
-                <span class="feature-bullet">· 完整透明通道</span>
+                <span class="feature-bullet">颜色智能压缩</span>
+                <span class="feature-bullet">透明背景不损</span>
               </div>
             </div>
           </div>
@@ -2518,13 +2744,13 @@ body {
                 <span class="mode-selection-radio"></span>
                 <span class="mode-card-title">高保真</span>
               </div>
-              <span class="mode-metric-badge badge-high">保真 88%</span>
+              <span class="mode-metric-badge badge-high">节省 35%~60% 空间</span>
             </div>
             <div class="mode-card-body">
               <p class="mode-card-desc">写实真彩与高频细节保护，杜绝模糊和噪点</p>
               <div class="mode-card-features">
-                <span class="feature-bullet">· 感知LUT高保真</span>
-                <span class="feature-bullet">· 减容 35%~60%</span>
+                <span class="feature-bullet">画质接近原图</span>
+                <span class="feature-bullet">适合照片素材</span>
               </div>
             </div>
           </div>
@@ -2537,13 +2763,13 @@ body {
                 <span class="mode-selection-radio"></span>
                 <span class="mode-card-title">真无损</span>
               </div>
-              <span class="mode-metric-badge badge-lossless">100% 逐像素</span>
+              <span class="mode-metric-badge badge-lossless">节省 10%~25% 空间</span>
             </div>
             <div class="mode-card-body">
               <p class="mode-card-desc">二进制逐像素绝对一致，安全清理冗余元数据</p>
               <div class="mode-card-features">
-                <span class="feature-bullet">· PSNR=∞ 逐位保真</span>
-                <span class="feature-bullet">· 减容 10%~25%</span>
+                <span class="feature-bullet">像素完全一致</span>
+                <span class="feature-bullet">适合设计交付</span>
               </div>
             </div>
           </div>
@@ -2604,9 +2830,12 @@ body {
               </div>
               <span class="workspace-section-title">压缩明细与缩减效果</span>
             </div>
-            <span id="totalSavingsBadge" class="savings-pill">
-              总体积节省 0 KB (0.0%)
-            </span>
+            <div>
+              <span id="totalSavingsBadge" class="savings-pill">
+                总体积节省 0 KB (0.0%)
+              </span>
+              <button class="btn-preset btn-clear-results" id="btnClearResults" onclick="clearCompressedResults()" title="清空所有已压缩的结果，图片留在待处理队列">清空结果</button>
+            </div>
           </div>
 
           <div class="results-table-wrapper">
@@ -2796,6 +3025,25 @@ body {
   </div>
 </div>
 
+<!-- 通用二次确认弹窗 (切换压缩模式清空结果 / 混合导出等破坏性联动操作) -->
+<div id="confirmModal" class="confirm-modal-overlay" style="display: none;" onclick="if(event.target===this) resolveConfirmModal(false)">
+  <div class="confirm-modal-card">
+    <div class="confirm-modal-icon" id="confirmModalIcon">
+      <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <h3 class="confirm-modal-title" id="confirmModalTitle">操作确认</h3>
+    <p class="confirm-modal-message" id="confirmModalMessage"></p>
+    <div class="confirm-modal-actions">
+      <button class="btn-action btn-confirm-cancel" id="confirmModalCancelBtn" onclick="resolveConfirmModal(false)">取消</button>
+      <button class="btn-action btn-confirm-ok" id="confirmModalOkBtn" onclick="resolveConfirmModal(true)">确认</button>
+    </div>
+  </div>
+</div>
+
 <!-- 自定义 Toast 提示 -->
 <div id="toastNotification" class="custom-toast">
   <span id="toastMessage">操作成功</span>
@@ -2836,6 +3084,8 @@ const state = {
   extremeQuality: 0.80,
   // 是否正在打包导出 ZIP
   isExporting: false,
+  // 用户是否已请求取消当前压缩批次 (压缩循环在每张图片边界检测该标志后安全退出)
+  abortCompression: false,
   // 队列目录分组视图中处于折叠状态的目录集合 (键为 relativePath 的目录前缀，'' 代表根目录散文件)
   collapsedGroups: new Set()
 };
@@ -2849,7 +3099,26 @@ window.addEventListener('DOMContentLoaded', () => {
   setupDragAndDrop();
   initCompareModalEvents();
   initQueueNextPeek();
+  initResultsGroupSticky();
   updateWorkspaceStats();
+
+  // 压缩/打包进行中拦截误关页面与刷新，避免全部已处理结果丢失
+  window.addEventListener('beforeunload', (e) => {
+    if (state.isCompressing || state.isExporting) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // Esc 快速关闭通用确认弹窗 (等同于放弃本次操作)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const confirmModal = document.getElementById('confirmModal');
+      if (confirmModal && confirmModal.style.display !== 'none') {
+        resolveConfirmModal(false);
+      }
+    }
+  });
 });
 
 function setupDragAndDrop() {
@@ -2860,7 +3129,8 @@ function setupDragAndDrop() {
     zone.addEventListener('dragover', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      zone.classList.add('active');
+      // 锁定期间不再给出可投放的高亮反馈
+      if (!isWorkspaceBusy()) zone.classList.add('active');
     });
 
     zone.addEventListener('dragleave', (e) => {
@@ -2873,6 +3143,12 @@ function setupDragAndDrop() {
       e.preventDefault();
       e.stopPropagation();
       zone.classList.remove('active');
+
+      // 联动锁定：压缩/打包进行中禁止导入新图，防止新图卷入正在运行的批次产生混合模式结果
+      if (isWorkspaceBusy()) {
+        showToast(state.isCompressing ? '压缩进行中，无法导入新图片，请等待完成或取消压缩' : 'ZIP 打包导出进行中，无法导入新图片');
+        return;
+      }
 
       const items = e.dataTransfer.items;
       if (items && items.length > 0) {
@@ -2920,6 +3196,24 @@ async function processDataTransferItems(items) {
   }
 
   appendScanLog(`[${getCurrentTime()}] 遍历扫描完成: 共检索 ${totalScanned} 个文件，成功加载 ${imageFound} 张图片`, 'success');
+  updateWorkspaceStats();
+  renderImageCards();
+  showToast(`扫描完成，已加载 ${imageFound} 张图片至工作区`);
+}
+
+/**
+ * 处理直接拖入的 FileList (浏览器不支持 DataTransferItem Entry API 时的兜底路径)
+ * 注：此前 drop 处理器调用了该函数但从未定义，属于潜在 ReferenceError，此处补齐实现
+ */
+async function processFileList(files) {
+  appendScanLog(`[${getCurrentTime()}] 开始分析拖入的文件 (共 ${files.length} 个)...`, 'info');
+  let imageFound = 0;
+  for (const file of files) {
+    file._relativePath = file.webkitRelativePath || file.name;
+    const isImg = await addSingleFileToWorkspace(file);
+    if (isImg) imageFound++;
+  }
+  appendScanLog(`[${getCurrentTime()}] 分析完成: 成功加载 ${imageFound} 张图片`, 'success');
   updateWorkspaceStats();
   renderImageCards();
   showToast(`扫描完成，已加载 ${imageFound} 张图片至工作区`);
@@ -2975,6 +3269,12 @@ function readAllEntriesFromReader(dirReader) {
  * 处理文件选择事件 (单选/多选图片)
  */
 async function handleImageFilesSelected(event) {
+  // 联动锁定兜底：文件选择框打开后压缩/打包可能已启动，此时导入直接放弃
+  if (isWorkspaceBusy()) {
+    showToast('压缩/打包任务进行中，本次导入已被忽略');
+    event.target.value = '';
+    return;
+  }
   const files = Array.from(event.target.files || []);
   if (files.length === 0) return;
 
@@ -2997,6 +3297,12 @@ async function handleImageFilesSelected(event) {
  * 处理目录选择事件 (<input webkitdirectory>)
  */
 async function handleFolderSelected(event) {
+  // 联动锁定兜底：文件选择框打开后压缩/打包可能已启动，此时导入直接放弃
+  if (isWorkspaceBusy()) {
+    showToast('压缩/打包任务进行中，本次导入已被忽略');
+    event.target.value = '';
+    return;
+  }
   const files = Array.from(event.target.files || []);
   if (files.length === 0) return;
 
@@ -4844,34 +5150,50 @@ async function compressGenericLossless(arrayBuffer) {
 // ==========================================================================
 
 async function startBatchCompress() {
-  if (state.isCompressing) return;
+  const text = document.getElementById('btnCompressText');
+  const headline = document.getElementById('scanStatusHeadline');
+
+  // 压缩中再次点击主按钮 = 请求取消: 置中止标记，批量循环在下一张图片边界安全退出
+  if (state.isCompressing) {
+    if (state.abortCompression) return; // 已请求过取消，等待当前单张收尾即可
+    state.abortCompression = true;
+    if (text) text.textContent = '正在取消...';
+    refreshActionStates(); // 主按钮置灰，title 同步为「已请求取消」
+    appendScanLog(`[${getCurrentTime()}] 已请求取消压缩，将在当前图片处理完成后停止...`, 'warning');
+    return;
+  }
+  if (state.isExporting) {
+    showToast('ZIP 打包导出进行中，完成后再执行压缩');
+    return;
+  }
   if (state.images.length === 0) {
     showToast('请先拖入或选择图片/网站项目');
     return;
   }
 
   state.isCompressing = true;
-  const btn = document.getElementById('btnStartCompress');
-  const text = document.getElementById('btnCompressText');
-  const spinner = document.getElementById('btnCompressSpinner');
-  const badge = document.getElementById('btnCompressCountBadge');
+  state.abortCompression = false;
+  refreshActionStates();
 
-  if (btn) btn.disabled = true;
-  if (spinner) spinner.style.display = 'inline-block';
-  if (badge) badge.style.display = 'none';
+  // 批次快照: 压缩期间新导入的图片不会被卷入本批 (导入入口已被联动锁定，此为双保险)
+  const batch = state.images.slice();
 
-  appendScanLog(`[${getCurrentTime()}] 开始执行极致无损批量压缩队列 (共 ${state.images.length} 张图片)...`, 'info');
+  appendScanLog(`[${getCurrentTime()}] 开始执行极致无损批量压缩队列 (共 ${batch.length} 张图片)...`, 'info');
 
   let successCount = 0;
   let skippedCount = 0;
+  let failedCount = 0;
   let totalBytesSaved = 0;
 
-  for (let i = 0; i < state.images.length; i++) {
-    const item = state.images[i];
+  for (let i = 0; i < batch.length; i++) {
+    if (state.abortCompression) break;
+
+    const item = batch[i];
     item.status = 'compressing';
     updateCardStatus(item);
 
-    text.textContent = `正在压缩 (${i + 1}/${state.images.length}): ${truncateString(item.fileName, 20)}`;
+    if (text) text.textContent = `取消压缩 (${i + 1}/${batch.length})`;
+    if (headline) headline.textContent = `正在批量压缩 · ${truncateString(item.fileName, 24)} (${i + 1}/${batch.length})`;
 
     // 释放微任务，保证 UI 界面与日志流畅更新
     await new Promise(r => setTimeout(r, 16));
@@ -4934,6 +5256,7 @@ async function startBatchCompress() {
       skippedCount++;
       appendScanLog(`[${getCurrentTime()}] [已达到极限] ${item.relativePath}: 原图已是极致压缩状态，安全保留原图 (已注入 SR-DevBox PixZip 溯源标识)`, 'info');
     } else {
+      failedCount++;
       appendScanLog(`[${getCurrentTime()}] [跳过] ${item.relativePath}: ${res.error || '保留原文件'}`, 'warning');
     }
 
@@ -4941,14 +5264,24 @@ async function startBatchCompress() {
     renderResultsTableRow(item);
   }
 
+  const wasCancelled = state.abortCompression;
   state.isCompressing = false;
-  if (btn) btn.disabled = false;
-  if (spinner) spinner.style.display = 'none';
-  if (text) text.textContent = '开始批量压缩';
+  state.abortCompression = false;
 
+  // 主按钮/导出/模式卡片等全部联动状态经状态机一次性恢复
   updateWorkspaceStats();
-  appendScanLog(`[${getCurrentTime()}] 全部处理完毕！${successCount} 张图片成功优化，${skippedCount} 张已达极限，累计节省 ${formatBytes(totalBytesSaved)}`, 'success');
-  showToast(`全部压缩完成！累计节省 ${formatBytes(totalBytesSaved)}`);
+
+  if (wasCancelled) {
+    const remainingCount = batch.length - successCount - skippedCount - failedCount;
+    appendScanLog(`[${getCurrentTime()}] 压缩任务已取消: ${successCount} 张成功优化，${skippedCount} 张已达极限，累计节省 ${formatBytes(totalBytesSaved)}; 剩余 ${remainingCount} 张未处理，可随时继续压缩`, 'warning');
+    showToast(`压缩已取消，已保留 ${successCount + skippedCount} 张已处理结果`);
+  } else {
+    appendScanLog(`[${getCurrentTime()}] 全部处理完毕！${successCount} 张图片成功优化，${skippedCount} 张已达极限，累计节省 ${formatBytes(totalBytesSaved)}`, 'success');
+    showToast(`全部压缩完成！累计节省 ${formatBytes(totalBytesSaved)}`);
+  }
+
+  // appendScanLog 会把最后一条日志写进状态栏标题，收尾后恢复默认就绪文案 (必须放在最后)
+  if (headline) headline.textContent = '本地压缩引擎就绪 · 纯前端离线运行';
 }
 
 // ==========================================================================
@@ -4956,13 +5289,32 @@ async function startBatchCompress() {
 // ==========================================================================
 
 async function exportZipArchive(mode = 'structured') {
+  if (state.isExporting) {
+    showToast('正在打包导出中，请稍候...');
+    return;
+  }
+  if (state.isCompressing) {
+    showToast('压缩进行中，完成或取消压缩后才能导出');
+    return;
+  }
   if (state.images.length === 0) {
     showToast('当前工作区无图片可供导出');
     return;
   }
-  if (state.isExporting) {
-    showToast('正在打包导出中，请稍候...');
+  // 队列中存在未处理 (pending/failed) 图片时弹降级确认: 它们将以原图形式打包进 ZIP
+  const processedCount = getProcessedCount();
+  if (processedCount === 0) {
+    showToast('请先执行压缩，再导出优化结果');
     return;
+  }
+  const uncompressedCount = state.images.length - processedCount;
+  if (uncompressedCount > 0) {
+    const ok = await showConfirmModal({
+      title: `存在 ${uncompressedCount} 张未压缩图片`,
+      message: `队列中还有 ${uncompressedCount} 张待处理/失败的图片，继续导出将它们以原图形式打包进 ZIP。是否仍要导出？`,
+      confirmText: '仍要导出'
+    });
+    if (!ok) return;
   }
 
   // mode: 'structured' (保持原有目录层级导出) | 'flat' (所有图片平铺至 ZIP 根目录)
@@ -4976,8 +5328,8 @@ async function exportZipArchive(mode = 'structured') {
   const origFlatTitle = titleFlat ? titleFlat.textContent : '平铺打包下载 (ZIP)';
 
   state.isExporting = true;
-  if (btnStructured) btnStructured.disabled = true;
-  if (btnFlat) btnFlat.disabled = true;
+  // 导出按钮禁用与全局联动 (主按钮/模式卡片/拖放区/清空) 统一由状态机刷新
+  refreshActionStates();
 
   const activeTitle = isFlat ? titleFlat : titleStructured;
   if (activeTitle) {
@@ -5048,11 +5400,10 @@ async function exportZipArchive(mode = 'structured') {
     showToast('打包失败: ' + err.message);
   } finally {
     state.isExporting = false;
-    if (btnFlat) btnFlat.disabled = false;
     if (titleStructured) titleStructured.textContent = origStructuredTitle;
     if (titleFlat) titleFlat.textContent = origFlatTitle;
-    // structured 按钮按工作区是否真实存在目录结构恢复可用性 (散图导入时保持禁用)
-    updateExportButtonsAvailability();
+    // 恢复全部按钮可用性与引导文案 (含 structured 按钮的目录结构判断)
+    refreshActionStates();
   }
 }
 
@@ -5369,18 +5720,18 @@ function renderResultsTableRow(item) {
                     onclick="openCompareModal('${item.id}')"
                     title="查看原图与压缩后画质细节对比">
               <svg viewBox="0 0 1024 1024" width="11" height="11" fill="currentColor" style="vertical-align: -1px;"><path d="M116.363636 837.818182h279.272728v93.090909H23.272727V93.090909h372.363637v93.090909H116.363636v651.636364z m512 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 0h93.090909v93.090909h-93.090909v-93.090909z m139.636364 93.090909v-93.090909h93.090909v93.090909h-93.090909z m0-325.818182v-93.090909h93.090909v93.090909h-93.090909z m0 139.636364v-93.090909h93.090909v93.090909h-93.090909z m0-279.272728v-93.090909h93.090909v93.090909h-93.090909z m0-139.636363v-93.090909h93.090909v93.090909h-93.090909z m0-139.636364V93.090909h93.090909v93.090909h-93.090909z m-46.545455 0h-93.090909V93.090909h93.090909v93.090909h-93.090909z m-139.636364 0h-93.090909V93.090909h93.090909v93.090909h-93.090909zM488.727273 0h93.090909v1024h-93.090909V0z"></path></svg>
-              <span>对比</span>
+              <span>压缩前后对比</span>
             </button>
           ` : ''}
           <button class="btn-table-action btn-table-download"
                   onclick="downloadSingleImage(state.images.find(i=>i.id==='${item.id}'))"
-                  title="单独下载此文件">
+                  title="${item.status === 'failed' ? '该图压缩处理失败，点击下载原始文件' : '单独下载此压缩后文件'}">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px;">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
               <polyline points="7 10 12 15 17 10"/>
               <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            <span>下载</span>
+            <span>单图下载</span>
           </button>
         </div>
       </td>
@@ -5491,7 +5842,33 @@ function updateResultsGroupSummary(dir) {
   groupRow.querySelector('.results-group-summary').textContent = `${count} 张 · 缩减 ${formatBytes(saved)} (-${pct}%)`;
 }
 
+/**
+ * 明细表粘性分组行需要严丝合缝贴在粘性表头下沿：
+ * 实测 thead th 的真实高度写入 .results-table 的 --results-head-h 变量，
+ * 并用 ResizeObserver 跟随字体加载完成、浏览器缩放等引起的高度变化实时校正。
+ */
+function initResultsGroupSticky() {
+  const table = document.querySelector('.results-table');
+  const th = table && table.querySelector('thead th');
+  if (!table || !th) return;
+  const syncHeadOffset = () => {
+    const h = th.offsetHeight;
+    if (h > 0) table.style.setProperty('--results-head-h', h + 'px');
+  };
+  syncHeadOffset();
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncHeadOffset).observe(th);
+  } else {
+    window.addEventListener('resize', syncHeadOffset, { passive: true });
+  }
+}
+
 function removeImage(id) {
+  // 压缩/打包进行中禁止改动队列，避免批量循环索引错位与 ZIP 数据竞争
+  if (isWorkspaceBusy()) {
+    showToast(state.isCompressing ? '压缩进行中，无法从队列移除图片' : '打包导出进行中，无法从队列移除图片');
+    return;
+  }
   const idx = state.images.findIndex(img => img.id === id);
   if (idx !== -1) {
     const item = state.images[idx];
@@ -5513,6 +5890,11 @@ function removeImage(id) {
 }
 
 function clearAllImages() {
+  // 压缩/打包进行中禁止清空队列
+  if (isWorkspaceBusy()) {
+    showToast(state.isCompressing ? '压缩进行中，无法清空队列' : '打包导出进行中，无法清空队列');
+    return;
+  }
   state.images.forEach(img => {
     if (img.previewUrl) URL.revokeObjectURL(img.previewUrl);
     if (img.compressedUrl && img.compressedUrl !== img.previewUrl) {
@@ -5524,17 +5906,28 @@ function clearAllImages() {
   state.collapsedGroups.clear();
   resultsGroupRows.clear();
 
-  document.getElementById('resultsTableBody').innerHTML = `
-    <tr id="tableEmptyRow">
-      <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px 20px;">
-        暂无已完成的压缩记录，请导入图片并点击上方“开始压缩”
-      </td>
-    </tr>
-  `;
+  document.getElementById('resultsTableBody').innerHTML = getResultsEmptyRowHtml();
 
   renderImageCards();
   updateWorkspaceStats();
   showToast('已清空工作区所有图片');
+}
+
+async function clearCompressedResults() {
+  if (isWorkspaceBusy()) return;
+  const hasResults = state.images.some(i => i.status === 'success' || i.status === 'skipped' || i.status === 'failed');
+  if (!hasResults) return;
+
+  const confirmed = await showConfirmModal({
+    title: '清空压缩结果',
+    message: '将清除所有已压缩的结果，图片仍保留在待处理队列中，可重新压缩。',
+    confirmText: '清空结果',
+    danger: true
+  });
+  if (!confirmed) return;
+
+  resetCompressedResults();
+  showToast('已清空压缩结果，图片保留在队列中');
 }
 
 function filterImageCards(query) {
@@ -5574,14 +5967,13 @@ function hasDirectoryStructure() {
  */
 function updateExportButtonsAvailability() {
   const btnStructured = document.getElementById('btnExportStructured');
-  // 导出进行中的禁用状态由 exportZipArchive 流程自行管理，此处不干预
-  if (!btnStructured || state.isExporting) return;
+  if (!btnStructured) return;
 
   const subEl = btnStructured.querySelector('.export-btn-sub');
   const hasDir = hasDirectoryStructure();
   const isEmpty = state.images.length === 0;
 
-  btnStructured.disabled = !hasDir;
+  // 本函数只负责引导文案与副标题; disabled 与受阻 title 由 refreshActionStates 统一写入
 
   if (hasDir) {
     btnStructured.title = '按上传时的文件夹结构导出，目录层级与相对路径原样保留';
@@ -5595,54 +5987,274 @@ function updateExportButtonsAvailability() {
   }
 }
 
+// ==========================================================================
+// 3.5 全局交互联动中枢 (按钮状态矩阵 · 单一事实来源)
+// ==========================================================================
+
+/**
+ * 工作区是否被长任务占用 (批量压缩中 / ZIP 打包导出中)
+ * 导入、队列增删、模式切换、导出等一切可能与任务互相干扰的入口都先经此判断
+ */
+function isWorkspaceBusy() {
+  return state.isCompressing || state.isExporting;
+}
+
+/** 队列中已处理完成 (压缩成功 / 已达极限保留原图) 的图片数，即明细表已收录的记录数 */
+function getProcessedCount() {
+  return state.images.filter(img => img.status === 'success' || img.status === 'skipped').length;
+}
+
+/** 压缩明细表空态占位行 (清空队列 / 重置压缩结果场景复用，保证文案一致) */
+function getResultsEmptyRowHtml() {
+  return `
+    <tr id="tableEmptyRow">
+      <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px 20px;">
+        暂无已完成的压缩记录，请导入图片并点击上方“开始批量压缩”
+      </td>
+    </tr>
+  `;
+}
+
+/**
+ * 所有操作按钮的统一状态机 —— disabled / title / 计数徽标 / 按钮文案的唯一写入口
+ * 依据三个事实推导: 队列数量、已处理数量、是否处于压缩/导出任务中
+ * 调用时机: updateWorkspaceStats (任何队列/结果变化都会触发) + 压缩/导出开始结束 + 取消请求
+ */
+function refreshActionStates() {
+  const busy = isWorkspaceBusy();
+  const count = state.images.length;
+  const processedCount = getProcessedCount();
+
+  // ---- 1. 压缩模式卡片 + 强度档位: 任务期间锁定，杜绝同一批结果混入两种模式的产物 ----
+  const modeLockReason = state.isCompressing
+    ? '批量压缩进行中，完成或取消压缩后才能切换压缩模式'
+    : 'ZIP 打包导出进行中，完成后才能切换压缩模式';
+  [
+    document.getElementById('compressCardExtreme'),
+    document.getElementById('compressCardHigh'),
+    document.getElementById('compressCardLossless')
+  ].forEach(card => {
+    if (!card) return;
+    card.classList.toggle('locked', busy);
+    if (busy) {
+      card.title = modeLockReason;
+    } else {
+      card.removeAttribute('title');
+    }
+  });
+  document.querySelectorAll('.quality-pill').forEach(pill => { pill.disabled = busy; });
+
+  // ---- 2. 导入拖放区: 任务期间禁止导入新文件 (防止批量数组中途变动 / ZIP 数据竞争) ----
+  const dropLockReason = state.isCompressing
+    ? '压缩进行中，无法导入新图片，请等待完成或取消压缩'
+    : 'ZIP 打包导出进行中，无法导入新图片';
+  [
+    document.getElementById('imageDropZone'),
+    document.getElementById('webDropZone')
+  ].forEach(zone => {
+    if (!zone) return;
+    zone.classList.toggle('locked', busy);
+    if (busy) {
+      zone.title = dropLockReason;
+    } else {
+      zone.removeAttribute('title');
+    }
+  });
+
+  // ---- 3. 主按钮: 「开始批量压缩」<->「取消压缩」双态切换 ----
+  const btn = document.getElementById('btnStartCompress');
+  const text = document.getElementById('btnCompressText');
+  const spinner = document.getElementById('btnCompressSpinner');
+  const badge = document.getElementById('btnCompressCountBadge');
+  if (btn && text && spinner && badge) {
+    if (state.isCompressing) {
+      // 压缩中按钮变为「取消压缩」; 已请求取消后置灰等待当前单张收尾
+      btn.disabled = state.abortCompression;
+      btn.classList.add('cancel-mode');
+      spinner.style.display = 'inline-block';
+      badge.style.display = 'none';
+      if (!state.abortCompression) text.textContent = '取消压缩';
+      btn.title = state.abortCompression
+        ? '已请求取消，将在当前图片处理完成后停止'
+        : '点击取消当前压缩任务，已完成的图片结果将保留';
+    } else {
+      btn.disabled = state.isExporting || count === 0;
+      btn.classList.remove('cancel-mode');
+      spinner.style.display = 'none';
+      text.textContent = '开始批量压缩';
+      if (count > 0) {
+        badge.textContent = `${count} 张`;
+        badge.style.display = 'inline-flex';
+        btn.title = `开始批量压缩队列中的 ${count} 张图片`;
+      } else {
+        badge.style.display = 'none';
+        btn.title = state.isExporting ? 'ZIP 打包导出进行中，请稍候' : '当前工作区暂无图片';
+      }
+    }
+  }
+
+  // ---- 4. 双 ZIP 导出按钮: 有已处理结果且无任务进行中才可用 ----
+  const canExport = !busy && count > 0 && processedCount > 0;
+  let exportBlockedReason = '';
+  if (state.isCompressing) exportBlockedReason = '压缩进行中，完成或取消压缩后可导出';
+  else if (state.isExporting) exportBlockedReason = 'ZIP 打包导出进行中，请稍候';
+  else if (count === 0) exportBlockedReason = '请先导入图片';
+  else if (processedCount === 0) exportBlockedReason = '请先执行压缩，再导出优化结果';
+
+  // 先由 updateExportButtonsAvailability 刷新 structured 按钮的引导文案/副标题，再在此统一覆盖 disabled 与 title
+  updateExportButtonsAvailability();
+
+  const btnFlat = document.getElementById('btnExportFlat');
+  const btnStructured = document.getElementById('btnExportStructured');
+  if (btnFlat) {
+    btnFlat.disabled = !canExport;
+    btnFlat.title = canExport
+      ? '忽略目录层级，所有优化后图片平铺打包到 ZIP 根目录，重名文件自动编号去重'
+      : exportBlockedReason;
+  }
+  if (btnStructured) {
+    btnStructured.disabled = !(canExport && hasDirectoryStructure());
+    // canExport 时保留 updateExportButtonsAvailability 写入的目录引导 title; 受阻时统一提示原因
+    if (!canExport) btnStructured.title = exportBlockedReason;
+  }
+
+  // ---- 5. 清空队列按钮 + 待处理卡片的删除按钮 ----
+  const btnClear = document.getElementById('btnClearQueue');
+  if (btnClear) {
+    btnClear.disabled = busy || count === 0;
+    btnClear.title = busy
+      ? (state.isCompressing ? '压缩进行中，无法清空队列' : 'ZIP 打包导出进行中，无法清空队列')
+      : (count === 0 ? '队列已为空' : '清空当前队列全部图片');
+  }
+  const btnClearResults = document.getElementById('btnClearResults');
+  if (btnClearResults) {
+    const hasResults = state.images.some(i => i.status === 'success' || i.status === 'skipped' || i.status === 'failed');
+    btnClearResults.disabled = busy || !hasResults;
+    btnClearResults.title = busy
+      ? (state.isCompressing ? '压缩进行中，无法清空结果' : 'ZIP 打包导出进行中，无法清空结果')
+      : (!hasResults ? '暂无已压缩的结果' : '清空所有已压缩的结果，图片留在待处理队列');
+  }
+  const cardsContainer = document.getElementById('imageCardsContainer');
+  if (cardsContainer) cardsContainer.classList.toggle('queue-locked', busy);
+}
+
+/**
+ * 切换压缩模式后重置所有已产出的压缩结果 (图片本体保留在待处理队列)
+ * 不同模式的产物不允许混在同一批导出中，因此切换前必须清空旧结果
+ */
+function resetCompressedResults() {
+  state.images.forEach(item => {
+    if (item.compressedUrl && item.compressedUrl !== item.previewUrl) {
+      URL.revokeObjectURL(item.compressedUrl);
+    }
+    item.compressedUrl = null;
+    item.data = null;
+    item.status = 'pending';
+    item.compressedSize = item.originalSize;
+    item.saved = 0;
+    item.ratio = '0.0';
+    item.outputSoftware = null;
+  });
+
+  // 明细表整体复位: 目录分组行索引清空，tbody 还原为空态占位行
+  resultsGroupRows.clear();
+  const tbody = document.getElementById('resultsTableBody');
+  if (tbody) tbody.innerHTML = getResultsEmptyRowHtml();
+
+  renderImageCards();
+  updateWorkspaceStats();
+  appendScanLog(`[${getCurrentTime()}] 压缩模式已切换，旧模式产出的压缩结果已全部清空，请重新压缩`, 'warning');
+}
+
+/** 点击拖放区唤起文件选择对话框的统一入口 (任务期间直接拒绝，与拖拽路径的拦截保持一致) */
+function openFilePicker(inputId) {
+  if (isWorkspaceBusy()) {
+    showToast(state.isCompressing
+      ? '压缩进行中，无法导入新图片，请等待完成或取消压缩'
+      : 'ZIP 打包导出进行中，无法导入新图片');
+    return;
+  }
+  const input = document.getElementById(inputId);
+  if (input) input.click();
+}
+
+// ---- 通用确认弹窗 (Promise 化，替代原生 confirm，视觉与全局 UI 一致) ----
+let confirmModalResolver = null;
+
+/**
+ * 弹出确认框，返回 Promise<boolean> (true = 用户点击了确认按钮)
+ * @param {Object} opts { title, message, confirmText, cancelText, danger } danger 时确认按钮为红色
+ */
+function showConfirmModal({ title, message, confirmText = '确认', cancelText = '取消', danger = false }) {
+  return new Promise(resolve => {
+    const modal = document.getElementById('confirmModal');
+    const icon = document.getElementById('confirmModalIcon');
+    const titleEl = document.getElementById('confirmModalTitle');
+    const msgEl = document.getElementById('confirmModalMessage');
+    const okBtn = document.getElementById('confirmModalOkBtn');
+    const cancelBtn = document.getElementById('confirmModalCancelBtn');
+    if (!modal || !titleEl || !msgEl || !okBtn) {
+      // 极端情况下弹窗 DOM 缺失，按「未确认」处理直接拒绝本次危险操作，安全优先
+      resolve(false);
+      return;
+    }
+    titleEl.textContent = title || '操作确认';
+    msgEl.textContent = message || '';
+    okBtn.textContent = confirmText;
+    okBtn.classList.toggle('btn-confirm-danger', danger);
+    if (cancelBtn) cancelBtn.textContent = cancelText;
+    if (icon) icon.classList.toggle('danger', danger);
+    confirmModalResolver = resolve;
+    modal.style.display = 'flex';
+  });
+}
+
+/** 确认弹窗回调 (确认/取消/遮罩点击/Esc 均经由此结算 Promise 并关闭弹窗) */
+function resolveConfirmModal(result) {
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.style.display = 'none';
+  if (confirmModalResolver) {
+    const resolve = confirmModalResolver;
+    confirmModalResolver = null;
+    resolve(result);
+  }
+}
+
 function updateWorkspaceStats() {
   const count = state.images.length;
   let originalTotal = 0;
   let compressedTotal = 0;
-  let totalSaved = 0;
+  let processedCount = 0;
 
   state.images.forEach(item => {
-    originalTotal += item.originalSize;
-    compressedTotal += item.compressedSize;
-    if (item.saved) totalSaved += item.saved;
+    if (item.status === 'success' || item.status === 'skipped' || item.status === 'failed') {
+      originalTotal += item.originalSize;
+      compressedTotal += item.compressedSize;
+      processedCount++;
+    }
   });
 
-  const ratio = originalTotal > 0 ? ((totalSaved / originalTotal) * 100).toFixed(1) : '0.0';
+  const totalSaved = originalTotal - compressedTotal;
 
   const headerBadge = document.getElementById('headerBadge');
   if (headerBadge) {
-    headerBadge.textContent = `工作区已有 ${count} 张图片 · 累计节省 ${formatBytes(totalSaved)} (${ratio}%)`;
+    headerBadge.textContent = `工作区已有 ${count} 张图片 · 累计节省 ${formatBytes(totalSaved)}`;
   }
   const totalSavingsBadge = document.getElementById('totalSavingsBadge');
   if (totalSavingsBadge) {
-    totalSavingsBadge.textContent = `总体积节省 ${formatBytes(totalSaved)} (${ratio}%)`;
+    if (processedCount > 0 && totalSaved > 0) {
+      totalSavingsBadge.innerHTML = `节省 <em>${formatBytes(totalSaved)}</em> · 压缩后共 <em>${formatBytes(compressedTotal)}</em>`;
+    } else if (processedCount > 0) {
+      totalSavingsBadge.innerHTML = `压缩后共 <em>${formatBytes(compressedTotal)}</em>`;
+    } else {
+      totalSavingsBadge.textContent = '暂无压缩结果';
+    }
   }
 
   updateTabCounts();
 
-  // 联动导出按钮可用性: 仅当工作区存在真实目录结构时，「按目录结构打包下载」才可点击
-  updateExportButtonsAvailability();
-
-  // 动态更新主操作按钮上的待处理图片计数标记
-  const compressCountBadge = document.getElementById('btnCompressCountBadge');
-  const compressText = document.getElementById('btnCompressText');
-  const btnStartCompress = document.getElementById('btnStartCompress');
-  if (compressCountBadge && compressText && !state.isCompressing) {
-    if (count > 0) {
-      compressCountBadge.textContent = `${count} 张`;
-      compressCountBadge.style.display = 'inline-flex';
-      compressText.textContent = '开始批量压缩';
-      if (btnStartCompress) {
-        btnStartCompress.title = `开始批量压缩队列中的 ${count} 张图片`;
-      }
-    } else {
-      compressCountBadge.style.display = 'none';
-      compressText.textContent = '开始批量压缩';
-      if (btnStartCompress) {
-        btnStartCompress.title = '当前工作区暂无图片';
-      }
-    }
-  }
+  // 所有按钮的 disabled/title/计数徽标/文案统一交由联动中枢刷新 (内部已调用 updateExportButtonsAvailability)
+  refreshActionStates();
 }
 
 /**
@@ -5784,7 +6396,37 @@ function showToast(msg) {
 // 6. 核心压缩模式与导出模式交互调度
 // ==========================================================================
 
-function selectCompressMode(mode) {
+async function selectCompressMode(mode) {
+  if (mode === state.compressMode) return;
+
+  // 任务进行中禁止切换模式: 当前批次产物会与新模式混批，且界面状态无法安全重置
+  if (state.isCompressing) {
+    showToast('批量压缩进行中，完成或取消压缩后才能切换压缩模式');
+    return;
+  }
+  if (state.isExporting) {
+    showToast('ZIP 打包导出进行中，完成后才能切换压缩模式');
+    return;
+  }
+
+  // 已有压缩结果时切换模式需显式确认: 旧模式产物不允许与新模式结果混在同一批导出中
+  const processedCount = getProcessedCount();
+  if (processedCount > 0) {
+    const ok = await showConfirmModal({
+      title: '切换压缩模式？',
+      message: `切换模式将清空已压缩的 ${processedCount} 张图片的压缩结果与明细记录，图片仍保留在待处理队列中，需要重新压缩。`,
+      confirmText: '清空结果并切换',
+      danger: true
+    });
+    if (!ok) return;
+    resetCompressedResults();
+  }
+
+  applyCompressMode(mode);
+}
+
+/** 实际执行模式切换 (写入 state 参数 + 卡片选中态 + 格式说明卡文案) */
+function applyCompressMode(mode) {
   state.compressMode = mode;
   const cardExtreme = document.getElementById('compressCardExtreme');
   const cardHigh = document.getElementById('compressCardHigh');
@@ -5840,6 +6482,11 @@ function selectCompressMode(mode) {
 }
 
 function setExtremeQuality(preset, el) {
+  // 与模式卡片同级别的参数入口，任务期间同样锁定
+  if (isWorkspaceBusy()) {
+    showToast('压缩/打包任务进行中，完成后才能调整强度档位');
+    return;
+  }
   state.extremePreset = preset;
   document.querySelectorAll('.quality-pill').forEach(pill => pill.classList.remove('active'));
   if (el) el.classList.add('active');
@@ -6246,6 +6893,8 @@ window.closeActivationModal = closeActivationModal;
 window.submitActivation = submitActivation;
 window.selectCompressMode = selectCompressMode;
 window.setExtremeQuality = setExtremeQuality;
+window.openFilePicker = openFilePicker;
+window.resolveConfirmModal = resolveConfirmModal;
 window.openCompareModal = openCompareModal;
 window.closeCompareModal = closeCompareModal;
 window.zoomCompareImage = zoomCompareImage;
